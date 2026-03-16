@@ -1,0 +1,31 @@
+import type { IconProps } from "../../Icon.types";
+import { resolveIconSize } from "../../Icon.types";
+const SvgImport = ({
+  size = "md",
+  color = "currentColor",
+  ...props
+}: IconProps) => {
+  const px = resolveIconSize(size);
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={px}
+      height={px}
+      fill="none"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill={color}
+        d="M3 16.839v-2.677c0-.528 0-.982.03-1.357.033-.395.104-.789.297-1.167a3 3 0 0 1 1.311-1.311c.378-.193.772-.264 1.167-.296C6.18 10 6.635 10 7.161 10H11v3.586l-1.293-1.293a1 1 0 0 0-1.414 1.414l3 3a1 1 0 0 0 1.414 0l3-3a1 1 0 0 0-1.414-1.414L13 13.586V10h3.839c.527 0 .982 0 1.356.03.395.033.789.104 1.167.297a3 3 0 0 1 1.311 1.311c.193.378.264.772.296 1.167.031.375.031.83.031 1.356v2.678c0 .527 0 .982-.03 1.356-.033.395-.104.789-.297 1.167a3 3 0 0 1-1.311 1.311c-.378.193-.772.264-1.167.296-.375.031-.83.031-1.357.031H7.162c-.527 0-.981 0-1.356-.03-.395-.033-.789-.104-1.167-.297a3 3 0 0 1-1.311-1.311c-.193-.378-.264-.772-.296-1.167A18 18 0 0 1 3 16.838"
+      />
+      <path
+        fill={color}
+        fillRule="evenodd"
+        d="M12 3a1 1 0 0 0-1 1v6h2V4a1 1 0 0 0-1-1"
+        clipRule="evenodd"
+      />
+    </svg>
+  );
+};
+export default SvgImport;

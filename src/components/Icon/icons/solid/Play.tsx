@@ -1,0 +1,25 @@
+import type { IconProps } from "../../Icon.types";
+import { resolveIconSize } from "../../Icon.types";
+const SvgPlay = ({
+  size = "md",
+  color = "currentColor",
+  ...props
+}: IconProps) => {
+  const px = resolveIconSize(size);
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={px}
+      height={px}
+      fill="none"
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path
+        fill={color}
+        d="M8.722 2.547C6.733 1.154 4 2.576 4 5.004v13.993c0 2.427 2.733 3.85 4.722 2.456l10.008-7.012c1.693-1.187 1.693-3.695 0-4.881z"
+      />
+    </svg>
+  );
+};
+export default SvgPlay;

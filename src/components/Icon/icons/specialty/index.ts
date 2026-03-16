@@ -1,0 +1,23 @@
+// ⚠️  AUTO-GENERATED — do not edit manually.
+// Run: npm run icons:index
+
+export { default as AllergistSpecialty } from './Allergist'
+export { default as DentalClinicSpecialty } from './DentalClinic'
+export { default as DentistSpecialty } from './Dentist'
+export { default as DermatologySpecialty } from './Dermatology'
+export { default as EyeDoctorSpecialty } from './EyeDoctor'
+export { default as NetworkTierCoinSpecialty } from './NetworkTierCoin'
+export { default as NutriSpecialty } from './Nutri'
+export { default as ObGynSpecialty } from './ObGyn'
+export { default as OncologistSpecialty } from './Oncologist'
+export { default as Oncologist2Specialty } from './Oncologist2'
+export { default as OptamologystSpecialty } from './Optamologyst'
+export { default as OrthoSpecialty } from './Ortho'
+export { default as OrthopedistSpecialty } from './Orthopedist'
+export { default as PediatricianSpecialty } from './Pediatrician'
+export { default as PregnancySpecialty } from './Pregnancy'
+export { default as PrimaryCareSpecialty } from './PrimaryCare'
+export { default as SpecialistSpecialty } from './Specialist'
+export { default as SurgerySpecialty } from './Surgery'
+export { default as TelehealthSpecialty } from './Telehealth'
+export { default as UrgentCareSpecialty } from './UrgentCare'

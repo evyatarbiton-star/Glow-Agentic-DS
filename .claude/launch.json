@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "glow-ds",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["vite", "--port", "5175"],
+      "port": 5175
+    }
+  ]
+}

@@ -1,15 +1,4 @@
-// ============================================================
-// GLOW DS — ZoeBenefitCard
-// Figma: Zoe UI — "Medical benefit" (node-id=11584:134644)
-//
-// A benefit card in the Zoe conversation. Shows a health benefit
-// with image/icon thumbnail, title, optional subtitle, optional
-// metadata row, and a chevron button.
-//
-// States: default (flat), hover (white bg + shadow), active (flat,
-// drawer is open for this card).
-// ============================================================
-
+// ZoeBenefitCard — Figma: node-id=11584:134644
 import { useState } from 'react'
 import { semanticColors as sc } from '../../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../../tokens/semantic/typography'
@@ -18,20 +7,19 @@ import { semanticRadii } from '../../../../tokens/semantic/radii'
 import ChevronRightLine from '../../Icon/icons/line/ChevronRight'
 import type { ZoeBenefitCardProps } from './ZoeBenefitCard.types'
 
-// ── Token Constants ─────────────────────────────────────────
-const PADDING = semanticSpacing.xs                              // 12px — card padding
-const GAP = semanticSpacing.s                                   // 16px — gap between image, content, chevron
-const CARD_RADIUS = semanticRadii.ln                            // 24px — card border-radius
-const IMAGE_RADIUS = semanticRadii.sn                           // 16px — image border-radius
-const IMAGE_SIZE = 88                                           // 88px — thumbnail size
-const CHEVRON_SIZE = 36                                         // 36px — chevron button circle
-const CHEVRON_ICON_SIZE = 20                                    // 20px — chevron icon
-const META_ICON_SIZE = 20                                       // 20px — metadata row icon
-const META_GAP = 4                                              // 4px — gap between meta icon and text
+const PADDING = semanticSpacing.xs                              // 12px
+const GAP = semanticSpacing.s                                   // 16px
+const CARD_RADIUS = semanticRadii.ln                            // 24px
+const IMAGE_RADIUS = semanticRadii.sn                           // 16px
+const IMAGE_SIZE = 88                                           // 88px
+const CHEVRON_SIZE = 36                                         // 36px
+const CHEVRON_ICON_SIZE = 20                                    // 20px
+const META_ICON_SIZE = 20                                       // 20px
+const META_GAP = 4                                              // 4px
 
-const TITLE_STYLE = typographyStyles['display-xxxxs']           // Tiempos 20px/24px weight 500
-const SUBTITLE_STYLE = typographyStyles['paragraph-m']          // Founders 16px/19px weight 400
-const META_TEXT_STYLE = typographyStyles['paragraph-l']         // Founders 18px/21px weight 400
+const TITLE_STYLE = typographyStyles['display-xxxxs']           // Tiempos 20px/24px
+const SUBTITLE_STYLE = typographyStyles['paragraph-m']          // Founders 16px/19px
+const META_TEXT_STYLE = typographyStyles['paragraph-l']         // Founders 18px/21px
 
 const TITLE_COLOR = sc.neutral.text.DEFAULT                     // #000000
 const SUBTITLE_COLOR = sc.neutral.text.dark                     // #404040
@@ -60,7 +48,6 @@ export function ZoeBenefitCard({
 
   const showHighlight = isHovered || isActive
 
-  // ── Container ───────────────────────────────────────────────
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
@@ -74,7 +61,6 @@ export function ZoeBenefitCard({
     ...style,
   }
 
-  // ── Thumbnail (image or icon variant) ───────────────────────
   const thumbnailStyle: React.CSSProperties = {
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
@@ -95,7 +81,6 @@ export function ZoeBenefitCard({
     display: 'block',
   }
 
-  // ── Content area ────────────────────────────────────────────
   const contentStyle: React.CSSProperties = {
     flex: '1 1 0',
     minWidth: 0,
@@ -133,7 +118,6 @@ export function ZoeBenefitCard({
     gap: 4,
   }
 
-  // ── Metadata row ────────────────────────────────────────────
   const metaRowStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
@@ -159,7 +143,6 @@ export function ZoeBenefitCard({
     justifyContent: 'center',
   }
 
-  // ── Chevron button ──────────────────────────────────────────
   const chevronStyle: React.CSSProperties = {
     width: CHEVRON_SIZE,
     height: CHEVRON_SIZE,
@@ -185,7 +168,7 @@ export function ZoeBenefitCard({
       onMouseLeave={() => setIsHovered(false)}
       aria-pressed={isActive || undefined}
     >
-      {/* Thumbnail — image or icon variant */}
+      {/* Thumbnail */}
       <div style={thumbnailStyle}>
         {imageSrc ? (
           <img src={imageSrc} alt={imageAlt} style={imgStyle} />
@@ -194,15 +177,12 @@ export function ZoeBenefitCard({
         ) : null}
       </div>
 
-      {/* Content area */}
       <div style={contentStyle}>
-        {/* Title + optional subtitle */}
         <div style={titleBlockStyle}>
           <p style={titleTextStyle}>{title}</p>
           {subtitle && <p style={subtitleTextStyle}>{subtitle}</p>}
         </div>
 
-        {/* Optional metadata row */}
         {metaText && (
           <div style={metaRowStyle}>
             {metaIcon && <div style={metaIconWrapStyle}>{metaIcon}</div>}
@@ -211,7 +191,6 @@ export function ZoeBenefitCard({
         )}
       </div>
 
-      {/* Chevron button */}
       <div style={chevronStyle}>
         <ChevronRightLine size={CHEVRON_ICON_SIZE} />
       </div>

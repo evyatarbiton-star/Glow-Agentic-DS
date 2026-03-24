@@ -10,15 +10,7 @@ import ArrowUpRightCrFrIcon from '../Icon/icons/solid/ArrowUpRightCrFr'
 import DistributeHorizontalSolid from '../Icon/icons/solid/DistributeHorizontal'
 import FileInfoIcon from '../Icon/icons/solid/FileInfo'
 
-// ============================================================
-// GLOW DS — CostSection (internal sub-component)
-//
-// Displays the price + optional cost comparison chip.
-// Uses the DS <Chip> component for cost level indicators.
-// Used inside ProviderCard — not exported from the DS.
-// ============================================================
-
-// ── Cost Chip Config (maps CostLevel → DS Chip props) ────────
+// CostSection — internal sub-component for ProviderCard
 type ChipConfig = {
   label: string
   chipColor: ChipColor
@@ -32,7 +24,6 @@ const COST_CHIP_CONFIG: Record<CostLevel, ChipConfig> = {
   unknown: { label: 'Unknown cost est',  chipColor: 'neutral', Icon: FileInfoIcon },
 }
 
-// ── Token Constants ───────────────────────────────────────────
 const FONT         = fontFamilies.default        // Founders Grotesk
 const FONT_DISPLAY = fontFamilies.display        // Tiempos Headline
 const W_REGULAR    = fontWeights.regular         // 400
@@ -42,7 +33,6 @@ const TEXT_DARK    = sc.neutral.text.dark         // #404040
 const TEXT_LIGHT   = sc.neutral.text.light        // #8a8a8a
 const GAP_XXS      = parseInt(semanticSpacing.xxs)  // 8px
 
-// ── Component ─────────────────────────────────────────────────
 interface CostSectionProps {
   cost: string
   costLevel?: CostLevel
@@ -74,7 +64,6 @@ export function CostSection({
   const chip = rawChip && costChipLabel ? { ...rawChip, label: costChipLabel } : rawChip
   const showChip = showCostChip && chip
 
-  // ── Hint element (reused) ──
   const hintEl = costHint ? (
     <p style={{
       fontFamily: FONT, fontWeight: W_REGULAR,
@@ -85,7 +74,6 @@ export function CostSection({
     </p>
   ) : null
 
-  // ── Chip element (uses DS <Chip> component) ──
   const chipEl = showChip ? (
     <Chip
       color={chip.chipColor}
@@ -97,7 +85,6 @@ export function CostSection({
     </Chip>
   ) : null
 
-  // ── Inline layout (horizontal card): always stacked, chip sits next to price when present ──
   if (chipInline) {
     return (
       <div>
@@ -130,10 +117,8 @@ export function CostSection({
     )
   }
 
-  // ── Default layout: chip below or beside the price block ──
   return (
     <div style={{ display: 'flex', alignItems: costHint ? 'flex-start' : 'center', justifyContent: 'space-between', gap: GAP_XXS }}>
-      {/* Price + label */}
       {showChip ? (
         <div>
           <span style={{
@@ -170,7 +155,6 @@ export function CostSection({
         </div>
       )}
 
-      {/* Cost chip */}
       {chipEl}
     </div>
   )

@@ -1,27 +1,15 @@
-// ============================================================
-// GLOW DS — ZoeChatHeader
-// Figma: Zoe UI — "Chat" (node-id=497:28402)
-//
-// Sticky gradient header for the Zoe chat screen. Contains a
-// close button (returns to home). Background fades from white
-// to transparent so scrolled content shows through.
-//
-// Usage: place as first child inside the scroll area.
-// ============================================================
-
+// ZoeChatHeader — Figma: node-id=497:28402
 import { semanticColors as sc } from '../../../../tokens/semantic/colors'
 import { semanticSpacing } from '../../../../tokens/semantic/spacing'
 import { IconButton } from '../../IconButton/IconButton'
 import CloseLine from '../../Icon/icons/line/Close'
 import type { ZoeChatHeaderProps } from './ZoeChatHeader.types'
 
-// ── Token Constants ─────────────────────────────────────────
-const BG_COLOR = sc.neutral.surface.negative                   // #ffffff — gradient start
-const PADDING_Y = semanticSpacing.s                            // 16px — top & bottom
-const PADDING_X = semanticSpacing.l                            // 24px — left & right
-const Z_INDEX = 10                                             // above scroll content
+const BG_COLOR = sc.neutral.surface.negative                   // #ffffff
+const PADDING_Y = semanticSpacing.s                            // 16px
+const PADDING_X = semanticSpacing.l                            // 24px
+const Z_INDEX = 10
 
-// Build gradient from token (white → transparent, fade ends at 70% of header height)
 const GRADIENT = `linear-gradient(to bottom, ${BG_COLOR} 40%, transparent 100%)`
 
 export function ZoeChatHeader({
@@ -34,7 +22,7 @@ export function ZoeChatHeader({
     top: 0,
     zIndex: Z_INDEX,
     background: GRADIENT,
-    padding: `${PADDING_Y} ${PADDING_X}`,                          // 16px top/bottom, 24px sides
+    padding: `${PADDING_Y} ${PADDING_X}`,
     pointerEvents: 'none',                                     // gradient area doesn't block scroll
     ...style,
   }

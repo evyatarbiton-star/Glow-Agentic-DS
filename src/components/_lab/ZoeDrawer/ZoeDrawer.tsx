@@ -1,15 +1,4 @@
-// ============================================================
-// GLOW DS — ZoeDrawer
-// Figma: Zoe UI — "Medical benefit" drawer (node-id=11584:134644)
-//
-// Right-side push drawer for Zoe chat. Pushes chat content to
-// the left — does NOT overlay with backdrop. Sits inline in a
-// flex row with the chat container.
-//
-// Behavior: slides in from right pushing chat, Escape to close,
-// close button in header. No backdrop, no portal.
-// ============================================================
-
+// ZoeDrawer — Figma: node-id=11584:134644
 import { useEffect, useCallback, useRef } from 'react'
 import { semanticColors as sc } from '../../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../../tokens/semantic/typography'
@@ -19,22 +8,21 @@ import { IconButton } from '../../IconButton/IconButton'
 import CloseLine from '../../Icon/icons/line/Close'
 import type { ZoeDrawerProps } from './ZoeDrawer.types'
 
-// ── Token Constants ─────────────────────────────────────────
-const DRAWER_WIDTH = 480                                       // desktop width (no token)
+const DRAWER_WIDTH = 480                                       // 480px (no token)
 const DRAWER_BG = sc.neutral.surface.negative                  // #ffffff
 const BORDER_COLOR = sc.neutral.border.strong                  // #e0e0e0
-const DRAWER_SHADOW = primitiveShadows.xl                      // 0px 8px 32px rgba(0,0,0,0.12)
+const DRAWER_SHADOW = primitiveShadows.xl
 
 const HEADER_PADDING = semanticSpacing.m                       // 20px
 const BODY_PADDING = semanticSpacing.m                         // 20px
 const FOOTER_PADDING = semanticSpacing.m                       // 20px
 
-const TITLE_STYLE = typographyStyles['heading-xs']             // Founders 20px/24px weight 500
-const SUBTITLE_STYLE = typographyStyles['paragraph-m']         // Founders 16px/19px weight 400
+const TITLE_STYLE = typographyStyles['heading-xs']             // Founders 20px/24px
+const SUBTITLE_STYLE = typographyStyles['paragraph-m']         // Founders 16px/19px
 const TITLE_COLOR = sc.neutral.text.DEFAULT                    // #000000
 const SUBTITLE_COLOR = sc.neutral.text.dark                    // #404040
 
-const TITLE_GAP = semanticSpacing.xxxs                         // 4px between title and subtitle
+const TITLE_GAP = semanticSpacing.xxxs                         // 4px
 
 export function ZoeDrawer({
   open,
@@ -48,7 +36,6 @@ export function ZoeDrawer({
 }: ZoeDrawerProps) {
   const panelRef = useRef<HTMLDivElement>(null)
 
-  // ── Escape key ──────────────────────────────────────────
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (e.key === 'Escape') onClose()
   }, [onClose])
@@ -60,18 +47,17 @@ export function ZoeDrawer({
     }
   }, [open, handleKeyDown])
 
-  // ── Click outside to close ──────────────────────────────
   useEffect(() => {
     if (!open) return
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       if (panelRef.current && !panelRef.current.contains(target)) {
-        // Don't close if clicking on a card — it will swap drawer content
+        // Don't close if clicking on a card (it will swap drawer content)
         if (target.closest('[role="button"]') || target.closest('article')) return
         onClose()
       }
     }
-    // Delay listener to avoid closing from the click that opened the drawer
+    // Delay to avoid closing from the click that opened the drawer
     const timer = setTimeout(() => {
       document.addEventListener('mousedown', handleClickOutside)
     }, 0)
@@ -81,7 +67,6 @@ export function ZoeDrawer({
     }
   }, [open, onClose])
 
-  // ── Styles ──────────────────────────────────────────────
   const panelStyle: React.CSSProperties = {
     width: open ? DRAWER_WIDTH : 0,
     minWidth: open ? DRAWER_WIDTH : 0,
@@ -163,7 +148,6 @@ export function ZoeDrawer({
     >
       {open && (
         <>
-          {/* Header — sticky */}
           <div style={headerStyle}>
             <div style={titleBlockStyle}>
               <h2 style={titleTextStyle}>{title}</h2>
@@ -178,12 +162,10 @@ export function ZoeDrawer({
             />
           </div>
 
-          {/* Body — scrolls */}
           <div style={bodyStyle}>
             {children}
           </div>
 
-          {/* Footer — sticky */}
           {footer && (
             <div style={footerStyle}>
               {footer}

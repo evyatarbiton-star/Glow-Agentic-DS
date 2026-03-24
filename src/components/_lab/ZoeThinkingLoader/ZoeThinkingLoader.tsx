@@ -1,29 +1,13 @@
-// ============================================================
-// GLOW DS — ZoeThinkingLoader
-// Figma: Zoe UI — "Zoe Loader – Text Animation Specs"
-//        (node-id=2858:188906)
-//
-// Animated "fake loader" shown while Zoe is thinking.
-// - Spinning Zoe icon (continuous rotation)
-// - Word-by-word text animation cycling through 3 messages
-// - Starts immediately when isThinking=true (configurable delay)
-// - Two built-in message sets, randomly chosen per cycle
-//
-// Entrance: words fade in one-by-one (150ms stagger, 500ms dur)
-// Exit: words fade out one-by-one (70ms stagger, 400ms dur, accelerate)
-// ============================================================
-
+// ZoeThinkingLoader — Figma: node-id=2858:188906
 import { useState, useEffect, useRef, useCallback, useId, useMemo } from 'react'
 import { semanticColors as sc } from '../../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../../tokens/semantic/typography'
 import ZoeDefaultIcon from '../../Icon/icons/line/ZoeDefault'
 import type { ZoeThinkingLoaderProps } from './ZoeThinkingLoader.types'
 
-// ── Token Constants ─────────────────────────────────────────
-const TEXT_COLOR = sc.neutral.text.light                      // #8a8a8a — thinking text
-const PARAGRAPH_M = typographyStyles['paragraph-m']           // 16px / 19px — paragraph/medium
+const TEXT_COLOR = sc.neutral.text.light                      // #8a8a8a
+const PARAGRAPH_M = typographyStyles['paragraph-m']           // 16px/19px
 
-// ── Default Message Sets ────────────────────────────────────
 const DEFAULT_MESSAGE_SETS: string[][] = [
   [
     'Assigning to AI agent...',
@@ -37,25 +21,23 @@ const DEFAULT_MESSAGE_SETS: string[][] = [
   ],
 ]
 
-// ── Animation Constants (from Figma spec) ───────────────────
-const DELAY_BEFORE_START = 0                                   // show loader immediately
-const ENTRANCE_WORD_STAGGER = 150                             // ms between each word fade-in
-const ENTRANCE_DURATION = 500                                 // ms per word fade-in
-const EXIT_WORD_STAGGER = 70                                  // ms between each word fade-out
-const EXIT_DURATION = 400                                     // ms per word fade-out
-const MESSAGE_VISIBLE_TIME = 2100                             // ms message stays fully visible
-const FAST_EXIT_DURATION = 200                                // ms per word in fast exit
-const FAST_EXIT_STAGGER = 30                                  // ms stagger in fast exit
-const SPIN_LOOP_DURATION = 3500                                // ms per spin loop
-const MIN_SPIN_LOOPS = 2                                       // minimum loops before exit allowed
-const MIN_DISPLAY_TIME = SPIN_LOOP_DURATION * MIN_SPIN_LOOPS   // 7000ms
+const DELAY_BEFORE_START = 0
+const ENTRANCE_WORD_STAGGER = 150
+const ENTRANCE_DURATION = 500
+const EXIT_WORD_STAGGER = 70
+const EXIT_DURATION = 400
+const MESSAGE_VISIBLE_TIME = 2100
+const FAST_EXIT_DURATION = 200
+const FAST_EXIT_STAGGER = 30
+const SPIN_LOOP_DURATION = 3500
+const MIN_SPIN_LOOPS = 2
+const MIN_DISPLAY_TIME = SPIN_LOOP_DURATION * MIN_SPIN_LOOPS
 
-const ICON_SIZE = 40                                          // Zoe icon render size
-const ICON_WRAPPER = 48                                       // wrapper with 4px padding
+const ICON_SIZE = 40                                          // 40px
+const ICON_WRAPPER = 48                                       // 48px
 const FONT_SIZE = Number.parseInt(PARAGRAPH_M.fontSize)       // 16
 const LINE_HEIGHT_NUM = Number.parseInt(PARAGRAPH_M.lineHeight) // 19
 
-// ── Phase type ──────────────────────────────────────────────
 type Phase = 'idle' | 'entering' | 'visible' | 'exiting'
 
 export function ZoeThinkingLoader({
@@ -76,9 +58,8 @@ export function ZoeThinkingLoader({
   const delayTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const phaseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const minTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const startedAtRef = useRef(0)                                // timestamp when animation started
+  const startedAtRef = useRef(0)
 
-  // ── Pick random set when thinking starts ──────────────────
   const setIndexRef = useRef(0)
   useEffect(() => {
     if (isThinking) {
@@ -90,7 +71,6 @@ export function ZoeThinkingLoader({
   const currentMessage = chosenSet[messageIndex] || ''
   const words = currentMessage.split(' ')
 
-  // ── Helpers ───────────────────────────────────────────────
   const clearAllTimers = useCallback(() => {
     if (delayTimer.current) { clearTimeout(delayTimer.current); delayTimer.current = null }
     if (phaseTimer.current) { clearTimeout(phaseTimer.current); phaseTimer.current = null }
@@ -111,16 +91,13 @@ export function ZoeThinkingLoader({
     }
   }, [clearAllTimers])
 
-  // ── Trigger fast exit (shared logic) ──────────────────────
   const triggerFastExit = useCallback(() => {
     setFastExit(true)
     setPhase('exiting')
   }, [])
 
-  // ── React to isThinking changes ───────────────────────────
   useEffect(() => {
     if (isThinking) {
-      // Start fresh
       reset()
       startedAtRef.current = Date.now() + delay
       delayTimer.current = setTimeout(() => {
@@ -128,8 +105,7 @@ export function ZoeThinkingLoader({
         setPhase('entering')
       }, delay)
     } else {
-      // Response arrived — NEVER exit mid-loop.
-      // Wait until the end of the current spin loop AND at least MIN_SPIN_LOOPS completed.
+      // Wait until end of current spin loop and at least MIN_SPIN_LOOPS completed before exiting
       if (started && phase !== 'idle') {
         const elapsed = Date.now() - startedAtRef.current
         // How far into the current loop are we?
@@ -140,10 +116,8 @@ export function ZoeThinkingLoader({
 
         let waitTime: number
         if (completedLoops >= MIN_SPIN_LOOPS) {
-          // Already past minimum — just wait for current loop to finish
           waitTime = timeToEndOfLoop
         } else {
-          // Need more loops — wait for remaining full loops + end of last one
           const remainingLoops = MIN_SPIN_LOOPS - completedLoops - 1
           waitTime = timeToEndOfLoop + remainingLoops * SPIN_LOOP_DURATION
         }
@@ -157,7 +131,6 @@ export function ZoeThinkingLoader({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isThinking])
 
-  // ── Phase state machine ───────────────────────────────────
   useEffect(() => {
     if (!started || phase === 'idle') return
     if (phaseTimer.current) clearTimeout(phaseTimer.current)
@@ -168,7 +141,6 @@ export function ZoeThinkingLoader({
     }
 
     if (phase === 'visible') {
-      // All messages exit after visible time — last message loops back to first
       phaseTimer.current = setTimeout(() => setPhase('exiting'), MESSAGE_VISIBLE_TIME)
     }
 
@@ -182,7 +154,6 @@ export function ZoeThinkingLoader({
           reset(true)
           return
         }
-        // Advance to next message — loop back to first after last
         const next = (messageIndex + 1) % chosenSet.length
         setMessageIndex(next)
         setPhase('entering')
@@ -193,10 +164,8 @@ export function ZoeThinkingLoader({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, started, messageIndex, fastExit])
 
-  // ── Don't render if not active ────────────────────────────
   if (!started) return null
 
-  // ── Build keyframes CSS ───────────────────────────────────
   const enterKf = `zoe-word-enter-${instanceId}`
   const exitKf = `zoe-word-exit-${instanceId}`
   const spinKf = `zoe-spin-${instanceId}`
@@ -222,7 +191,6 @@ export function ZoeThinkingLoader({
     }
   `
 
-  // ── Per-word animation style ──────────────────────────────
   const getWordAnimation = (index: number): React.CSSProperties => {
     if (phase === 'entering') {
       return {
@@ -236,11 +204,9 @@ export function ZoeThinkingLoader({
         animation: `${exitKf} ${exitDur}ms ${exitEasing} ${index * exitStagger}ms forwards`,
       }
     }
-    // visible
     return { opacity: 1 }
   }
 
-  // ── Styles ────────────────────────────────────────────────
   const wrapperStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
@@ -262,7 +228,7 @@ export function ZoeThinkingLoader({
     display: 'flex',
     flexWrap: 'wrap',
     gap: '0 5px',
-    fontFamily: PARAGRAPH_M.fontFamily,                        // Founders Grotesk, sans-serif
+    fontFamily: PARAGRAPH_M.fontFamily,
     fontSize: FONT_SIZE,
     lineHeight: `${LINE_HEIGHT_NUM}px`,
     color: TEXT_COLOR,
@@ -274,14 +240,12 @@ export function ZoeThinkingLoader({
     <div className={className} style={wrapperStyle}>
       <style>{animCSS}</style>
 
-      {/* Spinning Zoe icon — runs independently, unaffected by text */}
       {showIcon && (
         <div style={iconStyle}>
           <ZoeDefaultIcon size={ICON_SIZE} />
         </div>
       )}
 
-      {/* Word-by-word animated text */}
       <div style={textStyle} key={`msg-${messageIndex}-${phase}`}>
         {words.map((word, i) => (
           <span key={i} style={getWordAnimation(i)}>

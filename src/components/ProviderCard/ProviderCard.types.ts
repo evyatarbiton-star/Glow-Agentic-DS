@@ -74,7 +74,7 @@ export interface ProviderCardProps {
   // ── Appointment ─────────────────────────────────────────────
   /** Appointment label, e.g. "Next appointment" */
   nextAppointmentLabel?: string
-  /** Appointment date, e.g. "Tomorrow at 2:00 PM" */
+  /** Appointment date — "Today, May 7" or "Tomorrow, May 8". No hours. Omit if after tomorrow (auto-shows "Call to check availability"). */
   nextAppointmentDate?: string
 
   // ── Interaction ─────────────────────────────────────────────

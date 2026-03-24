@@ -1,16 +1,4 @@
-// ============================================================
-// GLOW DS — ZoeInput
-// Figma: Zoe UI — "Zoe text bar web" (node-id=12742:178974)
-//
-// The Zoe AI chat input bar. Pill-shaped container with:
-// - Zoe branding icon (visible in idle state)
-// - Auto-expanding textarea
-// - Send button (activates when text exists)
-//
-// States: idle → focused → typing → typed → sent
-// Shape: pill (single line) → rounded-24 (multi-line)
-// ============================================================
-
+// ZoeInput — Figma: node-id=12742:178974
 import { useRef, useState, useCallback, useEffect, useId } from 'react'
 import { semanticColors as sc } from '../../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../../tokens/semantic/typography'
@@ -21,34 +9,33 @@ import ArrowUpCrFrSolid from '../../Icon/icons/solid/ArrowUpCrFr'
 import ZoeDefaultIcon from '../../Icon/icons/line/ZoeDefault'
 import type { ZoeInputProps } from './ZoeInput.types'
 
-// ── Token Constants ─────────────────────────────────────────
-const BAR_BG = sc.neutral.surface.negative                     // #ffffff — outer bar
-const FIELD_BG = sc.neutral.surface.extraSubtle                // #fafafa — inner input field
-const TEXT_COLOR = sc.neutral.text.DEFAULT                     // #000000 — typed text
-const PLACEHOLDER_COLOR = sc.neutral.text.light                // #8a8a8a — placeholder when focused
-const PLACEHOLDER_IDLE_COLOR = sc.neutral.text.DEFAULT         // #000000 — placeholder when idle
-const SEND_ACTIVE = sc.primary.surface.DEFAULT                 // #fd5201 — send button enabled
-const SEND_DISABLED = sc.neutral.surface.disabled              // #d4d4d4 — send button disabled
-const SEND_HOVER = sc.primary.surface.hover                    // #fe7434 — send button hover
+const BAR_BG = sc.neutral.surface.negative                     // #ffffff
+const FIELD_BG = sc.neutral.surface.extraSubtle                // #fafafa
+const TEXT_COLOR = sc.neutral.text.DEFAULT                     // #000000
+const PLACEHOLDER_COLOR = sc.neutral.text.light                // #8a8a8a
+const PLACEHOLDER_IDLE_COLOR = sc.neutral.text.DEFAULT         // #000000
+const SEND_ACTIVE = sc.primary.surface.DEFAULT                 // #fd5201
+const SEND_DISABLED = sc.neutral.surface.disabled              // #d4d4d4
+const SEND_HOVER = sc.primary.surface.hover                    // #fe7434
 
-const BAR_PADDING = semanticSpacing.xxs                        // 8px — spacing.xxs
-const FIELD_PADDING_LEFT = semanticSpacing.s                   // 16px — spacing.s
-const FIELD_PADDING_RIGHT = semanticSpacing.xxxs               // 4px — spacing.xxxs
-const FIELD_PADDING_Y = 10                                     // vertical padding when multi-line (no exact token)
-const FIELD_HEIGHT = 40                                        // inner field min-height (no token)
-const ICON_SIZE = 32                                           // Zoe icon + send button size (no token)
-const MAX_ROWS = 6                                             // max textarea rows before scroll
+const BAR_PADDING = semanticSpacing.xxs                        // 8px
+const FIELD_PADDING_LEFT = semanticSpacing.s                   // 16px
+const FIELD_PADDING_RIGHT = semanticSpacing.xxxs               // 4px
+const FIELD_PADDING_Y = 10                                     // 10px (no exact token)
+const FIELD_HEIGHT = 40                                        // 40px (no token)
+const ICON_SIZE = 32                                           // 32px (no token)
+const MAX_ROWS = 6
 
-const PARAGRAPH_L = typographyStyles['paragraph-l']            // 18px / 21px — paragraph/large
+const PARAGRAPH_L = typographyStyles['paragraph-l']            // 18px/21px
 const FONT_SIZE = Number.parseInt(PARAGRAPH_L.fontSize)        // 18
 const LINE_HEIGHT_NUM = Number.parseInt(PARAGRAPH_L.lineHeight) // 21
 
-const SHADOW_DEFAULT = primitiveShadows.md                     // 0px 2px 8px rgba(0,0,0,0.08)
-const SHADOW_FOCUSED = primitiveShadows.lg                     // 0px 4px 16px rgba(0,0,0,0.10)
+const SHADOW_DEFAULT = primitiveShadows.md
+const SHADOW_FOCUSED = primitiveShadows.lg
 
-const RADIUS_PILL = semanticRadii.full                         // 999px — corner-radius/full
-const RADIUS_EXPANDED = semanticRadii.ln                       // 24px — corner-radius/l
-const FIELD_RADIUS_EXPANDED = semanticRadii.sn                 // 16px — corner-radius/sn for expanded field
+const RADIUS_PILL = semanticRadii.full                         // 999px
+const RADIUS_EXPANDED = semanticRadii.ln                       // 24px
+const FIELD_RADIUS_EXPANDED = semanticRadii.sn                 // 16px
 
 export function ZoeInput({
   value,
@@ -72,7 +59,6 @@ export function ZoeInput({
   const isIdle = !isFocused && !hasText
   const isMultiLine = textareaHeight > LINE_HEIGHT_NUM
 
-  // ── Auto-resize textarea ────────────────────────────────
   const updateHeight = useCallback(() => {
     const el = textareaRef.current
     if (!el) return
@@ -87,7 +73,6 @@ export function ZoeInput({
     updateHeight()
   }, [value, updateHeight])
 
-  // ── Handlers ────────────────────────────────────────────
   const handleSubmit = useCallback(() => {
     if (!hasText || disabled) return
     onSubmit(value.trim())
@@ -115,14 +100,11 @@ export function ZoeInput({
     textareaRef.current?.focus()
   }, [handleSubmit])
 
-  // ── Zoe icon visibility (animated) ───────────────────────
   const iconVisible = showZoeIcon && isIdle
 
-  // ── Dynamic radius ───────────────────────────────────────
   const borderRadius = isMultiLine ? RADIUS_EXPANDED : RADIUS_PILL
   const fieldRadius = isMultiLine ? FIELD_RADIUS_EXPANDED : RADIUS_PILL
 
-  // ── Styles ───────────────────────────────────────────────
   const barStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
@@ -141,9 +123,9 @@ export function ZoeInput({
     flexShrink: 0,
     overflow: 'hidden',
     // Animate width + spacing to collapse smoothly; icon rotates & fades
-    width: iconVisible ? 48 : 0,                                // 8pl + 32 icon + 8mr
-    paddingLeft: iconVisible ? BAR_PADDING : 0,                 // spacing.xxs
-    marginRight: iconVisible ? BAR_PADDING : 0,                 // spacing.xxs — gap between icon and field
+    width: iconVisible ? 48 : 0,
+    paddingLeft: iconVisible ? BAR_PADDING : 0,
+    marginRight: iconVisible ? BAR_PADDING : 0,
     opacity: iconVisible ? 1 : 0,
     transform: iconVisible ? 'rotate(0deg)' : 'rotate(180deg) translateX(8px)',
     transition: 'width 0.25s ease, padding-left 0.25s ease, margin-right 0.25s ease, opacity 0.2s ease, transform 0.3s ease',
@@ -170,7 +152,7 @@ export function ZoeInput({
     border: 'none',
     outline: 'none',
     background: 'transparent',
-    fontFamily: PARAGRAPH_L.fontFamily,                        // Founders Grotesk, sans-serif
+    fontFamily: PARAGRAPH_L.fontFamily,
     fontSize: FONT_SIZE,
     lineHeight: `${LINE_HEIGHT_NUM}px`,
     color: TEXT_COLOR,
@@ -201,7 +183,6 @@ export function ZoeInput({
     ? (isSendHovered ? SEND_HOVER : SEND_ACTIVE)
     : SEND_DISABLED
 
-  // ── Dynamic placeholder color CSS ─────────────────────
   // Idle: black placeholder. Focused: grey placeholder.
   const textareaClass = `zoe-input-${instanceId}`
   const placeholderColor = isIdle ? PLACEHOLDER_IDLE_COLOR : PLACEHOLDER_COLOR
@@ -221,14 +202,12 @@ export function ZoeInput({
     >
       <style>{placeholderCSS}</style>
 
-      {/* Zoe icon — animates out on focus (half-spin + slide left) */}
       {showZoeIcon && (
         <div style={iconWrapStyle}>
           <ZoeDefaultIcon size="xl" />
         </div>
       )}
 
-      {/* Input field area */}
       <div style={fieldStyle}>
         <textarea
           ref={textareaRef}
@@ -246,7 +225,6 @@ export function ZoeInput({
           aria-label="Chat with Zoe"
         />
 
-        {/* Send button */}
         <div
           style={sendStyle}
           onClick={handleSendClick}

@@ -3,20 +3,7 @@ import type { ChipSize } from './Chip.types'
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { fontWeights } from '../../../tokens/primitive/typography'
 
-// ============================================================
-// GLOW DS — Chip Component
-//
-// A compact label for categorization, filtering, and selection.
-// Use Chip for tags, filters, and status indicators.
-// Use Button for actions.
-//
-// Variants:  subtle | outline | filled
-// Colors:    neutral | success | error | info | warning | recommended | hsa | lfsa
-// Sizes:     sm (28px) | md (32px) | lg (36px)
-// Features:  selected, removable, iconLeft, disabled
-// ============================================================
-
-// ── Close Icon SVG ────────────────────────────────────────────
+// Chip Component
 function CloseIcon({ size }: { size: number }) {
   return (
     <svg
@@ -37,9 +24,7 @@ function CloseIcon({ size }: { size: number }) {
   )
 }
 
-// ── Variant Color Definitions ─────────────────────────────────
-// Each variant × color combination defines colors for every state.
-// Token references in comments map to semantic/colors.ts.
+// Variant × color state definitions (token refs in inline comments)
 
 type VariantColors = {
   bg: string
@@ -56,9 +41,6 @@ type VariantDef = {
   selected: VariantColors
   disabled: VariantColors
 }
-
-// ── Subtle Variant ────────────────────────────────────────────
-// Soft fill, no border. For tags, labels, categories.
 
 const subtleVariants: Record<ChipColor, VariantDef> = {
   neutral: {
@@ -119,9 +101,6 @@ const subtleVariants: Record<ChipColor, VariantDef> = {
   },
 }
 
-// ── Outline Variant ───────────────────────────────────────────
-// Border-based, transparent bg. For filter chips, selectable chips.
-
 const outlineVariants: Record<ChipColor, VariantDef> = {
   neutral: {
     default:  { bg: 'transparent', text: sc.neutral.text.DEFAULT, border: sc.neutral.border.strong, borderWidth: 1 },
@@ -180,9 +159,6 @@ const outlineVariants: Record<ChipColor, VariantDef> = {
     disabled: { bg: 'transparent', text: sc.neutral.text.disabledDark, border: sc['accent-purple'].border.light, borderWidth: 1 },
   },
 }
-
-// ── Filled Variant ────────────────────────────────────────────
-// Solid bg, white text. For status indicators, emphasis.
 
 const filledVariants: Record<ChipColor, VariantDef> = {
   neutral: {
@@ -243,16 +219,13 @@ const filledVariants: Record<ChipColor, VariantDef> = {
   },
 }
 
-// ── Master variant map ────────────────────────────────────────
-
 const variantColorMap: Record<ChipVariant, Record<ChipColor, VariantDef>> = {
   subtle:  subtleVariants,
   outline: outlineVariants,
   filled:  filledVariants,
 }
 
-// ── Size Definitions ──────────────────────────────────────────
-// Chips are always pill-shaped (borderRadius: 999 → radii.full).
+// Chips are always pill-shaped (borderRadius: 999 → radii.full)
 
 type SizeDef = {
   height: number
@@ -271,8 +244,6 @@ const sizes: Record<ChipSize, SizeDef> = {
   md: { height: 32, paddingX: 12, paddingY: 6, gap: 6, iconSize: 16, fontSize: 14, lineHeight: 18, closeSize: 20, closeIconSize: 8 },
   lg: { height: 36, paddingX: 14, paddingY: 8, gap: 8, iconSize: 18, fontSize: 16, lineHeight: 19, closeSize: 22, closeIconSize: 10 },
 }
-
-// ── Chip Component ────────────────────────────────────────────
 
 export function Chip({
   variant   = 'subtle',
@@ -344,7 +315,6 @@ export function Chip({
       style={baseStyle}
       onClick={isInteractive ? onClick : undefined}
 
-      // ── Hover ──
       onMouseEnter={isInteractive ? (e) => {
         const el = e.currentTarget
         if (selected) return
@@ -365,7 +335,6 @@ export function Chip({
         }
       } : undefined}
 
-      // ── Focus ──
       onFocus={isInteractive ? (e) => {
         const el = e.currentTarget
         if (!el.matches(':focus-visible')) return
@@ -379,7 +348,6 @@ export function Chip({
         el.style.outlineOffset = '0px'
       } : undefined}
 
-      // ── Keyboard ──
       onKeyDown={isInteractive ? (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault()
@@ -389,7 +357,6 @@ export function Chip({
 
       {...props}
     >
-      {/* Leading icon */}
       {iconLeft && (
         <span
           className="inline-flex items-center justify-center shrink-0"
@@ -399,10 +366,8 @@ export function Chip({
         </span>
       )}
 
-      {/* Label */}
       <span>{children}</span>
 
-      {/* Remove button */}
       {removable && (
         <button
           type="button"
@@ -439,8 +404,6 @@ export function Chip({
     </div>
   )
 }
-
-// ── ChipGroup Component ───────────────────────────────────────
 
 export function ChipGroup({
   gap = 8,          // spacing.xxs

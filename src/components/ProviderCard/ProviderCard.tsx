@@ -10,7 +10,6 @@ import { fontFamilies, fontWeights, fontSizes, lineHeights } from '../../../toke
 import { semanticSpacing } from '../../../tokens/semantic/spacing'
 import { semanticRadii } from '../../../tokens/semantic/radii'
 
-// ── DS Icons ──────────────────────────────────────────────────
 import LocationIcon from '../Icon/icons/line/Location'
 import StarLineIcon from '../Icon/icons/line/Star'
 import CalendarIcon from '../Icon/icons/line/Calendar'
@@ -19,26 +18,11 @@ import VideoCameraIcon from '../Icon/icons/line/VideoCamera'
 import BookmarkLineIcon from '../Icon/icons/line/Bookmark'
 import BookmarkSolidIcon from '../Icon/icons/solid/Bookmark'
 
-// ── Provider Avatar Fallback Icons (detailed / M variants) ──
 import ProviderFemale from '../Icon/icons/profile/ProviderFemale'
 import ProviderMale from '../Icon/icons/profile/ProviderMale'
 import Facility from '../Icon/icons/profile/Facility'
 
-// ============================================================
-// GLOW DS — ProviderCard Component
-//
-// A card displaying healthcare provider information including
-// avatar, name, specialty, network tier, location, rating,
-// appointment, cost with comparison chip, and action buttons.
-//
-// Supports two layouts:
-//   - vertical (default) — stacked sections, ideal for grids
-//   - horizontal — single-row, ideal for list views
-//
-// Uses: Card, Button, NetworkBadge (internal), CostSection (internal)
-// ============================================================
-
-// ── Token Constants ───────────────────────────────────────────
+// ProviderCard Component
 const FONT         = fontFamilies.default              // Founders Grotesk
 const W_REGULAR    = fontWeights.regular               // 400
 const W_MEDIUM     = fontWeights.medium                // 500
@@ -55,16 +39,12 @@ const SPACE_XS     = parseInt(semanticSpacing.xs)      // 12px
 const SPACE_S      = parseInt(semanticSpacing.s)       // 16px
 const SPACE_M      = parseInt(semanticSpacing.m)       // 20px
 
-// ── Action Buttons ──────────────────────────────────────────
 const ACTION_BTN_WIDTH = 160                             // Fixed width for action buttons grid
 
-// ── Avatar Size ───────────────────────────────────────────────
 const AVATAR_SIZE = 52                                  // Custom size for provider photos
 
-// ── Responsive Breakpoint ─────────────────────────────────────
 const HORIZONTAL_MIN_WIDTH = 480                        // px — below this → vertical
 
-// ── useContainerWidth Hook ────────────────────────────────────
 function useContainerWidth(ref: React.RefObject<HTMLDivElement | null>) {
   const [width, setWidth] = useState(0)
   useEffect(() => {
@@ -80,8 +60,6 @@ function useContainerWidth(ref: React.RefObject<HTMLDivElement | null>) {
   }, [ref])
   return width
 }
-
-// ── Shared Sub-Components ─────────────────────────────────────
 
 function ProviderAvatar({ photoUrl, name, providerType, imgError, onImgError }: {
   photoUrl?: string; name: string; providerType: 'male' | 'female' | 'facility'
@@ -127,10 +105,8 @@ function DetailRow({ icon, children }: { icon: React.ReactNode; children: React.
   )
 }
 
-// ── Shimmer Style (injected once) ─────────────────────────────
-// Uses DS tokens: BG_SUBTLE for base, BG_NEGATIVE for shimmer highlight.
-// All skeleton elements share a fixed-width gradient (800px) so CSS syncs
-// the animation across every element — one continuous sweep across the card.
+// Shimmer: all skeleton elements share a fixed-width gradient (800px) so
+// the animation syncs across every element — one continuous sweep across the card.
 const SHIMMER_STYLE_ID = 'glow-skeleton-shimmer-style'
 const SHIMMER_WIDTH = 800 // px — gradient band width, wider than any card
 function ensureShimmerStyle() {
@@ -159,7 +135,6 @@ function ensureShimmerStyle() {
   document.head.appendChild(style)
 }
 
-// ── Skeleton Placeholder Helpers ──────────────────────────────
 function SkeletonBar({ width, height = 12, radius = 8 }: { width: number | string; height?: number; radius?: number }) {
   ensureShimmerStyle()
   return (
@@ -179,12 +154,9 @@ function SkeletonCircle({ size }: { size: number }) {
   )
 }
 
-// ── Skeleton Layouts ──────────────────────────────────────────
-
 function VerticalSkeleton() {
   return (
     <>
-      {/* ── Header: avatar + name + specialty ── */}
       <div style={{ padding: `${SPACE_S}px ${SPACE_S}px ${SPACE_XS}px` }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: SPACE_XXS }}>
           <SkeletonCircle size={AVATAR_SIZE} />
@@ -192,15 +164,12 @@ function VerticalSkeleton() {
             <SkeletonBar width="55%" height={16} />
             <SkeletonBar width="35%" height={12} />
           </div>
-          {/* Bookmark placeholder */}
           <SkeletonBar width={24} height={24} radius={6} />
         </div>
       </div>
 
-      {/* ── Divider ── */}
       <div style={{ height: 1, backgroundColor: BORDER_LIGHT, margin: `0 ${SPACE_S}px` }} />
 
-      {/* ── Detail rows ── */}
       <div style={{
         padding: `${SPACE_XS}px ${SPACE_S}px`,
         display: 'flex', flexDirection: 'column', gap: SPACE_XS,
@@ -213,16 +182,13 @@ function VerticalSkeleton() {
         ))}
       </div>
 
-      {/* ── Divider ── */}
       <div style={{ height: 1, backgroundColor: BORDER_LIGHT, margin: `0 ${SPACE_S}px` }} />
 
-      {/* ── Cost area ── */}
       <div style={{ padding: `${SPACE_XS}px ${SPACE_S}px`, display: 'flex', flexDirection: 'column', gap: 10 }}>
         <SkeletonBar width="28%" height={20} radius={6} />
         <SkeletonBar width="38%" height={10} />
       </div>
 
-      {/* ── Action buttons ── */}
       <div style={{ padding: `${SPACE_XS}px ${SPACE_S}px ${SPACE_S}px` }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: SPACE_XS }}>
           <SkeletonBar width="100%" height={36} radius={10} />
@@ -236,9 +202,7 @@ function VerticalSkeleton() {
 function HorizontalSkeleton() {
   return (
     <div style={{ display: 'flex', padding: SPACE_S }}>
-      {/* ── Left Column ── */}
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: SPACE_S }}>
-        {/* Avatar + name row */}
         <div style={{ display: 'flex', gap: SPACE_XS, alignItems: 'flex-start' }}>
           <SkeletonCircle size={AVATAR_SIZE} />
           <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -247,7 +211,6 @@ function HorizontalSkeleton() {
           </div>
         </div>
 
-        {/* Detail rows */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: SPACE_XXS }}>
           {[65, 75, 45].map((w, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: SPACE_XXS }}>
@@ -258,22 +221,18 @@ function HorizontalSkeleton() {
         </div>
       </div>
 
-      {/* ── Right Column ── */}
       <div style={{
         flexShrink: 0, display: 'flex', flexDirection: 'column',
         alignItems: 'flex-end',
         marginLeft: SPACE_S, minWidth: 160, gap: SPACE_M,
       }}>
-        {/* Bookmark placeholder */}
         <SkeletonBar width={24} height={24} radius={6} />
 
-        {/* Cost area */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-end' }}>
           <SkeletonBar width={56} height={20} radius={6} />
           <SkeletonBar width={76} height={10} />
         </div>
 
-        {/* Action buttons */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: SPACE_XXS, width: ACTION_BTN_WIDTH, marginTop: 'auto' }}>
           <SkeletonBar width="100%" height={36} radius={10} />
           <SkeletonBar width="100%" height={36} radius={10} />
@@ -283,7 +242,6 @@ function HorizontalSkeleton() {
   )
 }
 
-// ── Component ─────────────────────────────────────────────────
 export function ProviderCard({
   layout = 'responsive',
   loading,
@@ -301,7 +259,7 @@ export function ProviderCard({
   networkLabel,
   cost,
   costLevel,
-  costLabel = 'est. out-of-pocket',
+  costLabel,
   costChipLabel,
   costChipHideIcon,
   showCostChip = true,
@@ -334,7 +292,6 @@ export function ProviderCard({
     onBookmarkChange?.(next)
   }
 
-  // ── Loading / Skeleton State ──────────────────────────────────
   if (loading) {
     const skeletonLayout = effectiveLayout === 'horizontal' ? 'horizontal' : 'vertical'
     return (
@@ -358,7 +315,6 @@ export function ProviderCard({
   const hasCost = showPrice && cost
   const hasActions = onCallClick || onBookClick
 
-  // ── Horizontal Layout ───────────────────────────────────────
   if (effectiveLayout === 'horizontal') {
     return (
       <div ref={containerRef} style={{ width: '100%', height: '100%', ...(layout === 'horizontal' ? { minWidth: HORIZONTAL_MIN_WIDTH } : undefined) }}>
@@ -373,9 +329,7 @@ export function ProviderCard({
         as="article"
       >
         <div style={{ display: 'flex', padding: SPACE_S }}>
-          {/* ── Left Column: Header + Details ── */}
           <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: SPACE_S }}>
-            {/* Avatar + Name Row */}
             <div style={{ display: 'flex', gap: SPACE_XS, alignItems: 'flex-start' }}>
               <ProviderAvatar
                 photoUrl={photoUrl} name={name} providerType={providerType}
@@ -403,7 +357,6 @@ export function ProviderCard({
               </div>
             </div>
 
-            {/* Detail Rows — aligned to card left edge */}
             {hasDetails && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: SPACE_XXS }}>
                 {rating != null && (
@@ -439,13 +392,11 @@ export function ProviderCard({
             )}
           </div>
 
-          {/* ── Right Column: Bookmark + Cost + Buttons ── */}
           <div style={{
             flexShrink: 0, display: 'flex', flexDirection: 'column',
             alignItems: 'flex-end',
             marginLeft: SPACE_S, minWidth: 160, gap: SPACE_M,
           }}>
-            {/* Bookmark */}
             {bookmarkable && (
               <IconButton
                 icon={isFaved ? <BookmarkSolidIcon size="md" /> : <BookmarkLineIcon size="md" />}
@@ -455,7 +406,6 @@ export function ProviderCard({
               />
             )}
 
-            {/* Cost */}
             {hasCost && (
               <div style={{ textAlign: 'right' }}>
                 <CostSection
@@ -466,7 +416,6 @@ export function ProviderCard({
               </div>
             )}
 
-            {/* Action Buttons */}
             {hasActions && (
               <div style={{ display: 'grid', gridTemplateColumns: onBookClick ? '1fr 1fr' : '1fr', gap: SPACE_XXS, width: ACTION_BTN_WIDTH, marginTop: 'auto' }}>
                 {onCallClick && (
@@ -488,7 +437,6 @@ export function ProviderCard({
     )
   }
 
-  // ── Vertical Layout (default) ───────────────────────────────
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
     <Card
@@ -501,16 +449,13 @@ export function ProviderCard({
       as="article"
       style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
-      {/* ── Provider Header ──────────────────────────────────── */}
       <div style={{ padding: `${SPACE_S}px ${SPACE_S}px ${SPACE_XS}px` }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: SPACE_XXS }}>
-          {/* Avatar */}
           <ProviderAvatar
             photoUrl={photoUrl} name={name} providerType={providerType}
             imgError={imgError} onImgError={() => setImgError(true)}
           />
 
-          {/* Name + Specialty + Network */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{
               fontFamily: FONT, fontWeight: W_MEDIUM,
@@ -538,7 +483,6 @@ export function ProviderCard({
             )}
           </div>
 
-          {/* Bookmark button */}
           {bookmarkable && (
             <IconButton
               icon={isFaved ? <BookmarkSolidIcon size="md" /> : <BookmarkLineIcon size="md" />}
@@ -552,7 +496,6 @@ export function ProviderCard({
         </div>
       </div>
 
-      {/* ── Details Section ──────────────────────────────────── */}
       {hasDetails && (
         <>
           <div style={{ height: 1, backgroundColor: BORDER_LIGHT, margin: `0 ${SPACE_S}px` }} />
@@ -593,7 +536,6 @@ export function ProviderCard({
         </>
       )}
 
-      {/* ── Cost Section ─────────────────────────────────────── */}
       {hasCost && (
         <>
           <div style={{ height: 1, backgroundColor: BORDER_LIGHT, margin: `0 ${SPACE_S}px` }} />
@@ -611,7 +553,6 @@ export function ProviderCard({
         </>
       )}
 
-      {/* ── Action Buttons ───────────────────────────────────── */}
       {hasActions && (
         <div style={{ padding: `${SPACE_XS}px ${SPACE_S}px ${SPACE_S}px`, marginTop: 'auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: onBookClick ? '1fr 1fr' : '1fr', gap: SPACE_XS }}>

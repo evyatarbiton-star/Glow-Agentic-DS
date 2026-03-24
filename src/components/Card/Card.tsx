@@ -4,19 +4,7 @@ import { semanticRadii } from '../../../tokens/semantic/radii'
 import { semanticSpacing } from '../../../tokens/semantic/spacing'
 import { primitiveShadows } from '../../../tokens/primitive/shadows'
 
-// ============================================================
-// GLOW DS — Card Component
-//
-// A container with rounded corners, optional border/shadow,
-// and optional hover-lift for interactive cards.
-//
-// Variants:  outline | elevated | filled
-// Radius:    sm (12px) | md (16px) | lg (24px)
-// Padding:   sm (16px) | md (20px) | lg (32px) | none
-// ============================================================
-
-// ── Variant Definitions ──────────────────────────────────────
-// Each variant defines the card's background, border, and shadow.
+// Card Component
 
 type VariantDef = {
   bg: string
@@ -46,14 +34,12 @@ const variantDefs: Record<CardVariant, VariantDef> = {
   },
 }
 
-// ── Radius Mapping ───────────────────────────────────────────
 const radii: Record<CardRadius, number> = {
   sm: parseInt(semanticRadii.xs),                  // 12px
   md: parseInt(semanticRadii.sn),                  // 16px
   lg: parseInt(semanticRadii.ln),                  // 24px
 }
 
-// ── Padding Mapping ──────────────────────────────────────────
 const paddings: Record<CardPadding, number> = {
   none: 0,
   sm: parseInt(semanticSpacing.s),                 // 16px
@@ -61,10 +47,8 @@ const paddings: Record<CardPadding, number> = {
   lg: parseInt(semanticSpacing.xl),                // 32px
 }
 
-// ── Hover shadow (interactive cards) ─────────────────────────
 const HOVER_SHADOW = primitiveShadows.lg            // 0px 4px 16px rgba(0,0,0,0.10)
 
-// ── Component ────────────────────────────────────────────────
 export function Card({
   variant     = 'outline',
   radius      = 'lg',

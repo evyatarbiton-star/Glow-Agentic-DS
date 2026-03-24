@@ -127,7 +127,7 @@ const propsData = [
   { prop: 'languages',            type: 'string[]',                        default: 'undefined',            description: 'Languages spoken, e.g. ["English", "Spanish"]. Shows first 2 + count.' },
   { prop: 'virtualAvailable',     type: 'boolean',                         default: 'undefined',            description: 'Show "Accept virtual appointment" row' },
   { prop: 'nextAppointmentLabel', type: 'string',                          default: 'undefined',            description: 'Appointment label, e.g. "Next appointment"' },
-  { prop: 'nextAppointmentDate',  type: 'string',                          default: 'undefined',            description: 'Appointment date, e.g. "Tomorrow at 2:00 PM"' },
+  { prop: 'nextAppointmentDate',  type: 'string',                          default: 'undefined',            description: 'Date: "Today, May 7" or "Tomorrow, May 8". No hours. Omit if after tomorrow.' },
   { prop: 'bookmarkable',         type: 'boolean',                         default: 'true',                 description: 'Show bookmark toggle button' },
   { prop: 'onBookmarkChange',     type: '(bookmarked: boolean) => void',   default: 'undefined',            description: 'Callback when bookmark state changes' },
   { prop: 'onCallClick',          type: '() => void',                      default: 'undefined',            description: 'Call button handler — hides button if omitted' },
@@ -181,7 +181,7 @@ function ResponsiveDemo() {
           cost="$1,400"
           costLevel="lower"
           nextAppointmentLabel="Next appointment"
-          nextAppointmentDate="Tomorrow at 2:00 PM"
+          nextAppointmentDate="Tomorrow, Mar 25"
           onCallClick={() => {}}
           onBookClick={() => {}}
         />
@@ -717,7 +717,7 @@ export function ProviderCardDoc() {
             networkLabel="In-Network"
             showPrice={false}
             nextAppointmentLabel="Next appointment"
-            nextAppointmentDate="Friday at 10:00 AM"
+            nextAppointmentDate="Today, Mar 24"
             onCallClick={() => {}}
             onBookClick={() => {}}
           />
@@ -741,7 +741,7 @@ export function ProviderCardDoc() {
             showCostChip={false}
             costLabel="est. provider charge"
             nextAppointmentLabel="Next appointment"
-            nextAppointmentDate="Today at 4:30 PM"
+            nextAppointmentDate="Today, Mar 24"
             onCallClick={() => {}}
             onBookClick={() => {}}
           />
@@ -801,7 +801,7 @@ export function ProviderCardDoc() {
               costLabel="copay per visit"
               showCostChip={false}
               nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Tomorrow at 11:00 AM"
+              nextAppointmentDate="Tomorrow, Mar 25"
               onCallClick={() => {}}
               onBookClick={() => {}}
             />
@@ -825,7 +825,7 @@ export function ProviderCardDoc() {
             cost="$1,400"
             costLevel="lower"
             nextAppointmentLabel="Next appointment"
-            nextAppointmentDate="Tomorrow at 2:00 PM"
+            nextAppointmentDate="Tomorrow, Mar 25"
             onClick={() => alert('Navigate to provider detail')}
             onCallClick={() => {}}
             onBookClick={() => {}}
@@ -891,7 +891,7 @@ export function ProviderCardDoc() {
   costLevel="lower"
   costLabel="est. out-of-pocket"
   nextAppointmentLabel="Next appointment"
-  nextAppointmentDate="Tomorrow at 2:00 PM"
+  nextAppointmentDate="Tomorrow, Mar 25"
   onCallClick={() => handleCall(provider)}
   onBookClick={() => handleBook(provider)}
   onClick={() => navigate(\`/provider/\${provider.id}\`)}

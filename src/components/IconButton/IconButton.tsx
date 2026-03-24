@@ -2,22 +2,7 @@ import type { IconButtonProps, IconButtonVariant, IconButtonSize } from './IconB
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { semanticRadii } from '../../../tokens/semantic/radii'
 
-// ============================================================
-// GLOW DS — IconButton Component
-//
-// A lightweight square button that renders a single DS icon.
-// Designed for utility actions: close, dismiss, bookmark,
-// navigation arrows, hamburger menus, etc.
-//
-// Use IconButton for transparent / subtle icon actions.
-// Use Button iconOnly for formal icon actions with visible fill.
-//
-// Variants:  ghost (transparent) | outline (white + border)
-// Sizes:     xs (28px) | sm (32px) | md (40px) | lg (48px)
-// Features:  pressed (toggle), pill, loading
-// ============================================================
-
-// ── Spinner ─────────────────────────────────────────────────
+// IconButton Component
 function Spinner({ size }: { size: number }) {
   return (
     <svg
@@ -39,9 +24,7 @@ function Spinner({ size }: { size: number }) {
   )
 }
 
-// ── Variant Color Definitions ───────────────────────────────
-// Each variant defines colors for every interaction state.
-// "pressed" states use primary tokens (e.g., orange bookmark).
+// "pressed" states use primary tokens (e.g., orange bookmark)
 
 type StateColors = {
   bg: string
@@ -82,8 +65,7 @@ const variants: Record<IconButtonVariant, VariantDef> = {
   },
 }
 
-// ── Size Definitions ────────────────────────────────────────
-// Each size defines the square dimension and icon size tier.
+// Size definitions: square dimension + icon size tier
 
 type SizeDef = {
   dimension: number
@@ -99,7 +81,6 @@ const sizes: Record<IconButtonSize, SizeDef> = {
   lg: { dimension: 48, iconSize: 24, radiusPill: 999, radiusRounded: parseInt(semanticRadii.xs) },
 }
 
-// ── Component ───────────────────────────────────────────────
 export function IconButton({
   icon,
   variant  = 'ghost',

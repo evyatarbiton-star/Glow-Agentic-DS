@@ -11,16 +11,7 @@ import CloseLine from '../Icon/icons/line/Close'
 import ChevronLeftLine from '../Icon/icons/line/ChevronLeft'
 import { IconButton } from '../IconButton'
 
-// ============================================================
-// GLOW DS — Modal Component
-// Source: Figma Web DS — node-id=2370-44085 (desktop), node-id=2370-43655 (mobile)
-//
-// Desktop: centered dialog — sm (480px) | md (600px) | lg (708px)
-// Mobile:  bottom sheet — full width, slides up from bottom
-// Breakpoint: 640px
-// ============================================================
-
-// ── DS Token Constants ───────────────────────────────────────
+// Modal Component — Figma node-id=2370-44085 (desktop), node-id=2370-43655 (mobile)
 
 const BACKDROP_BG     = sc.overlay.surface.DEFAULT          // rgba(0, 0, 0, 0.72)
 const PANEL_BG        = sc.neutral.surface.negative          // #ffffff
@@ -53,15 +44,11 @@ const Z_INDEX         = 1500                                 // above Select/Dat
 const ANIM_DURATION   = '150ms'
 const MOBILE_BP       = 640                                  // px — mobile breakpoint
 
-// ── Size Widths ──────────────────────────────────────────────
-
 const SIZE_MAP: Record<ModalSize, number> = {
   sm: 480,
   md: 600,
   lg: 708,
 }
-
-// ── CSS (injected once) ──────────────────────────────────────
 
 const MODAL_CSS = `
   @keyframes modal-backdrop-in {
@@ -129,8 +116,6 @@ const MODAL_CSS = `
   }
 `
 
-// ── Modal ────────────────────────────────────────────────────
-
 export function Modal({
   open,
   onClose,
@@ -149,7 +134,6 @@ export function Modal({
   const previousFocusRef = useRef<HTMLElement | null>(null)
   const titleId = useRef(`modal-title-${Math.random().toString(36).slice(2, 8)}`).current
 
-  // ── Escape key handler ────────────────────────────────────
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (closeOnEscape && e.key === 'Escape') {
       e.stopPropagation()
@@ -157,7 +141,6 @@ export function Modal({
     }
   }, [closeOnEscape, onClose])
 
-  // ── Focus trap ────────────────────────────────────────────
   const handleTab = useCallback((e: KeyboardEvent) => {
     if (e.key !== 'Tab' || !panelRef.current) return
 
@@ -182,7 +165,6 @@ export function Modal({
     }
   }, [])
 
-  // ── Body scroll lock + focus management ───────────────────
   useEffect(() => {
     if (!open) return
 
@@ -214,7 +196,6 @@ export function Modal({
 
   if (!open) return null
 
-  // ── Determine footer content ──────────────────────────────
   const hasFooter = footer !== undefined || footerActions !== undefined
   const renderFooter = () => {
     if (footer !== undefined) return footer
@@ -237,7 +218,6 @@ export function Modal({
 
   return createPortal(
     <div className="glow-modal-overlay">
-      {/* Backdrop */}
       <div
         style={{
           position: 'absolute',
@@ -248,7 +228,6 @@ export function Modal({
         aria-hidden="true"
       />
 
-      {/* Panel */}
       <div
         ref={panelRef}
         className="glow-modal-panel"
@@ -258,7 +237,6 @@ export function Modal({
         tabIndex={-1}
         style={{ width: SIZE_MAP[size] }}
       >
-        {/* Header */}
         <div
           style={{
             display: 'flex',
@@ -271,7 +249,7 @@ export function Modal({
             flexShrink: 0,
           }}
         >
-          {/* Back button (or invisible spacer for centering) */}
+          {/* Invisible spacer when no back button — keeps title centered */}
           {showBackButton ? (
             <IconButton
               icon={<ChevronLeftLine size={CLOSE_ICON_SIZE} />}
@@ -284,7 +262,6 @@ export function Modal({
             <div style={{ width: ICON_BTN_SIZE, height: ICON_BTN_SIZE, flexShrink: 0, visibility: 'hidden' }} />
           )}
 
-          {/* Title */}
           <p
             id={titleId}
             style={{
@@ -305,7 +282,6 @@ export function Modal({
             {title}
           </p>
 
-          {/* Close button */}
           <IconButton
             icon={<CloseLine size={CLOSE_ICON_SIZE} />}
             aria-label="Close modal"
@@ -315,7 +291,6 @@ export function Modal({
           />
         </div>
 
-        {/* Body (scrollable) */}
         <div
           style={{
             flex: 1,
@@ -326,7 +301,6 @@ export function Modal({
           {children}
         </div>
 
-        {/* Footer */}
         {hasFooter && (
           <div className="glow-modal-footer">
             {renderFooter()}
@@ -334,7 +308,6 @@ export function Modal({
         )}
       </div>
 
-      {/* CSS */}
       <style>{MODAL_CSS}</style>
     </div>,
     document.body

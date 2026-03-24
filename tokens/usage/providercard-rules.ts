@@ -88,8 +88,8 @@ export const providerCardUsageRules = {
       virtualAvailable: 'boolean — Shows "Accept virtual appointment" row with video icon. Optional, hidden by default.',
     },
     appointment: {
-      nextAppointmentLabel: 'e.g., "Next appointment" — no colon needed',
-      nextAppointmentDate:  'e.g., "Today, May 7" — ALWAYS last detail row',
+      nextAppointmentLabel: 'Always "Next appointment" — no colon needed',
+      nextAppointmentDate:  'Format: "Today, May 7" or "Tomorrow, May 8". NO hours/times. If appointment is after tomorrow → omit prop entirely (auto-shows "Call to check availability").',
     },
     interaction: {
       bookmarkable:    'Show bookmark toggle (default: true)',
@@ -124,8 +124,8 @@ export const providerCardUsageRules = {
     },
     {
       id: 'appointment-follows-actions',
-      rule: 'Book+Call → MUST provide nextAppointmentDate (shows "Next appointment [date]"). Call-only → shows "Call to check availability" automatically (no date needed). No actions → no appointment row.',
-      detail: 'It is impossible to have a Book button without a next appointment date. When only Call is available, the component auto-shows "Call to check availability" instead of a date.',
+      rule: 'Book+Call → MUST provide nextAppointmentDate (today/tomorrow only). Call-only → auto-shows "Call to check availability". No actions → no appointment row.',
+      detail: 'Date format: "Today, May 7" or "Tomorrow, May 8" — never include hours. If the next available appointment is after tomorrow, omit nextAppointmentDate entirely — the component auto-shows "Call to check availability". Book button requires a date (you can\'t book without availability).',
     },
     {
       id: 'button-width-behavior',
@@ -269,7 +269,7 @@ export const providerCardUsageRules = {
   cost="$1,400"
   costLevel="lower"
   nextAppointmentLabel="Next appointment"
-  nextAppointmentDate="Tomorrow at 2:00 PM"
+  nextAppointmentDate="Tomorrow, Mar 25"
   onCallClick={() => call(provider)}
   onBookClick={() => book(provider)}
   onClick={() => navigate(\`/provider/\${provider.id}\`)}
@@ -285,7 +285,7 @@ export const providerCardUsageRules = {
   onCallClick={() => call(facility)}
   onBookClick={() => book(facility)}
   nextAppointmentLabel="Next appointment"
-  nextAppointmentDate="Tomorrow at 10:00 AM"
+  nextAppointmentDate="Today, Mar 24"
 />`,
     minimalMale: `
 <ProviderCard

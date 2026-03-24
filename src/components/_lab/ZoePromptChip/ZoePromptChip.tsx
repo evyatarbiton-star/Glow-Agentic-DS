@@ -1,15 +1,4 @@
-// ============================================================
-// GLOW DS — ZoePromptChip
-// Figma: Zoe UI — "Promt" (node-id=12742:31877)
-//
-// A suggested follow-up action chip in the Zoe conversation.
-// Appears in the welcome screen and after Zoe responses.
-// Clicking sends the text as a user message directly (bypasses input).
-//
-// Design: frosted glass card — semi-transparent white bg, subtle
-// shadow, rounded-16 corners. NOT a pill shape.
-// ============================================================
-
+// ZoePromptChip — Figma: node-id=12742:31877
 import { useState } from 'react'
 import { semanticColors as sc } from '../../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../../tokens/semantic/typography'
@@ -17,16 +6,15 @@ import { semanticSpacing } from '../../../../tokens/semantic/spacing'
 import { semanticRadii } from '../../../../tokens/semantic/radii'
 import type { ZoePromptChipProps } from './ZoePromptChip.types'
 
-// ── Token Constants ─────────────────────────────────────────
-const BG_DEFAULT = 'rgba(255, 255, 255, 0.5)'                  // Frosted glass — semi-transparent white
-const BG_HOVER = 'rgba(255, 255, 255, 0.85)'                   // More opaque on hover
-const SHADOW_DEFAULT = '0px 2px 8px rgba(0, 0, 0, 0.08)'       // Card/Default shadow
-const SHADOW_HOVER = '0px 4px 12px rgba(0, 0, 0, 0.12)'        // Slightly stronger on hover
-const PADDING_H = semanticSpacing.l                              // 24px — horizontal
-const PADDING_V = semanticSpacing.xs                             // 12px — vertical
-const BORDER_RADIUS = semanticRadii.sn                           // 16px — NOT pill
+const BG_DEFAULT = 'rgba(255, 255, 255, 0.5)'                  // frosted glass
+const BG_HOVER = 'rgba(255, 255, 255, 0.85)'
+const SHADOW_DEFAULT = '0px 2px 8px rgba(0, 0, 0, 0.08)'
+const SHADOW_HOVER = '0px 4px 12px rgba(0, 0, 0, 0.12)'
+const PADDING_H = semanticSpacing.l                              // 24px
+const PADDING_V = semanticSpacing.xs                             // 12px
+const BORDER_RADIUS = semanticRadii.sn                           // 16px
 const TEXT_COLOR = sc.neutral.text.DEFAULT                       // #000000
-const PARAGRAPH_L = typographyStyles['paragraph-l']              // 18px / 21px
+const PARAGRAPH_L = typographyStyles['paragraph-l']              // 18px/21px
 
 export function ZoePromptChip({
   text,

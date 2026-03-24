@@ -2,17 +2,7 @@ import type { ButtonProps, ButtonVariant, ButtonSize } from './Button.types'
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { fontWeights } from '../../../tokens/primitive/typography'
 
-// ============================================================
-// GLOW DS — Button Component
-// Source: Figma Web DS — node-id=114-6888
-// URL: https://www.figma.com/design/ke9Y1BHl3xvX8UMRRAMQ9T/Web-DS?node-id=114-6888
-//
-// Variants:  primary | secondary | outline | subtle | ghost | destructive
-// Sizes:     xs (36px) | sm (40px) | md (48px) | lg (56px)
-// Features:  pill, iconOnly, loading, fullWidth, iconLeft, iconRight
-// ============================================================
-
-// ── Spinner ─────────────────────────────────────────────────
+// Button Component — Figma node-id=114-6888
 function Spinner({ size }: { size: number }) {
   return (
     <svg
@@ -34,17 +24,8 @@ function Spinner({ size }: { size: number }) {
   )
 }
 
-// ── Variant Color Definitions ───────────────────────────────
-// Each variant defines colors for every state.
-// Extracted from Figma Web DS variables.
-//
-// Mapping:
-//   primary     → Figma "Primary"      (orange filled)
-//   secondary   → Figma "Secondary"    (black filled)
-//   outline     → Figma "Tertiary 1"   (white + border)
-//   subtle      → Figma "Tertiary 2"   (gray filled)
-//   ghost       → Figma "Link"         (transparent)
-//   destructive → Not in Figma         (red filled)
+// Figma variant mapping: primary→Primary, secondary→Secondary,
+// outline→Tertiary 1, subtle→Tertiary 2, ghost→Link, destructive→N/A
 
 type VariantColors = {
   bg: string
@@ -106,8 +87,7 @@ const variants: Record<ButtonVariant, VariantDef> = {
   },
 }
 
-// ── Size Definitions ────────────────────────────────────────
-// Extracted from Figma variables per size tier.
+// Size definitions from Figma variables
 
 type SizeDef = {
   height: number
@@ -127,7 +107,6 @@ const sizes: Record<ButtonSize, SizeDef> = {
   xs: { height: 36, paddingX: 12, paddingY: 8,  borderRadius: 8,  gap: 4,  iconSize: 20, fontSize: 14, lineHeight: 18 },
 }
 
-// ── Component ────────────────────────────────────────────────
 export function Button({
   variant   = 'primary',
   size      = 'md',

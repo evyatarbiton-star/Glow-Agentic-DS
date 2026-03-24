@@ -1,17 +1,8 @@
-// ============================================================
-// GLOW DS — ScrollArea
-// Figma: n/a (utility component)
-//
-// A styled scroll container with a custom scroll indicator.
-// Supports horizontal, vertical, or both directions.
-// Uses a div-based scrollbar for consistent cross-platform rendering
-// (macOS overlay scrollbars hide native CSS-styled scrollbars).
-// ============================================================
+// ScrollArea — utility component (no Figma node)
 
 import { useRef, useState, useEffect, useCallback } from 'react'
 import type { ScrollAreaProps } from './ScrollArea.types'
 
-// ── Token Constants ─────────────────────────────────────────
 const INDICATOR_SIZE = 4                                   // 4px — thin indicator bar
 const INDICATOR_THUMB = '#d4d4d4'                          // neutral — visible on light backgrounds
 const INDICATOR_THUMB_HOVER = '#bfbfbf'                    // darker on hover
@@ -39,7 +30,6 @@ export function ScrollArea({
 
   const isHorizontal = direction === 'horizontal'
 
-  // ── Measure scroll state ──────────────────────────────────
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current
     if (!el) return
@@ -57,7 +47,6 @@ export function ScrollArea({
     }
   }, [isHorizontal])
 
-  // ── Listen to scroll + resize ─────────────────────────────
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
@@ -78,7 +67,6 @@ export function ScrollArea({
     }
   }, [updateScrollState])
 
-  // ── Drag to scroll ────────────────────────────────────────
   const handleTrackClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     const el = scrollRef.current
     const track = e.currentTarget
@@ -131,7 +119,6 @@ export function ScrollArea({
     document.addEventListener('mouseup', onMouseUp)
   }, [isHorizontal])
 
-  // ── Snap styles ───────────────────────────────────────────
   const snapType = snap
     ? direction === 'horizontal'
       ? 'x mandatory'
@@ -140,7 +127,6 @@ export function ScrollArea({
         : 'both mandatory'
     : undefined
 
-  // ── Container styles ──────────────────────────────────────
   const containerStyle: React.CSSProperties = {
     overflowX: (direction === 'horizontal' || direction === 'both' ? 'auto' : 'hidden') as any,
     overflowY: (direction === 'vertical' || direction === 'both' ? 'auto' : 'hidden') as any,
@@ -156,15 +142,12 @@ export function ScrollArea({
     ...style,
   }
 
-  // ── Hide-native-scrollbar CSS (webkit) ────────────────────
   const hideNativeCSS = `
     .glow-scroll-hide::-webkit-scrollbar { display: none; }
   `
 
-  // ── Show custom indicator? ────────────────────────────────
   const showIndicator = !hideScrollbar && isScrollable
 
-  // ── Indicator track & thumb styles ────────────────────────
   const trackStyle: React.CSSProperties = isHorizontal
     ? {
         width: '100%',
@@ -214,7 +197,6 @@ export function ScrollArea({
         minHeight: 24,
       }
 
-  // ── Wrapper direction ─────────────────────────────────────
   const wrapperStyle: React.CSSProperties = isHorizontal
     ? { display: 'flex', flexDirection: 'column', marginBlock: -8 }  // compensate scroll container paddingBlock
     : { display: 'flex', flexDirection: 'row', ...(maxHeight != null && { maxHeight }) }

@@ -60,13 +60,16 @@ interface CostSectionProps {
 export function CostSection({
   cost,
   costLevel,
-  costLabel = 'est. out-of-pocket',
+  costLabel: costLabelProp,
   costChipLabel,
   showCostChip = true,
   costChipHideIcon = false,
   chipInline = false,
   costHint,
 }: CostSectionProps) {
+  // Default cost label: "Call to verify out-of-pocket cost" for unknown, "est. out-of-pocket" otherwise
+  const costLabel = costLabelProp ?? (costLevel === 'unknown' ? 'Call to verify out-of-pocket cost' : 'est. out-of-pocket')
+
   const rawChip = costLevel ? COST_CHIP_CONFIG[costLevel] : null
   const chip = rawChip && costChipLabel ? { ...rawChip, label: costChipLabel } : rawChip
   const showChip = showCostChip && chip

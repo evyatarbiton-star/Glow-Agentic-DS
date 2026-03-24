@@ -75,9 +75,9 @@ export const providerCardUsageRules = {
       networkLabel: 'Custom label, e.g., "In-Network" (auto-generated from tier if omitted)',
     },
     cost: {
-      cost:         'Formatted cost string, e.g., "$1,400"',
-      costLevel:    '"lower" | "typical" | "higher" — controls chip color and icon',
-      costLabel:    'Label under cost, default: "est. out-of-pocket"',
+      cost:         'Formatted cost string, e.g., "$1,400" or "$900–$1,200" for unknown tier',
+      costLevel:    '"lower" | "typical" | "higher" | "unknown" — controls chip color and icon',
+      costLabel:    'Label under cost — defaults to "est. out-of-pocket", or "Call to verify out-of-pocket cost" when costLevel is "unknown"',
       showCostChip: 'Show/hide the cost comparison chip (default: true)',
       showPrice:    'Show/hide the entire cost section (default: true)',
     },
@@ -224,6 +224,35 @@ export const providerCardUsageRules = {
 </div>`,
     },
   ],
+
+  // ── Presets (card defaults by cost level) ────────────────────
+  presets: {
+    description: 'Default prop combinations by cost level. All presets omit languages and virtualAvailable by default.',
+    lower: {
+      costLevel: 'lower',
+      cost: 'Single price, e.g., "$95"',
+      costLabel: '"est. out-of-pocket" (default)',
+    },
+    typical: {
+      costLevel: 'typical',
+      cost: 'Single price, e.g., "$120"',
+      costLabel: '"est. out-of-pocket" (default)',
+    },
+    higher: {
+      costLevel: 'higher',
+      cost: 'Single price, e.g., "$200"',
+      costLabel: '"est. out-of-pocket" (default)',
+    },
+    unknown: {
+      costLevel: 'unknown',
+      cost: 'Price RANGE, e.g., "$900–$1,200"',
+      costLabel: '"Call to verify out-of-pocket cost" (auto-set when costLevel is unknown)',
+    },
+    defaults: {
+      languages: 'Omitted by default — only add when provider speaks non-English languages',
+      virtualAvailable: 'Omitted by default — only add when provider explicitly offers virtual visits',
+    },
+  },
 
   // ── Example Usage ───────────────────────────────────────────
   examples: {

@@ -1,7 +1,7 @@
 import type { ReactNode, HTMLAttributes, MouseEvent } from 'react'
 
 export type ChipVariant = 'subtle' | 'outline' | 'filled'
-export type ChipColor   = 'neutral' | 'primary' | 'success' | 'error'
+export type ChipColor   = 'neutral' | 'success' | 'error' | 'info' | 'warning' | 'recommended' | 'hsa' | 'lfsa'
 export type ChipSize    = 'sm' | 'md' | 'lg'
 
 export interface ChipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {

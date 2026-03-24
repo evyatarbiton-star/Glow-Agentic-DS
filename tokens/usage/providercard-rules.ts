@@ -66,8 +66,8 @@ export const providerCardUsageRules = {
       distance: 'Distance string, e.g., "0.3 mi"',
     },
     quality: {
-      rating:      'Numeric rating out of 5, e.g., 4.5',
-      reviewCount: 'Number of reviews — shown in parentheses after rating',
+      rating:      'Numeric rating out of 5, e.g., 4.5 — optional, omit for facilities or when unavailable',
+      reviewCount: 'Number of reviews — shown in parentheses after rating. Only relevant when rating is provided.',
     },
     network: {
       networkTier:  '"in-network" | "tier-2" | "tier-3" | "out-of-network" — controls badge color',
@@ -103,6 +103,11 @@ export const providerCardUsageRules = {
   // ── Composition Rules ───────────────────────────────────────
   compositionRules: [
     {
+      id: 'call-is-mandatory',
+      rule: '⚠️ Every actionable ProviderCard MUST have a Call button — there is no valid card with Book but no Call',
+      detail: 'Call is the minimum action. Valid combinations: (1) Call + Book — both buttons side by side, (2) Call only — single full-width button, (3) No actions — read-only card. A Book button without Call is NEVER valid. Agents MUST NOT pass onBookClick without also passing onCallClick.',
+    },
+    {
       id: 'use-providercard-not-card-avatar',
       rule: 'For healthcare provider listings, ALWAYS use <ProviderCard> — never manually compose Card + Avatar',
       detail: 'ProviderCard handles avatar fallbacks, network badges, cost chips, and action buttons automatically.',
@@ -114,13 +119,18 @@ export const providerCardUsageRules = {
     },
     {
       id: 'actions-are-optional',
-      rule: 'Action buttons (Call, Book) only appear when their handlers are provided',
-      detail: 'Omit onCallClick/onBookClick to hide the action buttons section entirely. Valid combinations: Book + Call, Call only, or no actions. Book-only is NOT a valid state.',
+      rule: 'Action buttons appear when handlers are provided — but Call is ALWAYS required if any action exists',
+      detail: 'Valid combinations: Call + Book (both buttons), Call only (full-width single button), or no actions (read-only card). Book-only is NEVER valid — agents MUST NOT pass onBookClick without also passing onCallClick.',
     },
     {
       id: 'appointment-follows-actions',
       rule: 'Book+Call → MUST provide nextAppointmentDate (shows "Next appointment [date]"). Call-only → shows "Call to check availability" automatically (no date needed). No actions → no appointment row.',
       detail: 'It is impossible to have a Book button without a next appointment date. When only Call is available, the component auto-shows "Call to check availability" instead of a date.',
+    },
+    {
+      id: 'button-width-behavior',
+      rule: 'When only Call exists, it takes full card width. When Call + Book exist, they split 50/50.',
+      detail: 'The button grid uses gridTemplateColumns: onBookClick ? "1fr 1fr" : "1fr". A single button at half width means a missing button — this is a layout bug.',
     },
     {
       id: 'actions-fixed-width-horizontal',
@@ -161,6 +171,58 @@ export const providerCardUsageRules = {
       rule: 'Use loading={true} to show a shimmer skeleton while provider data is being fetched',
       detail: 'The skeleton renders placeholder shapes matching the full card structure (avatar, name, specialty, 3 detail rows, cost, 2 buttons) to prevent layout shift. Works in both vertical and horizontal layouts. All other props are ignored when loading is true.',
     },
+    {
+      id: 'card-fills-container',
+      rule: 'ProviderCard always stretches to fill its parent container width — never set a width on ProviderCard itself',
+      detail: 'ProviderCard has width: 100% built-in. To control the card width, set the width on the PARENT wrapper div. e.g., <div style={{ width: 360 }}><ProviderCard ... /></div>. Never do <ProviderCard style={{ width: 360 }} /> — there is no style prop.',
+    },
+    {
+      id: 'scroll-indicator-rules',
+      rule: 'Horizontal carousels show the scroll indicator on desktop but hide it on mobile',
+      detail: 'On desktop, the ScrollArea custom indicator (thin grey bar below the cards) helps users discover that content is scrollable. On mobile/touch devices, users swipe natively so the indicator adds visual noise — hide it with hideScrollbar={true}. Detect viewport width or use a responsive flag.',
+      implementation: `
+// ✅ CORRECT — responsive scroll indicator
+<ScrollArea direction="horizontal" gap={16} snap hideScrollbar={isMobile}>
+  {cards}
+</ScrollArea>
+
+// ❌ WRONG — always showing indicator (noisy on mobile)
+<ScrollArea direction="horizontal" gap={16} snap>
+  {cards}
+</ScrollArea>
+
+// ❌ WRONG — always hiding indicator (users don't know to scroll on desktop)
+<ScrollArea direction="horizontal" gap={16} snap hideScrollbar>
+  {cards}
+</ScrollArea>`,
+    },
+    {
+      id: 'equal-size-in-lists',
+      rule: 'When cards appear side by side (carousel, grid, swipe), ALL cards MUST have equal width AND equal height, with 16px gap between cards',
+      detail: 'Cards with fewer detail rows (no appointment, no languages, etc.) must NOT shrink — the missing content is simply invisible but the card dimensions stay the same. Default gap between cards is 16px (spacing.s).',
+      implementation: `
+// ✅ CORRECT — Horizontal carousel with ScrollArea
+<ScrollArea direction="horizontal" gap={16} snap>
+  {providers.map(p => (
+    <div key={p.id} style={{ width: 360, minWidth: 360, flexShrink: 0, scrollSnapAlign: 'start', display: 'flex' }}>
+      <ProviderCard name={p.name} specialty={p.specialty} ... />
+    </div>
+  ))}
+</ScrollArea>
+
+// ✅ CORRECT — Grid layout
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, 360px)', gap: 16, alignItems: 'stretch' }}>
+  {providers.map(p => (
+    <ProviderCard key={p.id} name={p.name} specialty={p.specialty} ... />
+  ))}
+</div>
+
+// ❌ WRONG — no fixed width wrapper, cards will be different widths
+<div style={{ display: 'flex', gap: 16 }}>
+  <ProviderCard ... />
+  <ProviderCard ... />
+</div>`,
+    },
   ],
 
   // ── Example Usage ───────────────────────────────────────────
@@ -191,7 +253,10 @@ export const providerCardUsageRules = {
   networkTier="in-network"
   distance="1.2 mi"
   address="8700 Beverly Blvd"
+  onCallClick={() => call(facility)}
   onBookClick={() => book(facility)}
+  nextAppointmentLabel="Next appointment"
+  nextAppointmentDate="Tomorrow at 10:00 AM"
 />`,
     minimalMale: `
 <ProviderCard
@@ -210,5 +275,29 @@ export const providerCardUsageRules = {
   specialty={provider?.specialty ?? ''}
   ...
 />`,
+    carousel: `
+// Horizontal carousel — 360px cards, 16px gap, scroll-snap
+<ScrollArea direction="horizontal" gap={16} snap>
+  {providers.map(p => (
+    <div key={p.id} style={{ width: 360, minWidth: 360, flexShrink: 0, scrollSnapAlign: 'start', display: 'flex' }}>
+      <ProviderCard
+        name={p.name}
+        specialty={p.specialty}
+        providerType={p.providerType}
+        networkTier={p.networkTier}
+        distance={p.distance}
+        address={p.address}
+        rating={p.rating}
+        reviewCount={p.reviewCount}
+        cost={p.cost}
+        costLevel={p.costLevel}
+        nextAppointmentLabel={p.nextAppointmentLabel}
+        nextAppointmentDate={p.nextAppointmentDate}
+        onCallClick={() => call(p)}
+        onBookClick={p.hasBook ? () => book(p) : undefined}
+      />
+    </div>
+  ))}
+</ScrollArea>`,
   },
 }

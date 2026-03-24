@@ -5,7 +5,7 @@ import type { ReactNode } from 'react'
 // ============================================================
 
 export type NetworkTier = 'in-network' | 'tier-2' | 'tier-3' | 'out-of-network'
-export type CostLevel = 'lower' | 'typical' | 'higher'
+export type CostLevel = 'lower' | 'typical' | 'higher' | 'unknown'
 export type ProviderType = 'male' | 'female' | 'facility'
 export type ProviderCardLayout = 'vertical' | 'horizontal' | 'responsive'
 
@@ -60,6 +60,8 @@ export interface ProviderCardProps {
   showCostChip?: boolean
   /** Show the entire price section (default: true) */
   showPrice?: boolean
+  /** Optional hint text below the price, e.g. "Call provider for an exact estimate" */
+  costHint?: React.ReactNode
 
   // ── Languages ──────────────────────────────────────────────
   /** Languages the provider speaks, e.g. ["English", "Spanish", "Mandarin"] */
@@ -86,4 +88,6 @@ export interface ProviderCardProps {
   onBookClick?: () => void
   /** Makes entire card clickable with hover effect */
   onClick?: () => void
+  /** Persistent highlight — keeps shadow active (e.g., when drawer is open for this card) */
+  isActive?: boolean
 }

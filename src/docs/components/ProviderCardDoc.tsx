@@ -6,6 +6,7 @@ import { Toggle } from '../../components/Toggle'
 import { TextInput } from '../../components/TextInput'
 import { Card } from '../../components/Card'
 import { Button } from '../../components/Button'
+import { ScrollArea } from '../../components/ScrollArea'
 
 // ── Helpers ──────────────────────────────────────────────────
 
@@ -204,6 +205,7 @@ const DEFAULTS = {
   networkName: '',
   distance: '0.3 mi',
   address: '1468 Madison Ave, Suite 4B, New York, NY 10029',
+  showRating: true,
   rating: '4.8',
   reviewCount: '128',
   cost: '$1,400',
@@ -252,6 +254,7 @@ const COST_LEVEL_OPTIONS = [
   { value: 'lower', label: 'Lower' },
   { value: 'typical', label: 'Typical' },
   { value: 'higher', label: 'Higher' },
+  { value: 'unknown', label: 'Unknown' },
 ]
 
 function Playground() {
@@ -312,8 +315,8 @@ function Playground() {
               photoUrl={s.showPhoto ? PHOTO_URL : undefined}
               distance={s.distance || undefined}
               address={s.address || undefined}
-              rating={s.rating ? Number(s.rating) : undefined}
-              reviewCount={s.reviewCount ? Number(s.reviewCount) : undefined}
+              rating={s.showRating && s.rating ? Number(s.rating) : undefined}
+              reviewCount={s.showRating && s.reviewCount ? Number(s.reviewCount) : undefined}
               networkTier={s.networkTier === 'none' ? undefined : s.networkTier as any}
               networkLabel={s.networkTier === 'none' ? undefined : s.networkLabel || undefined}
               networkName={s.networkName || undefined}
@@ -349,6 +352,7 @@ function Playground() {
               <Toggle checked={s.showPrice} onChange={() => set('showPrice', !s.showPrice)} label="Price" />
               <Toggle checked={s.showCostChip} onChange={() => set('showCostChip', !s.showCostChip)} label="Cost chip" />
               <Toggle checked={s.bookmarkable} onChange={() => set('bookmarkable', !s.bookmarkable)} label="Bookmark" />
+              <Toggle checked={s.showRating} onChange={() => set('showRating', !s.showRating)} label="Rating" />
               <Toggle checked={s.showAppointment} onChange={() => set('showAppointment', !s.showAppointment)} label="Appointment" />
               <Toggle checked={s.showLanguages} onChange={() => set('showLanguages', !s.showLanguages)} label="Languages" />
               <Toggle checked={s.virtualAvailable} onChange={() => set('virtualAvailable', !s.virtualAvailable)} label="Virtual visit" />
@@ -467,8 +471,6 @@ export function ProviderCardDoc() {
             providerType="facility"
             distance="0.9 mi"
             address="100 E 77th St, Lower Level, New York, NY 10075"
-            rating={4.3}
-            reviewCount={67}
             networkTier="out-of-network"
             networkLabel="Out-of-Network"
             cost="$890"
@@ -504,7 +506,7 @@ export function ProviderCardDoc() {
       </Section>
 
       {/* ── Cost Chip Levels ─────────────────────────────────── */}
-      <Section title="Cost Chip Levels" description="Three cost comparison levels with distinct colors and icons. Lower and higher include directional arrow icons.">
+      <Section title="Cost Chip Levels" description="Four cost comparison levels with distinct colors and icons. Lower and higher include directional arrow icons.">
         <Row>
           <CardDemo>
             <Label>Lower cost</Label>
@@ -562,6 +564,76 @@ export function ProviderCardDoc() {
               networkLabel="In-Network"
               cost="$210"
               costLevel="higher"
+              nextAppointmentLabel="Next appointment"
+              nextAppointmentDate="Mon, Mar 23"
+              onCallClick={() => {}}
+              onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>Unknown cost</Label>
+            <ProviderCard
+              name="Dr. Lisa Nguyen"
+              specialty="Ophthalmologist"
+              initials="LN"
+              distance="3.0 mi"
+              address="500 Park Ave, Suite 200, New York, NY 10065"
+              rating={4.6}
+              reviewCount={74}
+              networkTier="in-network"
+              networkLabel="In-Network"
+              cost="$1,400 - $3,200"
+              costLevel="unknown"
+              nextAppointmentLabel="Next appointment"
+              nextAppointmentDate="Fri, Mar 21"
+              onCallClick={() => {}}
+              onBookClick={() => {}}
+            />
+          </CardDemo>
+        </Row>
+      </Section>
+
+      {/* ── Cost Chip Customization ──────────────────────────── */}
+      <Section title="Cost Chip Customization" description="Override the default cost chip label or hide the icon.">
+        <Row>
+          <CardDemo>
+            <Label>Custom label</Label>
+            <ProviderCard
+              name="Dr. Sarah Chen"
+              specialty="Dermatologist"
+              providerType="female"
+              distance="0.5 mi"
+              address="100 E 77th St, New York, NY 10075"
+              rating={4.8}
+              reviewCount={112}
+              networkTier="in-network"
+              networkLabel="In-Network"
+              cost="$95"
+              costLevel="typical"
+              costChipLabel="Check with insurer"
+              nextAppointmentLabel="Next appointment"
+              nextAppointmentDate="Tomorrow"
+              onCallClick={() => {}}
+              onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>Hidden icon</Label>
+            <ProviderCard
+              name="Dr. James Wright"
+              specialty="Dermatologist"
+              initials="JW"
+              distance="1.8 mi"
+              address="250 W 57th St, New York, NY 10019"
+              rating={4.4}
+              reviewCount={63}
+              networkTier="in-network"
+              networkLabel="In-Network"
+              cost="$180"
+              costLevel="higher"
+              costChipHideIcon
               nextAppointmentLabel="Next appointment"
               nextAppointmentDate="Mon, Mar 23"
               onCallClick={() => {}}
@@ -759,6 +831,40 @@ export function ProviderCardDoc() {
             onBookClick={() => {}}
           />
         </CardDemo>
+      </Section>
+
+      {/* ── Horizontal Carousel ──────────────────────────────── */}
+      <Section title="Horizontal Carousel" description="6 ProviderCards in a horizontal scroll. Each card is 360px wide with 16px gap. Cards 4–5 have no appointment — their height still matches.">
+        <ScrollArea direction="horizontal" gap={16} snap>
+          {([
+            { name: 'Dr. Emily Park', specialty: 'Dermatologist', providerType: 'female' as const, distance: '0.3 mi', address: '123 Medical Center Dr, New York, NY', rating: 4.8, reviewCount: 124, networkTier: 'in-network' as const, cost: '$180', costLevel: 'lower' as const, nextAppointmentLabel: 'Next available', nextAppointmentDate: 'Tomorrow, Mar 22', hasBook: true },
+            { name: 'Dr. Robert Kim', specialty: 'Dermatologist', providerType: 'male' as const, distance: '1.2 mi', address: '456 Park Ave, New York, NY', rating: 4.5, reviewCount: 89, networkTier: 'in-network' as const, cost: '$195', costLevel: 'lower' as const, nextAppointmentLabel: 'Next available', nextAppointmentDate: 'Mar 24', hasBook: true },
+            { name: 'Dr. Jessica Rivera', specialty: 'Dermatologist', providerType: 'female' as const, distance: '2.1 mi', address: '789 Broadway, Suite 5, New York, NY', rating: 4.6, reviewCount: 156, networkTier: 'in-network' as const, cost: '$165', costLevel: 'lower' as const, nextAppointmentLabel: 'Next available', nextAppointmentDate: 'Mar 25', hasBook: true },
+            { name: 'Dr. David Hoffman', specialty: 'Dermatologist', providerType: 'male' as const, distance: '0.8 mi', address: '555 Madison Ave, 17th Floor, New York, NY', rating: 4.7, reviewCount: 134, networkTier: 'in-network' as const, cost: '$210', costLevel: 'typical' as const, hasBook: false },
+            { name: 'Manhattan Skin Center', specialty: 'Dermatology clinic', providerType: 'facility' as const, distance: '0.5 mi', address: '100 E 77th St, New York, NY', rating: 4.3, reviewCount: 67, networkTier: 'tier-2' as const, cost: '$250', costLevel: 'typical' as const, hasBook: false },
+            { name: 'Dr. Sarah Chen', specialty: 'Dermatologist', providerType: 'female' as const, photoUrl: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=120&h=120&fit=crop&crop=face', distance: '3.0 mi', address: '1468 Madison Ave, Suite 4B, New York, NY', rating: 4.9, reviewCount: 201, networkTier: 'in-network' as const, cost: '$140', costLevel: 'lower' as const, nextAppointmentLabel: 'Next available', nextAppointmentDate: 'Today, Mar 21', hasBook: true },
+          ] as const).map((p, i) => (
+            <div key={i} style={{ width: 360, minWidth: 360, flexShrink: 0, scrollSnapAlign: 'start', display: 'flex' }}>
+              <ProviderCard
+                name={p.name}
+                specialty={p.specialty}
+                providerType={p.providerType}
+                photoUrl={'photoUrl' in p ? p.photoUrl : undefined}
+                distance={p.distance}
+                address={p.address}
+                rating={p.rating}
+                reviewCount={p.reviewCount}
+                networkTier={p.networkTier}
+                cost={p.cost}
+                costLevel={p.costLevel}
+                nextAppointmentLabel={'nextAppointmentLabel' in p ? p.nextAppointmentLabel : undefined}
+                nextAppointmentDate={'nextAppointmentDate' in p ? p.nextAppointmentDate : undefined}
+                onCallClick={() => {}}
+                onBookClick={p.hasBook ? () => {} : undefined}
+              />
+            </div>
+          ))}
+        </ScrollArea>
       </Section>
 
       {/* ── Props Table ──────────────────────────────────────── */}

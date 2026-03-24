@@ -17,19 +17,37 @@ import { ModalDoc }           from './docs/components/ModalDoc'
 import { ProviderCardDoc }    from './docs/components/ProviderCardDoc'
 import { IconButtonDoc }      from './docs/components/IconButtonDoc'
 import { StarRatingDoc }     from './docs/components/StarRatingDoc'
+import { SideNavDoc }        from './docs/components/SideNavDoc'
+import { ScrollAreaDoc }     from './docs/components/ScrollAreaDoc'
 import { NetworkBadgeDoc }   from './docs/components/NetworkBadgeDoc'
 import { LoginExample, LoginScreen }   from './docs/examples/LoginExample'
 import { ProviderSearchResultsExample, ProviderSearchResultsScreen } from './docs/examples/ProviderSearchResultsExample'
 import { HealtheeHomeExample, HealtheeHomeScreen } from './docs/examples/HealtheeHomeExample'
 import { IconPage } from './docs/pages/IconPage'
 import { OverviewPage } from './docs/pages/OverviewPage'
-import { ProviderCardV2Lab } from './docs/lab/ProviderCardV2Lab'
+import ZoeInputLab from './docs/lab/ZoeInputLab'
+import ZoeThinkingLoaderLab from './docs/lab/ZoeThinkingLoaderLab'
+import ZoeUserBubbleLab from './docs/lab/ZoeUserBubbleLab'
+import ZoeChatDemoLab from './docs/lab/ZoeChatDemoLab'
+import ZoeResponseBubbleLab from './docs/lab/ZoeResponseBubbleLab'
+import ZoeBenefitCardLab from './docs/lab/ZoeBenefitCardLab'
+import ZoePromptChipLab from './docs/lab/ZoePromptChipLab'
+import ZoeChatHeaderLab from './docs/lab/ZoeChatHeaderLab'
+import ZoeDrawerLab from './docs/lab/ZoeDrawerLab'
+import ZoeProviderCardLab from './docs/lab/ZoeProviderCardLab'
+import CarouselTestPage from './docs/pages/CarouselTestPage'
 
 function App() {
   return (
     <BrowserRouter>
       <PlatformProvider>
       <Routes>
+
+        {/* ── Carousel test (full-screen, no sidebar) ── */}
+        <Route path="/preview/carousel" element={<CarouselTestPage />} />
+
+        {/* ── Zoe Chat (full-screen, no sidebar) ── */}
+        <Route path="/preview/zoe-chat" element={<ZoeChatDemoLab />} />
 
         {/* ── Full-screen previews (no sidebar) ── */}
         <Route path="/preview/healthee-home" element={
@@ -85,8 +103,10 @@ function App() {
                 <Route path="/components/chip" element={<ChipDoc />} />
                 <Route path="/components/modal" element={<ModalDoc />} />
                 <Route path="/components/provider-card" element={<ProviderCardDoc />} />
-                <Route path="/components/network-badge" element={<NetworkBadgeDoc />} />
                 <Route path="/components/star-rating" element={<StarRatingDoc />} />
+                <Route path="/components/sidenav" element={<SideNavDoc />} />
+                <Route path="/components/scroll-area" element={<ScrollAreaDoc />} />
+                <Route path="/components/network-badge" element={<NetworkBadgeDoc />} />
 
                 {/* Examples */}
                 <Route path="/examples/login" element={<LoginExample />} />
@@ -99,7 +119,16 @@ function App() {
                 } />
 
                 {/* Lab */}
-                <Route path="/lab/provider-card-v2" element={<ProviderCardV2Lab />} />
+                <Route path="/lab/zoe-input" element={<ZoeInputLab />} />
+                <Route path="/lab/zoe-thinking-loader" element={<ZoeThinkingLoaderLab />} />
+                <Route path="/lab/zoe-user-bubble" element={<ZoeUserBubbleLab />} />
+                <Route path="/lab/zoe-response-bubble" element={<ZoeResponseBubbleLab />} />
+                <Route path="/lab/zoe-benefit-card" element={<ZoeBenefitCardLab />} />
+                <Route path="/lab/zoe-prompt-chip" element={<ZoePromptChipLab />} />
+                <Route path="/lab/zoe-chat-demo" element={<ZoeChatDemoLab />} />
+                <Route path="/lab/zoe-chat-header" element={<ZoeChatHeaderLab />} />
+                <Route path="/lab/zoe-drawer" element={<ZoeDrawerLab />} />
+                <Route path="/lab/zoe-provider-card" element={<ZoeProviderCardLab />} />
 
                 {/* Catch-all for lab */}
                 <Route path="/lab/*" element={

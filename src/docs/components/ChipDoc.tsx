@@ -1,7 +1,14 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { DocLayout, Section } from '../layout/DocLayout'
 import { Chip, ChipGroup } from '../../components/Chip'
 import type { ChipVariant, ChipColor, ChipSize } from '../../components/Chip'
+import { Toggle } from '../../components/Toggle'
+import { RadioButton } from '../../components/RadioButton'
+import { Select } from '../../components/Select'
+import { TextInput } from '../../components/TextInput'
+import CheckCrFrLine from '../../components/Icon/icons/line/CheckCrFr'
+import BellLine from '../../components/Icon/icons/line/Bell'
+import StarLine from '../../components/Icon/icons/line/Star'
 
 // ── Mini helpers ─────────────────────────────────────────────
 function Label({ children }: { children: React.ReactNode }) {
@@ -88,7 +95,7 @@ function CheckIcon() {
 // ── Props Table ──────────────────────────────────────────────
 const chipPropsData = [
   { prop: 'variant',   type: '"subtle" | "outline" | "filled"',                  default: '"subtle"',   description: 'Visual style — subtle (soft fill) | outline (border) | filled (solid)' },
-  { prop: 'color',     type: '"neutral" | "primary" | "success" | "error"',      default: '"neutral"',  description: 'Color family — maps to semantic color tokens' },
+  { prop: 'color',     type: '"neutral" | "success" | "error" | "info" | "warning" | "recommended" | "hsa" | "lfsa"', default: '"neutral"', description: 'Color family — maps to semantic color tokens' },
   { prop: 'size',      type: '"sm" | "md" | "lg"',                               default: '"md"',       description: 'Height: sm=28px, md=32px, lg=36px' },
   { prop: 'selected',  type: 'boolean',                                           default: 'false',      description: 'Selected/active state — inverts colors' },
   { prop: 'removable', type: 'boolean',                                           default: 'false',      description: 'Show remove (X) button' },
@@ -130,11 +137,127 @@ export function ChipDoc() {
     setTags(prev => prev.filter(t => t !== tag))
   }
 
+  // ── Playground state ──────────────────────────────────────
+  const [pgVariant, setPgVariant] = useState<ChipVariant>('subtle')
+  const [pgColor, setPgColor] = useState<ChipColor>('neutral')
+  const [pgSize, setPgSize] = useState<ChipSize>('md')
+  const [pgSelected, setPgSelected] = useState(false)
+  const [pgDisabled, setPgDisabled] = useState(false)
+  const [pgRemovable, setPgRemovable] = useState(false)
+  const [pgIconLeft, setPgIconLeft] = useState<string>('none')
+  const [pgLabel, setPgLabel] = useState('Chip text')
+
+  const iconOptions: { key: string; label: string; node: ReactNode | null }[] = [
+    { key: 'none', label: 'None', node: null },
+    { key: 'check', label: 'Check', node: <CheckCrFrLine size="sm" /> },
+    { key: 'bell', label: 'Bell', node: <BellLine size="sm" /> },
+    { key: 'star', label: 'Star', node: <StarLine size="sm" /> },
+  ]
+
+  const pgIconNode = iconOptions.find(o => o.key === pgIconLeft)?.node ?? null
+
   return (
     <DocLayout
       title="Chip"
       description="A compact label for categorization, filtering, and selection. Use Chip for tags, filters, and status indicators — not for actions (use Button for actions)."
     >
+      {/* ── Playground ── */}
+      <Section title="Playground" description="Configure a chip interactively. Use the controls on the right to change any prop.">
+        <div className="flex rounded-xs overflow-hidden" style={{ minHeight: 360, border: '1px solid #ededed' }}>
+
+          {/* Left — Preview */}
+          <div className="flex-1 flex items-center justify-center bg-neutral-negative" style={{ borderRight: '1px dashed #d4d4d4' }}>
+            <Chip
+              variant={pgVariant}
+              color={pgColor}
+              size={pgSize}
+              selected={pgSelected}
+              disabled={pgDisabled}
+              removable={pgRemovable}
+              onRemove={pgRemovable ? () => {} : undefined}
+              iconLeft={pgIconNode}
+              onClick={() => {}}
+            >
+              {pgLabel}
+            </Chip>
+          </div>
+
+          {/* Right — Controls */}
+          <div className="w-[300px] shrink-0 bg-neutral-subtle p-m space-y-l overflow-y-auto" style={{ maxHeight: 440 }}>
+
+            {/* ── Appearance ── */}
+            <div className="space-y-s">
+              <p className="font-default font-medium text-[11px] text-neutral-text-light uppercase tracking-wider">Appearance</p>
+
+              <div>
+                <Label>Variant</Label>
+                <div className="space-y-xxs">
+                  {(['subtle', 'outline', 'filled'] as ChipVariant[]).map(v => (
+                    <RadioButton key={v} name="pg-variant" label={v} checked={pgVariant === v} onChange={() => setPgVariant(v)} />
+                  ))}
+                </div>
+              </div>
+
+              <Select
+                label="Color"
+                size="sm"
+                value={pgColor}
+                onChange={v => setPgColor(v as ChipColor)}
+                options={[
+                  { value: 'neutral', label: 'Neutral' },
+                  { value: 'success', label: 'Success' },
+                  { value: 'error', label: 'Error' },
+                  { value: 'info', label: 'Info' },
+                  { value: 'warning', label: 'Warning' },
+                  { value: 'recommended', label: 'Recommended' },
+                  { value: 'hsa', label: 'HSA' },
+                  { value: 'lfsa', label: 'LFSA' },
+                ]}
+              />
+
+              <div>
+                <Label>Size</Label>
+                <div className="space-y-xxs">
+                  {(['sm', 'md', 'lg'] as ChipSize[]).map(s => (
+                    <RadioButton key={s} name="pg-size" label={`${s} (${s === 'sm' ? '28px' : s === 'md' ? '32px' : '36px'})`} checked={pgSize === s} onChange={() => setPgSize(s)} />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── Content ── */}
+            <div className="space-y-s">
+              <p className="font-default font-medium text-[11px] text-neutral-text-light uppercase tracking-wider">Content</p>
+
+              <TextInput
+                label="Label"
+                size="sm"
+                value={pgLabel}
+                onChange={e => setPgLabel(e.target.value)}
+              />
+
+              <Select
+                label="Icon Left"
+                size="sm"
+                value={pgIconLeft}
+                onChange={v => setPgIconLeft(v)}
+                options={iconOptions.map(o => ({ value: o.key, label: o.label }))}
+              />
+            </div>
+
+            {/* ── State ── */}
+            <div className="space-y-s">
+              <p className="font-default font-medium text-[11px] text-neutral-text-light uppercase tracking-wider">State</p>
+              <div className="space-y-xs">
+                <Toggle label="Selected" checked={pgSelected} onChange={() => setPgSelected(!pgSelected)} />
+                <Toggle label="Disabled" checked={pgDisabled} onChange={() => setPgDisabled(!pgDisabled)} />
+                <Toggle label="Removable" checked={pgRemovable} onChange={() => setPgRemovable(!pgRemovable)} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </Section>
+
       {/* ── Variants ── */}
       <Section title="Variants" description="Three visual variants for different contexts.">
         <Row label="Subtle — soft fill, no border (default)">
@@ -155,26 +278,46 @@ export function ChipDoc() {
       </Section>
 
       {/* ── Colors ── */}
-      <Section title="Colors" description="Four semantic color families. Each variant supports all colors.">
-        <Row label="Neutral (default)">
+      <Section title="Colors" description="Eight color families — semantic colors for meaning, plus special purpose colors for recommendations and benefit types.">
+        <Row label="Neutral (default) — general purpose">
           <Chip color="neutral">Default</Chip>
           <Chip color="neutral" variant="outline">Outline</Chip>
           <Chip color="neutral" variant="filled">Filled</Chip>
         </Row>
-        <Row label="Primary">
-          <Chip color="primary">Featured</Chip>
-          <Chip color="primary" variant="outline">Outline</Chip>
-          <Chip color="primary" variant="filled">Filled</Chip>
-        </Row>
-        <Row label="Success">
+        <Row label="Success — positive, active, approved">
           <Chip color="success">Active</Chip>
           <Chip color="success" variant="outline">Approved</Chip>
           <Chip color="success" variant="filled">Complete</Chip>
         </Row>
-        <Row label="Error">
+        <Row label="Error — negative, failed, critical">
           <Chip color="error">Failed</Chip>
           <Chip color="error" variant="outline">Overdue</Chip>
           <Chip color="error" variant="filled">Critical</Chip>
+        </Row>
+        <Row label="Info — informational, context">
+          <Chip color="info">New</Chip>
+          <Chip color="info" variant="outline">Updated</Chip>
+          <Chip color="info" variant="filled">Info</Chip>
+        </Row>
+        <Row label="Warning — attention, caution">
+          <Chip color="warning">Review</Chip>
+          <Chip color="warning" variant="outline">Pending</Chip>
+          <Chip color="warning" variant="filled">Attention</Chip>
+        </Row>
+        <Row label="Recommended — product recommendations (subtle=gradient, outline=bordered)">
+          <Chip color="recommended">Top pick</Chip>
+          <Chip color="recommended" variant="outline">Also recommended</Chip>
+          <Chip color="recommended" variant="filled">Best match</Chip>
+        </Row>
+        <Row label="HSA — HSA-eligible items">
+          <Chip color="hsa">HSA eligible</Chip>
+          <Chip color="hsa" variant="outline">HSA</Chip>
+          <Chip color="hsa" variant="filled">HSA</Chip>
+        </Row>
+        <Row label="LFSA — LFSA-eligible items">
+          <Chip color="lfsa">LFSA eligible</Chip>
+          <Chip color="lfsa" variant="outline">LFSA</Chip>
+          <Chip color="lfsa" variant="filled">LFSA</Chip>
         </Row>
       </Section>
 
@@ -193,10 +336,10 @@ export function ChipDoc() {
       </Section>
 
       {/* ── Colors × Variants Matrix ── */}
-      <Section title="Colors × Variants" description="All 12 combinations at a glance.">
+      <Section title="Colors × Variants" description="All 24 combinations at a glance.">
         {(['subtle', 'outline', 'filled'] as ChipVariant[]).map(variant => (
           <Row key={variant} label={variant}>
-            {(['neutral', 'primary', 'success', 'error'] as ChipColor[]).map(color => (
+            {(['neutral', 'success', 'error', 'info', 'warning', 'recommended', 'hsa', 'lfsa'] as ChipColor[]).map(color => (
               <Chip key={color} variant={variant} color={color}>
                 {color}
               </Chip>
@@ -233,9 +376,11 @@ export function ChipDoc() {
         </Row>
         <Row label="Selected with colors">
           <Chip variant="subtle" color="neutral" selected>Neutral</Chip>
-          <Chip variant="subtle" color="primary" selected>Primary</Chip>
           <Chip variant="subtle" color="success" selected>Success</Chip>
           <Chip variant="subtle" color="error" selected>Error</Chip>
+          <Chip variant="subtle" color="info" selected>Info</Chip>
+          <Chip variant="subtle" color="warning" selected>Warning</Chip>
+          <Chip variant="subtle" color="recommended" selected>Recommended</Chip>
         </Row>
       </Section>
 
@@ -254,9 +399,10 @@ export function ChipDoc() {
           </ChipGroup>
         </Row>
         <Row label="Removable with colors">
-          <Chip color="primary" removable onRemove={() => {}}>Featured</Chip>
           <Chip color="success" removable onRemove={() => {}}>Active</Chip>
           <Chip color="error" removable onRemove={() => {}}>Failed</Chip>
+          <Chip color="info" removable onRemove={() => {}}>New</Chip>
+          <Chip color="warning" removable onRemove={() => {}}>Review</Chip>
         </Row>
         <Row label="Outline removable">
           <Chip variant="outline" removable onRemove={() => {}}>Filter 1</Chip>
@@ -269,8 +415,9 @@ export function ChipDoc() {
         <Row>
           <Chip iconLeft={<CircleIcon />} color="success">Active</Chip>
           <Chip iconLeft={<CircleIcon />} color="error">Offline</Chip>
-          <Chip iconLeft={<StarIcon />} color="primary">Featured</Chip>
+          <Chip iconLeft={<StarIcon />} color="warning">Featured</Chip>
           <Chip iconLeft={<CheckIcon />} variant="outline">Verified</Chip>
+          <Chip iconLeft={<CheckIcon />} color="recommended">Top pick</Chip>
         </Row>
         <Row label="Icons with sizes">
           <Chip iconLeft={<CircleIcon />} size="sm">Small</Chip>
@@ -287,9 +434,13 @@ export function ChipDoc() {
           <Chip variant="filled" disabled>Filled</Chip>
         </Row>
         <Row label="Disabled with colors">
-          <Chip color="primary" disabled>Primary</Chip>
           <Chip color="success" disabled>Success</Chip>
           <Chip color="error" disabled>Error</Chip>
+          <Chip color="info" disabled>Info</Chip>
+          <Chip color="warning" disabled>Warning</Chip>
+          <Chip color="recommended" disabled>Recommended</Chip>
+          <Chip color="hsa" disabled>HSA</Chip>
+          <Chip color="lfsa" disabled>LFSA</Chip>
         </Row>
         <Row label="Disabled removable">
           <Chip removable disabled onRemove={() => {}}>Cannot remove</Chip>
@@ -307,7 +458,7 @@ export function ChipDoc() {
         </Row>
         <Row label="Custom gap (16px)">
           <ChipGroup gap={16}>
-            <Chip variant="filled" color="primary">React</Chip>
+            <Chip variant="filled" color="info">React</Chip>
             <Chip variant="filled" color="success">Node.js</Chip>
             <Chip variant="filled" color="neutral">Docker</Chip>
           </ChipGroup>
@@ -393,7 +544,7 @@ export function ChipDoc() {
             { rule: '2. Subtle for static labels', desc: 'Use variant="subtle" (default) for non-interactive labels, tags, and categories. This is the most common variant.' },
             { rule: '3. Outline for selectable chips', desc: 'Use variant="outline" for filter chips and choice chips — elements the user can select/deselect.' },
             { rule: '4. Filled for status indicators', desc: 'Use variant="filled" for high-emphasis status badges (Active, Failed, Pending). Use sparingly.' },
-            { rule: '5. Color conveys meaning', desc: 'Use color="success" for positive states (active, approved), color="error" for negative states (failed, overdue), color="primary" for highlighted items. Default to color="neutral".' },
+            { rule: '5. Color conveys meaning', desc: 'success = positive, error = negative, info = informational, warning = caution, recommended = product recommendations (gradient for primary, outline for secondary), hsa/lfsa = benefit type eligibility. Default to neutral.' },
             { rule: '6. Removable for user-added tags', desc: 'Use removable + onRemove for tags that the user has added and can dismiss (input chips, search filters).' },
             { rule: '7. Keep labels short', desc: 'Chip labels should be 1-3 words maximum. If the label is longer, use a different component.' },
           ].map(({ rule, desc }) => (
@@ -458,6 +609,16 @@ export function ChipDoc() {
 // Status indicator
 <Chip variant="filled" color="success">Active</Chip>
 <Chip variant="filled" color="error">Failed</Chip>
+<Chip color="info">Updated</Chip>
+<Chip color="warning">Review needed</Chip>
+
+// Recommendations (gradient for primary, outline for secondary)
+<Chip color="recommended">Top pick</Chip>
+<Chip color="recommended" variant="outline">Also recommended</Chip>
+
+// Benefit type eligibility
+<Chip color="hsa">HSA eligible</Chip>
+<Chip color="lfsa">LFSA eligible</Chip>
 
 // Removable tag
 <Chip removable onRemove={() => removeTag(id)}>

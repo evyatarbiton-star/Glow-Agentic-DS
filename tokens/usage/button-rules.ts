@@ -118,6 +118,24 @@ export const buttonUsageRules = {
         incorrect: ['Pill shape for a standard form submit button'],
       },
     },
+    {
+      id: 'size-defaults',
+      rule: 'Default button size is md (48px). Use lg (56px) only for hero/marketing CTAs — never in standard product flows.',
+      detail: 'Size guide: xs (36px) for tight spaces like table rows. sm (40px) for card actions and compact forms. md (48px) for standard forms, modals, page CTAs. lg (56px) for marketing landing pages and hero sections ONLY — not for product screens.',
+      examples: {
+        correct: ['md "Submit" in a form', 'sm "Book" on a provider card', 'md "Show results" in modal'],
+        incorrect: ['lg orange "Find a provider" in a product page — looks like a marketing banner'],
+      },
+    },
+    {
+      id: 'arrow-icon-in-buttons',
+      rule: 'For arrow icons inside buttons, use ArrowBigRight (line) — not ArrowRightCrFr (circle frame)',
+      detail: 'ArrowBigRight is clean and minimal. ArrowRightCrFr adds a circle frame that creates visual noise inside a button that already has its own shape. Import: `import ArrowBigRightLine from "@/components/Icon/icons/line/ArrowBigRight"`.',
+      examples: {
+        correct: ['<Button iconRight={<ArrowBigRightLine />}>Find a provider</Button>'],
+        incorrect: ['<Button iconRight={<ArrowRightCrFrLine />}>Find a provider</Button> — circle frame inside button is redundant'],
+      },
+    },
   ],
 
   // ── Pairing Matrix ─────────────────────────────────────────
@@ -156,6 +174,7 @@ export const buttonUsageRules = {
     'info-cta':              'secondary',    // "How coverage works" style CTAs
     'search-button':         'primary',      // Search icon button (pill, icon-only)
     'phone-icon':            'outline',      // Phone call icon button
+    'page-cta':              'primary',      // Page-level CTA — use md size, NOT lg
   },
 
 } as const

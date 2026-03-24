@@ -1,89 +1,59 @@
 import { DocLayout, Section } from '../layout/DocLayout'
 import { NetworkBadge } from '../../components/NetworkBadge'
 
-function Label({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="font-default text-[11px] font-medium text-neutral-text-light uppercase tracking-wider mb-xs">
-      {children}
-    </p>
-  )
-}
-
 export function NetworkBadgeDoc() {
   return (
     <DocLayout
-      title="Network Badge"
-      description="Displays insurance network tier status with a colored coin icon and label. Use this component everywhere network tier info appears — provider cards, modals, search results, benefit details. Never use a generic Chip for network tiers."
+      title="NetworkBadge"
+      description="Displays a dual-color coin icon + network tier label. Wraps <Chip variant='outline'> for consistent sizing. Use everywhere network tier info is shown: provider cards, modals, search results."
     >
-      {/* All Tiers */}
-      <Section title="Tiers">
-        <Label>In-Network (best coverage)</Label>
-        <div className="mb-m">
-          <NetworkBadge tier="in-network" label="In-Network" />
-        </div>
-
-        <Label>Tier 2 (secondary network)</Label>
-        <div className="mb-m">
-          <NetworkBadge tier="tier-2" label="Tier 2" />
-        </div>
-
-        <Label>Tier 3 (tertiary network)</Label>
-        <div className="mb-m">
-          <NetworkBadge tier="tier-3" label="Tier 3" />
-        </div>
-
-        <Label>Out-of-Network (worst coverage)</Label>
-        <div className="mb-m">
-          <NetworkBadge tier="out-of-network" label="Out-of-Network" />
+      <Section title="All tiers" description="Four network tiers with distinct color coding.">
+        <div className="flex flex-col gap-m p-m bg-white rounded-xs border border-neutral-border-light">
+          <div className="flex items-center gap-m">
+            <span className="font-default text-[13px] text-neutral-text-light w-[120px]">In-Network</span>
+            <NetworkBadge tier="in-network" label="In-Network" />
+          </div>
+          <div className="flex items-center gap-m">
+            <span className="font-default text-[13px] text-neutral-text-light w-[120px]">Tier 2</span>
+            <NetworkBadge tier="tier-2" label="Tier 2" />
+          </div>
+          <div className="flex items-center gap-m">
+            <span className="font-default text-[13px] text-neutral-text-light w-[120px]">Tier 3</span>
+            <NetworkBadge tier="tier-3" label="Tier 3" />
+          </div>
+          <div className="flex items-center gap-m">
+            <span className="font-default text-[13px] text-neutral-text-light w-[120px]">Out-of-Network</span>
+            <NetworkBadge tier="out-of-network" label="Out-of-Network" />
+          </div>
         </div>
       </Section>
 
-      {/* With Network Name */}
-      <Section title="With Network Name (multi-tier plans)">
-        <Label>Network name prepended to label</Label>
-        <div className="flex flex-wrap gap-xs">
-          <NetworkBadge tier="in-network" networkName="Aetna" label="Preferred" />
-          <NetworkBadge tier="tier-2" networkName="Aetna" label="Tier 2" />
-          <NetworkBadge tier="out-of-network" networkName="Aetna" label="Out-of-Network" />
+      <Section title="With network name" description="Multi-network plans show 'NetworkName · Tier' format.">
+        <div className="flex flex-col gap-m p-m bg-white rounded-xs border border-neutral-border-light">
+          <NetworkBadge tier="in-network" networkName="Aetna" label="In-Network" />
+          <NetworkBadge tier="tier-2" networkName="Anthem" label="Tier 2" />
+          <NetworkBadge tier="out-of-network" networkName="Cigna" label="Out-of-Network" />
         </div>
       </Section>
 
-      {/* Sizes */}
-      <Section title="Sizes">
-        <Label>Small (default) — 28px height, matches Chip sm</Label>
-        <div className="flex flex-wrap gap-xs mb-m">
-          <NetworkBadge tier="in-network" label="In-Network" size="sm" />
-          <NetworkBadge tier="tier-2" networkName="Aetna" label="Tier 2" size="sm" />
-        </div>
-
-        <Label>Medium — 32px height, matches Chip md</Label>
-        <div className="flex flex-wrap gap-xs">
-          <NetworkBadge tier="in-network" label="In-Network" size="md" />
-          <NetworkBadge tier="tier-2" networkName="Aetna" label="Tier 2" size="md" />
+      <Section title="Sizes" description="sm (28px) and md (32px) — matches Chip sizing.">
+        <div className="flex flex-col gap-m p-m bg-white rounded-xs border border-neutral-border-light">
+          <div className="flex items-center gap-m">
+            <span className="font-default text-[13px] text-neutral-text-light w-[32px]">sm</span>
+            <NetworkBadge tier="in-network" label="In-Network" size="sm" />
+          </div>
+          <div className="flex items-center gap-m">
+            <span className="font-default text-[13px] text-neutral-text-light w-[32px]">md</span>
+            <NetworkBadge tier="in-network" label="In-Network" size="md" />
+          </div>
         </div>
       </Section>
 
-      {/* Bordered vs Unbounded */}
-      <Section title="Bordered vs Unbounded">
-        <Label>Bordered (default) — with pill border</Label>
-        <div className="mb-m">
-          <NetworkBadge tier="in-network" label="In-Network" bordered />
-        </div>
-
-        <Label>Unbounded — icon + text only, no border</Label>
-        <div className="mb-m">
+      <Section title="Unbordered" description="bordered=false — just icon + text, no chip wrapper. Used inline in compact layouts.">
+        <div className="flex flex-col gap-m p-m bg-white rounded-xs border border-neutral-border-light">
           <NetworkBadge tier="in-network" label="In-Network" bordered={false} />
-        </div>
-      </Section>
-
-      {/* Usage Rules */}
-      <Section title="Usage Rules">
-        <div className="font-default text-[14px] text-neutral-text-dark space-y-xs">
-          <p><strong>Always use NetworkBadge</strong> — never use a generic Chip, Tag, or custom styled element for network tier display.</p>
-          <p><strong>Tier ordering:</strong> green (In-Network) → yellow (Tier 2) → purple (Tier 3) → red (Out-of-Network). Best coverage first, worst last.</p>
-          <p><strong>Single-network plans:</strong> Show only In-Network and Out-of-Network.</p>
-          <p><strong>Multi-tier plans:</strong> Show all tiers that exist in the plan. Use <code>networkName</code> prop to prepend the network name.</p>
-          <p><strong>ProviderCard handles it internally:</strong> When using ProviderCard, you pass <code>networkTier</code> and <code>networkLabel</code> props — NetworkBadge is rendered automatically. Use NetworkBadge directly in modals, detail pages, lists, and other contexts.</p>
+          <NetworkBadge tier="out-of-network" label="Out-of-Network" bordered={false} />
+          <NetworkBadge tier="tier-2" networkName="Anthem" label="Tier 2" bordered={false} />
         </div>
       </Section>
     </DocLayout>

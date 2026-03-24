@@ -70,6 +70,7 @@ export function Card({
   radius      = 'lg',
   padding     = 'md',
   interactive = false,
+  isActive    = false,
   as          = 'div',
   children,
   className   = '',
@@ -87,10 +88,10 @@ export function Card({
     borderStyle: v.borderWidth ? 'solid' : 'none',
     borderRadius: r,
     padding: p,
-    boxShadow: v.shadow,
+    boxShadow: isActive ? HOVER_SHADOW : v.shadow,
     overflow: 'hidden',
     boxSizing: 'border-box',
-    transition: interactive ? 'box-shadow 150ms ease, transform 150ms ease' : undefined,
+    transition: (interactive || isActive) ? 'box-shadow 150ms ease, transform 150ms ease' : undefined,
     cursor: interactive ? 'pointer' : undefined,
     ...styleProp,
   }
@@ -108,7 +109,7 @@ export function Card({
       } : undefined}
       onMouseLeave={interactive ? (e: React.MouseEvent<HTMLElement>) => {
         const el = e.currentTarget
-        el.style.boxShadow = v.shadow
+        el.style.boxShadow = isActive ? HOVER_SHADOW : v.shadow
         el.style.transform = 'translateY(0)'
       } : undefined}
       {...props}

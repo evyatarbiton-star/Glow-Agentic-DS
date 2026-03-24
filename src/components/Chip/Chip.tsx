@@ -11,7 +11,7 @@ import { fontWeights } from '../../../tokens/primitive/typography'
 // Use Button for actions.
 //
 // Variants:  subtle | outline | filled
-// Colors:    neutral | primary | success | error
+// Colors:    neutral | success | error | info | warning | recommended | hsa | lfsa
 // Sizes:     sm (28px) | md (32px) | lg (36px)
 // Features:  selected, removable, iconLeft, disabled
 // ============================================================
@@ -46,6 +46,7 @@ type VariantColors = {
   text: string
   border?: string
   borderWidth?: number
+  background?: string   // CSS background (for gradients) — overrides bg
 }
 
 type VariantDef = {
@@ -67,26 +68,54 @@ const subtleVariants: Record<ChipColor, VariantDef> = {
     selected: { bg: sc.neutral.surface.DEFAULT, text: sc.neutral.text.negative },                                                     // #000 bg, #fff text
     disabled: { bg: sc.neutral.surface.disabled, text: sc.neutral.text.disabledDark },                                                // #d4d4d4 bg, #949494 text
   },
-  primary: {
-    default:  { bg: sc.primary.surface.subtle, text: sc.primary.text.DEFAULT },                                                       // #fff8f5 bg, #fd5201 text
-    hover:    { bg: sc.primary.surface.extraLight, text: sc.primary.text.dark },                                                      // #ffede5 bg
-    focus:    { bg: sc.primary.surface.extraLight, text: sc.primary.text.DEFAULT, focusBorder: sc.primary.border.light, focusBorderWidth: 2 },
-    selected: { bg: sc.primary.surface.DEFAULT, text: sc.neutral.text.negative },                                                     // #fd5201 bg, #fff text
-    disabled: { bg: sc.primary.surface.disabled, text: sc.primary.text.disabled },                                                    // #ffb999 bg, #fff8f5 text
-  },
   success: {
-    default:  { bg: sc.success.surface.subtle, text: sc.success.text.dark },                                                          // #f1f9f1 bg, #317233 text
+    default:  { bg: sc.success.surface.subtle, text: sc.success.text.dark },                                                          // #f1f9f1 bg → #e2f3e3 (Figma green/100)
     hover:    { bg: sc.success.surface.light, text: sc.success.text.dark },                                                           // #c2e5c3 bg
     focus:    { bg: sc.success.surface.light, text: sc.success.text.dark, focusBorder: sc.success.border.light, focusBorderWidth: 2 },
     selected: { bg: sc.success.surface.DEFAULT, text: sc.neutral.text.negative },                                                     // #5bb95e bg, #fff text
     disabled: { bg: sc.success.surface.disabled, text: sc.neutral.text.disabledDark },                                                // #c2e5c3 bg, #949494 text
   },
   error: {
-    default:  { bg: sc.error.surface.subtle, text: sc.error.text.DEFAULT },                                                           // #feecec bg, #e10f0f text
+    default:  { bg: sc.error.surface.subtle, text: sc.error.text.DEFAULT },                                                           // #feecec bg → #fcd9d9 (Figma red/100)
     hover:    { bg: sc.error.surface.light, text: sc.error.text.dark },                                                               // #f78c8c bg
     focus:    { bg: sc.error.surface.light, text: sc.error.text.DEFAULT, focusBorder: sc.error.border.light, focusBorderWidth: 2 },
     selected: { bg: sc.error.surface.DEFAULT, text: sc.neutral.text.negative },                                                       // #f23c3c bg, #fff text
     disabled: { bg: sc.error.surface.disabled, text: sc.error.text.disabled },                                                        // #fab3b3 bg, #fcd9d9 text
+  },
+  info: {
+    default:  { bg: sc['accent-blue'].surface.light, text: sc['accent-blue'].text.dark },                                             // #ebf0ff bg, #245eff text
+    hover:    { bg: sc['accent-blue'].surface.hover, text: sc['accent-blue'].text.dark },                                             // #d3dfff bg
+    focus:    { bg: sc['accent-blue'].surface.hover, text: sc['accent-blue'].text.dark, focusBorder: sc['accent-blue'].border.light, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-blue'].surface.selected, text: sc.neutral.text.negative },                                             // #618bff bg, #fff text
+    disabled: { bg: sc['accent-blue'].surface.disabled, text: sc.neutral.text.disabledDark },                                         // #d3dfff bg, #949494 text
+  },
+  warning: {
+    default:  { bg: sc['accent-yellow'].surface.light, text: sc['accent-yellow'].text.dark },                                         // #fff3c7 bg, #947400 text
+    hover:    { bg: sc['accent-yellow'].surface.hover, text: sc['accent-yellow'].text.dark },                                         // #ffe78f bg
+    focus:    { bg: sc['accent-yellow'].surface.hover, text: sc['accent-yellow'].text.dark, focusBorder: sc['accent-yellow'].border.light, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.negative },                                           // #ffd129 bg, #fff text
+    disabled: { bg: sc['accent-yellow'].surface.disabled, text: sc.neutral.text.disabledDark },                                       // #ffe78f bg, #949494 text
+  },
+  recommended: {
+    default:  { bg: 'transparent', text: sc.neutral.text.DEFAULT, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.light}, ${sc.success.surface.light})` },  // gradient yellow→green
+    hover:    { bg: 'transparent', text: sc.neutral.text.DEFAULT, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.hover}, ${sc.success.surface.light})` },
+    focus:    { bg: 'transparent', text: sc.neutral.text.DEFAULT, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.light}, ${sc.success.surface.light})`, focusBorder: sc['accent-yellow'].border.DEFAULT, focusBorderWidth: 2 },
+    selected: { bg: 'transparent', text: sc.neutral.text.DEFAULT, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.hover}, ${sc.success.surface.hover})` },
+    disabled: { bg: sc.neutral.surface.disabled, text: sc.neutral.text.disabledDark },                                                // fallback solid when disabled
+  },
+  hsa: {
+    default:  { bg: sc['accent-yellow'].surface.light, text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1 },   // #fff3c7 bg, #ffdb57 border
+    hover:    { bg: sc['accent-yellow'].surface.hover, text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1 },
+    focus:    { bg: sc['accent-yellow'].surface.light, text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1, focusBorder: sc['accent-yellow'].border.darker, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.negative, border: sc['accent-yellow'].border.darker, borderWidth: 1 },
+    disabled: { bg: sc['accent-yellow'].surface.disabled, text: sc.neutral.text.disabledDark, border: sc['accent-yellow'].border.light, borderWidth: 1 },
+  },
+  lfsa: {
+    default:  { bg: sc['accent-purple'].surface.light, text: sc['accent-purple'].text.dark, border: sc['accent-purple'].border.DEFAULT, borderWidth: 1 },   // #e7dafb bg, #b38cf3 border
+    hover:    { bg: sc['accent-purple'].surface.hover, text: sc['accent-purple'].text.dark, border: sc['accent-purple'].border.DEFAULT, borderWidth: 1 },
+    focus:    { bg: sc['accent-purple'].surface.light, text: sc['accent-purple'].text.dark, border: sc['accent-purple'].border.DEFAULT, borderWidth: 1, focusBorder: sc['accent-purple'].border.darker, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-purple'].surface.selected, text: sc.neutral.text.negative, border: sc['accent-purple'].border.darker, borderWidth: 1 },
+    disabled: { bg: sc['accent-purple'].surface.disabled, text: sc.neutral.text.disabledDark, border: sc['accent-purple'].border.light, borderWidth: 1 },
   },
 }
 
@@ -100,13 +129,6 @@ const outlineVariants: Record<ChipColor, VariantDef> = {
     focus:    { bg: 'transparent', text: sc.neutral.text.DEFAULT, border: sc.neutral.border.strong, borderWidth: 1, focusBorder: sc.neutral.border.strong, focusBorderWidth: 2 },
     selected: { bg: sc.neutral.surface.DEFAULT, text: sc.neutral.text.negative, border: sc.neutral.border.DEFAULT, borderWidth: 1 },
     disabled: { bg: 'transparent', text: sc.neutral.text.disabledDark, border: sc.neutral.border.light, borderWidth: 1 },
-  },
-  primary: {
-    default:  { bg: 'transparent', text: sc.primary.text.DEFAULT, border: sc.primary.border.DEFAULT, borderWidth: 1 },
-    hover:    { bg: sc.primary.surface.subtle, text: sc.primary.text.dark, border: sc.primary.border.DEFAULT, borderWidth: 1 },
-    focus:    { bg: 'transparent', text: sc.primary.text.DEFAULT, border: sc.primary.border.DEFAULT, borderWidth: 1, focusBorder: sc.primary.border.light, focusBorderWidth: 2 },
-    selected: { bg: sc.primary.surface.DEFAULT, text: sc.neutral.text.negative, border: sc.primary.border.DEFAULT, borderWidth: 1 },
-    disabled: { bg: 'transparent', text: sc.primary.text.disabled, border: sc.primary.border.light, borderWidth: 1 },
   },
   success: {
     default:  { bg: 'transparent', text: sc.success.text.dark, border: sc.success.border.DEFAULT, borderWidth: 1 },
@@ -122,6 +144,41 @@ const outlineVariants: Record<ChipColor, VariantDef> = {
     selected: { bg: sc.error.surface.DEFAULT, text: sc.neutral.text.negative, border: sc.error.border.DEFAULT, borderWidth: 1 },
     disabled: { bg: 'transparent', text: sc.error.text.disabled, border: sc.error.border.light, borderWidth: 1 },
   },
+  info: {
+    default:  { bg: 'transparent', text: sc['accent-blue'].text.dark, border: sc['accent-blue'].border.DEFAULT, borderWidth: 1 },
+    hover:    { bg: sc['accent-blue'].surface.subtle, text: sc['accent-blue'].text.dark, border: sc['accent-blue'].border.DEFAULT, borderWidth: 1 },
+    focus:    { bg: 'transparent', text: sc['accent-blue'].text.dark, border: sc['accent-blue'].border.DEFAULT, borderWidth: 1, focusBorder: sc['accent-blue'].border.light, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-blue'].surface.selected, text: sc.neutral.text.negative, border: sc['accent-blue'].border.darker, borderWidth: 1 },
+    disabled: { bg: 'transparent', text: sc.neutral.text.disabledDark, border: sc['accent-blue'].border.light, borderWidth: 1 },
+  },
+  warning: {
+    default:  { bg: 'transparent', text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1 },
+    hover:    { bg: sc['accent-yellow'].surface.subtle, text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1 },
+    focus:    { bg: 'transparent', text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1, focusBorder: sc['accent-yellow'].border.light, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.negative, border: sc['accent-yellow'].border.darker, borderWidth: 1 },
+    disabled: { bg: 'transparent', text: sc.neutral.text.disabledDark, border: sc['accent-yellow'].border.light, borderWidth: 1 },
+  },
+  recommended: {
+    default:  { bg: 'transparent', text: sc.neutral.text.DEFAULT, border: sc['accent-yellow'].surface.light, borderWidth: 2 },        // Figma: 2nd Recommended — yellow border
+    hover:    { bg: sc['accent-yellow'].surface.subtle, text: sc.neutral.text.DEFAULT, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 2 },
+    focus:    { bg: 'transparent', text: sc.neutral.text.DEFAULT, border: sc['accent-yellow'].surface.light, borderWidth: 2, focusBorder: sc['accent-yellow'].border.DEFAULT, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-yellow'].surface.light, text: sc.neutral.text.DEFAULT, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 2 },
+    disabled: { bg: 'transparent', text: sc.neutral.text.disabledDark, border: sc.neutral.border.light, borderWidth: 2 },
+  },
+  hsa: {
+    default:  { bg: 'transparent', text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1 },
+    hover:    { bg: sc['accent-yellow'].surface.subtle, text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1 },
+    focus:    { bg: 'transparent', text: sc['accent-yellow'].text.dark, border: sc['accent-yellow'].border.DEFAULT, borderWidth: 1, focusBorder: sc['accent-yellow'].border.darker, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.negative, border: sc['accent-yellow'].border.darker, borderWidth: 1 },
+    disabled: { bg: 'transparent', text: sc.neutral.text.disabledDark, border: sc['accent-yellow'].border.light, borderWidth: 1 },
+  },
+  lfsa: {
+    default:  { bg: 'transparent', text: sc['accent-purple'].text.dark, border: sc['accent-purple'].border.DEFAULT, borderWidth: 1 },
+    hover:    { bg: sc['accent-purple'].surface.subtle, text: sc['accent-purple'].text.dark, border: sc['accent-purple'].border.DEFAULT, borderWidth: 1 },
+    focus:    { bg: 'transparent', text: sc['accent-purple'].text.dark, border: sc['accent-purple'].border.DEFAULT, borderWidth: 1, focusBorder: sc['accent-purple'].border.darker, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-purple'].surface.selected, text: sc.neutral.text.negative, border: sc['accent-purple'].border.darker, borderWidth: 1 },
+    disabled: { bg: 'transparent', text: sc.neutral.text.disabledDark, border: sc['accent-purple'].border.light, borderWidth: 1 },
+  },
 }
 
 // ── Filled Variant ────────────────────────────────────────────
@@ -134,13 +191,6 @@ const filledVariants: Record<ChipColor, VariantDef> = {
     focus:    { bg: sc.neutral.surface.focused, text: sc.neutral.text.negative, focusBorder: sc.neutral.border.light, focusBorderWidth: 2 },
     selected: { bg: sc.neutral.surface.DEFAULT, text: sc.neutral.text.negative },                                                     // same as default (already filled)
     disabled: { bg: sc.neutral.surface.disabled, text: sc.neutral.text.disabledDark },
-  },
-  primary: {
-    default:  { bg: sc.primary.surface.DEFAULT, text: sc.neutral.text.negative },                                                     // #fd5201 bg, #fff text
-    hover:    { bg: sc.primary.surface.hover, text: sc.neutral.text.negative },                                                       // #fe7434 bg
-    focus:    { bg: sc.primary.surface.focused, text: sc.neutral.text.negative, focusBorder: sc.primary.border.light, focusBorderWidth: 2 },
-    selected: { bg: sc.primary.surface.selected, text: sc.neutral.text.negative },                                                    // #cb4101 bg
-    disabled: { bg: sc.primary.surface.disabled, text: sc.primary.text.disabled },
   },
   success: {
     default:  { bg: sc.success.surface.DEFAULT, text: sc.neutral.text.negative },                                                     // #5bb95e bg
@@ -155,6 +205,41 @@ const filledVariants: Record<ChipColor, VariantDef> = {
     focus:    { bg: sc.error.surface.focused, text: sc.neutral.text.negative, focusBorder: sc.error.border.light, focusBorderWidth: 2 },
     selected: { bg: sc.error.surface.selected, text: sc.neutral.text.negative },                                                      // #e10f0f bg
     disabled: { bg: sc.error.surface.disabled, text: sc.error.text.disabled },
+  },
+  info: {
+    default:  { bg: sc['accent-blue'].surface.selected, text: sc.neutral.text.negative },                                             // #618bff bg
+    hover:    { bg: sc['accent-blue'].surface.DEFAULT, text: sc.neutral.text.negative },                                              // #99b4ff bg
+    focus:    { bg: sc['accent-blue'].surface.selected, text: sc.neutral.text.negative, focusBorder: sc['accent-blue'].border.light, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-blue'].surface.selected, text: sc.neutral.text.negative },
+    disabled: { bg: sc['accent-blue'].surface.disabled, text: sc.neutral.text.disabledDark },
+  },
+  warning: {
+    default:  { bg: sc['accent-yellow'].surface.DEFAULT, text: sc.neutral.text.DEFAULT },                                             // #ffdb57 bg, black text
+    hover:    { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.DEFAULT },                                            // #ffd129 bg
+    focus:    { bg: sc['accent-yellow'].surface.DEFAULT, text: sc.neutral.text.DEFAULT, focusBorder: sc['accent-yellow'].border.darker, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.DEFAULT },
+    disabled: { bg: sc['accent-yellow'].surface.disabled, text: sc.neutral.text.disabledDark },
+  },
+  recommended: {
+    default:  { bg: 'transparent', text: sc.neutral.text.negative, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.DEFAULT}, ${sc.success.surface.DEFAULT})` },
+    hover:    { bg: 'transparent', text: sc.neutral.text.negative, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.selected}, ${sc.success.surface.hover})` },
+    focus:    { bg: 'transparent', text: sc.neutral.text.negative, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.DEFAULT}, ${sc.success.surface.DEFAULT})`, focusBorder: sc['accent-yellow'].border.DEFAULT, focusBorderWidth: 2 },
+    selected: { bg: 'transparent', text: sc.neutral.text.negative, background: `linear-gradient(to right, ${sc['accent-yellow'].surface.selected}, ${sc.success.surface.selected})` },
+    disabled: { bg: sc.neutral.surface.disabled, text: sc.neutral.text.disabledDark },
+  },
+  hsa: {
+    default:  { bg: sc['accent-yellow'].surface.DEFAULT, text: sc.neutral.text.DEFAULT },                                             // #ffdb57 bg
+    hover:    { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.DEFAULT },
+    focus:    { bg: sc['accent-yellow'].surface.DEFAULT, text: sc.neutral.text.DEFAULT, focusBorder: sc['accent-yellow'].border.darker, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-yellow'].surface.selected, text: sc.neutral.text.DEFAULT },
+    disabled: { bg: sc['accent-yellow'].surface.disabled, text: sc.neutral.text.disabledDark },
+  },
+  lfsa: {
+    default:  { bg: sc['accent-purple'].surface.DEFAULT, text: sc.neutral.text.negative },                                            // #b38cf3 bg
+    hover:    { bg: sc['accent-purple'].surface.selected, text: sc.neutral.text.negative },
+    focus:    { bg: sc['accent-purple'].surface.DEFAULT, text: sc.neutral.text.negative, focusBorder: sc['accent-purple'].border.darker, focusBorderWidth: 2 },
+    selected: { bg: sc['accent-purple'].surface.selected, text: sc.neutral.text.negative },
+    disabled: { bg: sc['accent-purple'].surface.disabled, text: sc.neutral.text.disabledDark },
   },
 }
 
@@ -216,8 +301,9 @@ export function Chip({
       : v.default
 
   const baseStyle: React.CSSProperties = {
-    // Colors
-    backgroundColor: colors.bg,
+    // Always use `background` (shorthand) for both solid fills and gradients.
+    // React 19 conflicts when mixing `background` and `backgroundColor` across rerenders.
+    background: colors.background ?? colors.bg,
     color: colors.text,
     borderColor: colors.border ?? 'transparent',
     borderWidth: colors.borderWidth ?? 0,
@@ -235,7 +321,7 @@ export function Chip({
     // Misc
     cursor: disabled ? 'not-allowed' : isInteractive ? 'pointer' : 'default',
     opacity: disabled ? 1 : undefined,                         // colors handle disabled, not opacity
-    transition: 'background-color 150ms ease, color 150ms ease, border-color 150ms ease',
+    transition: 'background 150ms ease, color 150ms ease, border-color 150ms ease',
     userSelect: 'none',
     boxSizing: 'border-box',
     ...styleProp,
@@ -262,7 +348,7 @@ export function Chip({
       onMouseEnter={isInteractive ? (e) => {
         const el = e.currentTarget
         if (selected) return
-        el.style.backgroundColor = v.hover.bg
+        el.style.background = v.hover.background ?? v.hover.bg
         el.style.color = v.hover.text
         if (v.hover.border) el.style.borderColor = v.hover.border
       } : undefined}
@@ -270,7 +356,7 @@ export function Chip({
       onMouseLeave={isInteractive ? (e) => {
         const el = e.currentTarget
         if (selected) return
-        el.style.backgroundColor = colors.bg
+        el.style.background = colors.background ?? colors.bg
         el.style.color = colors.text
         el.style.borderColor = colors.border ?? 'transparent'
         if (document.activeElement !== el) {
@@ -340,11 +426,11 @@ export function Chip({
           }}
           onMouseEnter={!disabled ? (e) => {
             e.currentTarget.style.opacity = '1'
-            e.currentTarget.style.backgroundColor = 'rgba(0,0,0,0.08)'
+            e.currentTarget.style.background = 'rgba(0,0,0,0.08)'
           } : undefined}
           onMouseLeave={!disabled ? (e) => {
             e.currentTarget.style.opacity = '0.6'
-            e.currentTarget.style.backgroundColor = 'transparent'
+            e.currentTarget.style.background = 'transparent'
           } : undefined}
         >
           <CloseIcon size={s.closeIconSize} />

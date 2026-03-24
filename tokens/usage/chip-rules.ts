@@ -1,6 +1,6 @@
 // ============================================================
 // GLOW DS — Chip Usage Rules
-// Source: Healthee product analysis — real-world chip patterns
+// Source: Figma Web DS node 116:12325 + Healthee product patterns
 //
 // These rules define WHEN to use each Chip variant and color.
 // AI agents generating screens MUST follow these rules.
@@ -18,16 +18,20 @@ export const chipUsageRules = {
   // use <Button pill>. If it selects/filters/labels, use <Chip>.
 
   variants: {
-    subtle:  'Default — soft background fill. Use for static labels, categories, tags.',
-    outline: 'Border only — use for selectable/filter chips. Clear selected state contrast.',
+    subtle:  'Default — soft background fill. Use for static labels, categories, tags. For "recommended" color, renders a gradient.',
+    outline: 'Border only — use for selectable/filter chips. For "recommended" color, renders a bordered secondary recommendation.',
     filled:  'Solid background — use for strong status indicators, badges, active state emphasis.',
   },
 
   colors: {
-    neutral: 'Default — general-purpose labels, categories, tags, filters.',
-    primary: 'Brand emphasis — selected state, active filters, primary categories.',
-    success: 'Positive — "active", "in-network", "available", "verified", "approved".',
-    error:   'Negative — "inactive", "out-of-network", "unavailable", "expired", "denied".',
+    neutral:     'Default — general-purpose labels, categories, tags, filters.',
+    success:     'Positive — "active", "in-network", "available", "verified", "approved".',
+    error:       'Negative — "inactive", "out-of-network", "unavailable", "expired", "denied".',
+    info:        'Informational — "new", "updated", neutral-positive context, blue tones.',
+    warning:     'Attention — "review needed", "pending action", caution, yellow tones.',
+    recommended: 'Product recommendations — subtle variant shows gradient (yellow→green), outline shows bordered secondary recommendation. Use when explicitly recommending a provider, plan, or option.',
+    hsa:         'HSA-eligible items — yellow background with yellow border. Use specifically for marking HSA eligibility.',
+    lfsa:        'LFSA-eligible items — purple background with purple border. Use specifically for marking LFSA eligibility.',
   },
 
   sizes: {
@@ -59,11 +63,21 @@ export const chipUsageRules = {
     {
       id: 'color-matches-meaning',
       rule: 'Always match Chip color to semantic meaning',
-      detail: 'success = positive/active, error = negative/inactive, primary = brand/selected, neutral = general.',
+      detail: 'success = positive/active, error = negative/inactive, info = informational, warning = caution, recommended = product recommendation, hsa/lfsa = benefit eligibility, neutral = general.',
       examples: {
-        correct: ['<Chip color="success">In-Network</Chip>', '<Chip color="error">Out-of-Network</Chip>'],
-        incorrect: ['<Chip color="neutral">In-Network</Chip> (should be success)'],
+        correct: ['<Chip color="success">In-Network</Chip>', '<Chip color="error">Out-of-Network</Chip>', '<Chip color="recommended">Top pick</Chip>'],
+        incorrect: ['<Chip color="neutral">In-Network</Chip> (should be success)', '<Chip color="success">Recommended</Chip> (should be recommended)'],
       },
+    },
+    {
+      id: 'recommended-variants',
+      rule: 'Use recommended + subtle for primary recommendation, recommended + outline for secondary',
+      detail: 'The gradient (subtle) signals the top/primary recommendation. The bordered (outline) signals other recommended options. Never use more than one gradient chip in the same context.',
+    },
+    {
+      id: 'hsa-lfsa-specific',
+      rule: 'Only use hsa/lfsa colors for actual benefit type eligibility',
+      detail: 'These are domain-specific colors. hsa = Health Savings Account eligible, lfsa = Limited Flexible Spending Account eligible. Do not use them for other purposes.',
     },
     {
       id: 'chipgroup-for-multiple',

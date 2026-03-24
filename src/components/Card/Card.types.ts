@@ -13,6 +13,8 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   padding?: CardPadding
   /** Adds hover effect: shadow lift + translateY(-1px). Use for clickable cards. */
   interactive?: boolean
+  /** Persistent highlight state — keeps hover shadow active (e.g., when a drawer is open for this card) */
+  isActive?: boolean
   /** Semantic HTML element to render */
   as?: 'div' | 'article' | 'section' | 'a'
   children: ReactNode

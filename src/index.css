@@ -17,8 +17,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 4px; }
+  /* Scrollbar — global default (light, thin) */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #d4d4d4; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb { background: #ededed; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #e0e0e0; }
+  ::-webkit-scrollbar-corner { background: transparent; }
 }

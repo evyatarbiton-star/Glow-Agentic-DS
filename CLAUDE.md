@@ -64,6 +64,8 @@ Primitive (raw values) → Semantic (meaning) → Usage Rules (constraints)
 - `tokens/usage/modal-rules.ts` — Modal sizes, footer patterns, mobile behavior
 - `tokens/usage/avatar-navbar-rules.ts` — Avatar sizes, NavBar zones, composition
 - `tokens/usage/providercard-rules.ts` — ProviderCard avatar fallback, providerType, composition
+- `tokens/usage/sidenav-rules.ts` — SideNav anatomy, compound components, hover states, responsive behavior
+- `tokens/usage/zoe-rules.ts` — Zoe AI chat answer types, component anatomy, layout rules, context defaults
 
 ---
 
@@ -82,6 +84,7 @@ import {
   Avatar, NavBar,
   NetworkBadge,
   StarRating,
+  ScrollArea,
 } from '../components'
 ```
 
@@ -109,19 +112,21 @@ import {
 | Component | Variants | Key Props |
 |-----------|----------|-----------|
 | **Card** | outline, elevated, filled | `radius` (sm/md/lg), `padding` (none/sm/md/lg), `interactive`, `as` |
-| **Chip** | subtle, outline, filled | `color` (neutral/primary/success/error), `size` (sm/md/lg), `selected`, `removable`, `iconLeft` |
+| **Chip** | subtle, outline, filled | `color` (neutral/success/error/info/warning/recommended/hsa/lfsa), `size` (sm/md/lg), `selected`, `removable`, `iconLeft` |
 | **ChipGroup** | — | `gap`, `wrap` |
 | **Modal** | — | `size` (sm/md/lg), `title`, `showBackButton`, `footer`, `footerActions`, `footerLeft` |
 | **Tooltip** | default (dark blur), rich (solid) | `direction`, `title`, `leftIcon`, `media`, `primaryAction`, `secondaryAction`, `link` |
 | **Avatar** | — | `size` (sm/md/lg), `src`, `alt`, `fallback`, `bgColor`, `color` |
-| **NetworkBadge** | — | `tier` (in-network/tier-2/tier-3/out-of-network), `label`, `networkName`, `bordered` (default: true), `size` (sm/md, default: sm). **ALWAYS use this for network tier display — never use Chip.** |
+| **NetworkBadge** | — | Thin wrapper around Chip — provides tier→color mapping + NetworkTierCoin icon. See Chip doc for examples. |
 | **ProviderCard** | — | `name`, `specialty`, `loading`, `photoUrl`, `providerType` (male/female/facility), `networkTier`, `cost`, `costLevel`, `languages` (string[]), `virtualAvailable`, `onBookClick`, `onCallClick` |
 | **StarRating** | — | `rating`, `maxStars`, `size` (xs/sm/md/lg), `showValue`, `reviewCount`, `filledColor`, `emptyColor` |
+| **ScrollArea** | — | `direction` (horizontal/vertical/both), `gap`, `snap`, `snapAlign`, `maxHeight`, `maxWidth`, `hideScrollbar` |
 
 ### Navigation
 | Component | Key Props |
 |-----------|-----------|
 | **NavBar** | `left` (NavBar.Brand), `center` (NavBar.Tabs), `right` (free-form), `sticky`, `maxWidth`, `responsive`, `mobileRight` |
+| **SideNav** | `open`, `onClose`, `closeOnBackdropClick`, `closeOnEscape`. Compound: `.Profile` (name, companyName, companyLogo), `.Section`, `.NavItem` (label, expandable, expanded), `.SubItem` (label), `.ToolItem` (thumbnail, title, description, trailingIcon), `.AppDownload` (qrImageUrl, onAppleClick, onAndroidClick), `.Footer`, `.FooterItem` (label, right) |
 
 ### Icon System (1,879 icons)
 | Style | Count | Import Pattern |
@@ -191,6 +196,8 @@ This is the most common mistake. Follow this decision tree:
 8. **Never put two filled buttons side by side** — primary + outline, or secondary + outline
 9. **Never use `font-display` for anything except page-level H1** — everything else is `font-default`
 10. **Never nest elevated Cards inside elevated Cards** — use outline or filled for inner cards
+11. **Never generate a ProviderCard with Book but no Call** — Call is ALWAYS required. Valid: Call+Book, Call only, or no actions.
+12. **Never use lg (56px) buttons in product screens** — lg is for marketing/hero only. Use md (48px) or sm (40px).
 
 ### Absolute Do's (ALWAYS do these):
 
@@ -202,8 +209,51 @@ This is the most common mistake. Follow this decision tree:
 6. **Always provide `alt` text** for Avatar when `src` is provided
 7. **Always use `footerActions`** for Modal buttons (right-aligned) — not custom `footer`
 8. **Always wrap multiple Chips** in `<ChipGroup>` for consistent spacing
-9. **Always match Chip color** to semantic meaning (success = positive, error = negative)
+9. **Always match Chip color** to semantic meaning (success = positive, error = negative, info = informational, warning = caution, recommended = product recommendation)
 10. **Always default backgrounds to white** (`bg-neutral-negative`) unless Figma says otherwise
+
+---
+
+## Figma-to-Token Mapping
+
+When building from Figma designs, NEVER copy raw values. Map every value to a DS token:
+
+### Colors
+Figma shows hex → find the matching semantic token:
+- `#fd5201` → `sc.primary.surface.DEFAULT`
+- `#f2f2f2` → `sc.neutral.surface.subtle`
+- `#e0e0e0` → `sc.neutral.surface.light` / `sc.neutral.border.strong`
+- `#404040` → `sc.neutral.text.dark`
+- `#8a8a8a` → `sc.neutral.text.light`
+- `#ffffff` → `sc.neutral.surface.negative`
+- `#000000` → `sc.neutral.text.DEFAULT`
+- If no exact match exists → STOP and flag it. Do not invent a new token or use a raw hex.
+
+### Spacing
+Figma shows pixels → find the matching spacing token:
+- `4px` → `semanticSpacing.xxxs` | `8px` → `xxs` | `12px` → `xs` | `16px` → `s` | `20px` → `m`
+- `24px` → `l` | `32px` → `xl` | `40px` → `xxl` | `48px` → `xxxl` | `56px` → `xxxxl` | `72px` → `5xl`
+- If the value doesn't match any token → use the nearest token and note the deviation.
+
+### Typography
+Figma shows font/size/weight → find the matching typography token:
+- Tiempos 40px/48px → `typographyStyles['display-xs']`
+- Founders 18px/21px → `typographyStyles['paragraph-l']`
+- Founders 16px/19px → `typographyStyles['paragraph-m']`
+- Never set fontSize/lineHeight/fontFamily individually — always spread from `typographyStyles['token-name']`
+
+### Components
+Before building ANY card, input, badge, or container:
+1. Check the Component Inventory table above
+2. Check `src/components/_lab/` for WIP components
+3. If a matching component exists → USE IT, even if the Figma looks slightly different
+4. If no match → build it using DS tokens only, flag it as a potential new DS component
+
+### Validation
+Run `node scripts/validate-tokens.cjs src/path/to/file.tsx` to check for hardcoded values.
+The script detects hardcoded hex colors, inline SVGs, and suggests the correct DS token.
+
+---
 
 ### Component Pattern:
 
@@ -319,6 +369,28 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 
 // WRONG — never manually compose Card + Avatar for providers
 // <Card><Avatar /><div>name...</div></Card>  ← DON'T DO THIS
+```
+
+### ProviderCard Carousel (ScrollArea + fixed-width wrappers)
+```tsx
+// ProviderCard fills its parent width — control card size via the wrapper div
+<ScrollArea direction="horizontal" gap={16} snap>
+  {providers.map(p => (
+    <div key={p.id} style={{ width: 360, minWidth: 360, flexShrink: 0, scrollSnapAlign: 'start', display: 'flex' }}>
+      <ProviderCard
+        name={p.name} specialty={p.specialty} providerType={p.providerType}
+        networkTier={p.networkTier} cost={p.cost} costLevel={p.costLevel}
+        onCallClick={() => call(p)}
+        onBookClick={p.hasBook ? () => book(p) : undefined}
+      />
+    </div>
+  ))}
+</ScrollArea>
+// Key rules:
+// - Each wrapper is 360px fixed width — ProviderCard stretches to fill it
+// - 16px gap between cards (ScrollArea gap prop)
+// - Cards without Book button auto-show "Call to check availability"
+// - All cards same height even with different content (flex stretch)
 ```
 
 ### Filter Bar (ChipGroup + TextInput)
@@ -456,6 +528,14 @@ When adding, removing, or modifying tokens or components, **always complete ever
 - [ ] Place the icon in the correct style folder (`line/`, `solid/`, `specialty/`, `profile/`)
 - [ ] Update icon **counts** in this file and in the Icon doc page
 - [ ] Ensure the icon uses **`currentColor`** and supports standard sizes
+
+### New component / screen — token compliance
+- [ ] Run `node scripts/validate-tokens.cjs src/path/to/file.tsx` — must pass with 0 violations
+- [ ] Zero hardcoded hex colors (all from `semanticColors`)
+- [ ] Zero hardcoded font values (all from `typographyStyles`)
+- [ ] Zero inline SVGs (all from Icon library)
+- [ ] All containers use `<Card>` component (not raw divs with borders/shadows)
+- [ ] Existing DS components reused where available (check Component Inventory above)
 
 ---
 

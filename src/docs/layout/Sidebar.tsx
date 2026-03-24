@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { NavLink } from 'react-router-dom'
 import ChevronSmallDownLine from '../../components/Icon/icons/line/ChevronSmallDown'
+import SearchLine from '../../components/Icon/icons/line/Search'
 import { usePlatform, type Platform } from '../context/PlatformContext'
 
 // ── Types ────────────────────────────────────────────────────
@@ -79,9 +80,10 @@ const sections: SidebarSection[] = [
           { label: 'Avatar',        path: '/components/navbar',         platforms: ['web'] },
           { label: 'Card',          path: '/components/card',           platforms: ['web'] },
           { label: 'Chip',          path: '/components/chip',           platforms: ['web'] },
-          { label: 'Network Badge', path: '/components/network-badge',  platforms: ['web'] },
-          { label: 'Star Rating',   path: '/components/star-rating',    platforms: ['web'] },
-          { label: 'Provider Card', path: '/components/provider-card',  platforms: ['web'] },
+          { label: 'Star Rating',    path: '/components/star-rating',    platforms: ['web'] },
+          { label: 'Provider Card',  path: '/components/provider-card',  platforms: ['web'] },
+          { label: 'Network Badge',  path: '/components/network-badge',  platforms: ['web'] },
+          { label: 'Scroll Area',    path: '/components/scroll-area',    platforms: ['web'] },
         ],
       },
       {
@@ -95,6 +97,7 @@ const sections: SidebarSection[] = [
         title: 'Navigation',
         items: [
           { label: 'NavBar', path: '/components/navbar', platforms: ['web'] },
+          { label: 'SideNav', path: '/components/sidenav', platforms: ['web'] },
         ],
       },
     ],
@@ -112,7 +115,16 @@ const sections: SidebarSection[] = [
     title: 'Lab',
     defaultOpen: true,
     items: [
-      { label: 'ProviderCard V2', path: '/lab/provider-card-v2', status: 'draft', platforms: ['web'] },
+      { label: 'ZoeInput', path: '/lab/zoe-input', status: 'ready', platforms: ['web'] },
+      { label: 'ZoeThinkingLoader', path: '/lab/zoe-thinking-loader', status: 'ready', platforms: ['web'] },
+      { label: 'ZoeUserBubble', path: '/lab/zoe-user-bubble', status: 'ready', platforms: ['web'] },
+      { label: 'ZoeResponseBubble', path: '/lab/zoe-response-bubble', status: 'ready', platforms: ['web'] },
+      { label: 'ZoeBenefitCard', path: '/lab/zoe-benefit-card', status: 'ready', platforms: ['web'] },
+      { label: 'ZoePromptChip', path: '/lab/zoe-prompt-chip', status: 'ready', platforms: ['web'] },
+      { label: 'ZoeChatHeader', path: '/lab/zoe-chat-header', status: 'ready', platforms: ['web'] },
+      { label: 'ZoeDrawer', path: '/lab/zoe-drawer', status: 'ready', platforms: ['web'] },
+      { label: 'ZoeProviderCard', path: '/lab/zoe-provider-card', status: 'ready', platforms: ['web'] },
+      { label: 'Zoe Chat Demo', path: '/lab/zoe-chat-demo', status: 'ready', platforms: ['web'] },
     ],
   },
 ]
@@ -263,14 +275,65 @@ function SubGroupHeader({ title }: { title: string }) {
 
 // ── Main Sidebar ─────────────────────────────────────────────
 
+// ── Search helpers ───────────────────────────────────────────
+interface SearchResult {
+  item: SidebarItem
+  sectionTitle: string
+}
+
+function collectSearchResults(query: string, platform: Platform): SearchResult[] {
+  const q = query.toLowerCase().trim()
+  if (!q) return []
+
+  const results: SearchResult[] = []
+  for (const section of sections) {
+    // Flat items
+    if (section.items) {
+      for (const item of section.items) {
+        if (!isAvailableOnPlatform(item, platform)) continue
+        if (item.label.toLowerCase().includes(q)) {
+          results.push({ item, sectionTitle: section.title })
+        }
+      }
+    }
+    // Grouped items
+    if (section.groups) {
+      for (const group of section.groups) {
+        for (const item of group.items) {
+          if (!isAvailableOnPlatform(item, platform)) continue
+          if (item.label.toLowerCase().includes(q)) {
+            results.push({ item, sectionTitle: section.title })
+          }
+        }
+      }
+    }
+  }
+  return results
+}
+
 export function Sidebar() {
   const [openSections, setOpenSections] = useState<Record<string, boolean>>(getInitialOpenState)
   const { platform } = usePlatform()
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchRef = useRef<HTMLInputElement>(null)
 
   // Persist open state
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(openSections))
   }, [openSections])
+
+  // Cmd+K / Ctrl+K to focus search
+  const handleGlobalKeyDown = useCallback((e: KeyboardEvent) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      e.preventDefault()
+      searchRef.current?.focus()
+    }
+  }, [])
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleGlobalKeyDown)
+    return () => document.removeEventListener('keydown', handleGlobalKeyDown)
+  }, [handleGlobalKeyDown])
 
   const toggleSection = (title: string) => {
     setOpenSections(prev => ({ ...prev, [title]: !prev[title] }))
@@ -280,6 +343,16 @@ export function Sidebar() {
   const visibleSections = sections.filter(s =>
     (s.items && s.items.length > 0) || (s.groups && s.groups.length > 0)
   )
+
+  const isSearching = searchQuery.trim().length > 0
+  const searchResults = isSearching ? collectSearchResults(searchQuery, platform) : []
+
+  // Group search results by section for display
+  const resultsBySection: Record<string, SidebarItem[]> = {}
+  for (const r of searchResults) {
+    if (!resultsBySection[r.sectionTitle]) resultsBySection[r.sectionTitle] = []
+    resultsBySection[r.sectionTitle].push(r.item)
+  }
 
   return (
     <aside className="w-[220px] shrink-0 h-screen sticky top-0 bg-neutral-negative border-r border-neutral-border-light overflow-y-auto flex flex-col">
@@ -296,63 +369,137 @@ export function Sidebar() {
         </div>
       </div>
 
-      {/* Overview Link */}
-      <div className="pt-s px-xs pb-xxs">
-        <NavLink
-          to="/overview"
-          className={({ isActive }) =>
-            `block px-xs py-xxs rounded-xxxs font-default text-[13px] font-medium transition-colors ${
-              isActive
-                ? 'bg-primary-subtle text-primary'
-                : 'text-neutral hover:bg-neutral-subtle'
-            }`
-          }
+      {/* Search */}
+      <div style={{ padding: '12px 12px 4px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 6,
+            padding: '6px 10px',
+            borderRadius: 999,
+            border: '1px solid #ededed',
+            background: '#fafafa',
+            transition: 'border-color 150ms',
+          }}
         >
-          Overview
-        </NavLink>
+          <SearchLine size="sm" style={{ color: '#8a8a8a', flexShrink: 0 }} />
+          <input
+            ref={searchRef}
+            type="text"
+            placeholder="Search..."
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Escape') { setSearchQuery(''); searchRef.current?.blur() } }}
+            style={{
+              border: 'none',
+              background: 'transparent',
+              outline: 'none',
+              fontFamily: 'Founders Grotesk, sans-serif',
+              fontSize: 13,
+              lineHeight: '18px',
+              color: '#000',
+              width: '100%',
+            }}
+          />
+          {isSearching && (
+            <button
+              onClick={() => { setSearchQuery(''); searchRef.current?.focus() }}
+              style={{
+                background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                fontFamily: 'Founders Grotesk, sans-serif', fontSize: 11, color: '#8a8a8a',
+                flexShrink: 0, lineHeight: 1,
+              }}
+            >
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Sections */}
-      <nav className="flex-1 py-xxs px-xs">
-        {visibleSections.map((section) => {
-          const isOpen = openSections[section.title] ?? true
+      {/* Overview Link (hidden during search) */}
+      {!isSearching && (
+        <div className="pt-xxs px-xs pb-xxs">
+          <NavLink
+            to="/overview"
+            className={({ isActive }) =>
+              `block px-xs py-xxs rounded-xxxs font-default text-[13px] font-medium transition-colors ${
+                isActive
+                  ? 'bg-primary-subtle text-primary'
+                  : 'text-neutral hover:bg-neutral-subtle'
+              }`
+            }
+          >
+            Overview
+          </NavLink>
+        </div>
+      )}
 
-          return (
-            <div key={section.title} className="mb-xs">
-              <SectionHeader
-                title={section.title}
-                isOpen={isOpen}
-                onToggle={() => toggleSection(section.title)}
-              />
+      {/* ── Search results ── */}
+      {isSearching ? (
+        <nav className="flex-1 py-xxs px-xs">
+          {searchResults.length === 0 ? (
+            <p className="font-default text-[13px] text-neutral-text-light px-xs py-m text-center">
+              No results for &ldquo;{searchQuery}&rdquo;
+            </p>
+          ) : (
+            Object.entries(resultsBySection).map(([sectionTitle, items]) => (
+              <div key={sectionTitle} className="mb-xs">
+                <p className="font-default font-medium text-[10px] text-neutral-text-light uppercase tracking-widest" style={{ padding: '4px 12px' }}>
+                  {sectionTitle}
+                </p>
+                <ul className="space-y-[2px]">
+                  {items.map(item => (
+                    <SidebarNavItem key={item.label + item.path} item={item} currentPlatform={platform} />
+                  ))}
+                </ul>
+              </div>
+            ))
+          )}
+        </nav>
+      ) : (
+        /* ── Normal sections ── */
+        <nav className="flex-1 py-xxs px-xs">
+          {visibleSections.map((section) => {
+            const isOpen = openSections[section.title] ?? true
 
-              {isOpen && (
-                <>
-                  {/* Flat items (Foundation, Patterns, Lab) */}
-                  {section.items && (
-                    <ul className="space-y-[2px]">
-                      {section.items.map(item => (
-                        <SidebarNavItem key={item.label} item={item} currentPlatform={platform} />
-                      ))}
-                    </ul>
-                  )}
+            return (
+              <div key={section.title} className="mb-xs">
+                <SectionHeader
+                  title={section.title}
+                  isOpen={isOpen}
+                  onToggle={() => toggleSection(section.title)}
+                />
 
-                  {/* Grouped items (Components) */}
-                  {section.groups && section.groups.map((group, gi) => (
-                    <div key={group.title} style={{ marginTop: gi === 0 ? 0 : 4 }}>
-                      <SubGroupHeader title={group.title} />
+                {isOpen && (
+                  <>
+                    {/* Flat items (Foundation, Patterns, Lab) */}
+                    {section.items && (
                       <ul className="space-y-[2px]">
-                        {group.items.map(item => (
-                          <SidebarNavItem key={item.label} item={item} indent currentPlatform={platform} />
+                        {section.items.map(item => (
+                          <SidebarNavItem key={item.label} item={item} currentPlatform={platform} />
                         ))}
                       </ul>
-                    </div>
-                  ))}
-                </>
-              )}
-            </div>
-          )
-        })}
-      </nav>
+                    )}
+
+                    {/* Grouped items (Components) */}
+                    {section.groups && section.groups.map((group, gi) => (
+                      <div key={group.title} style={{ marginTop: gi === 0 ? 0 : 4 }}>
+                        <SubGroupHeader title={group.title} />
+                        <ul className="space-y-[2px]">
+                          {group.items.map(item => (
+                            <SidebarNavItem key={item.label} item={item} indent currentPlatform={platform} />
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+            )
+          })}
+        </nav>
+      )}
 
       {/* Footer */}
       <div className="px-s py-xs border-t border-neutral-border-light">

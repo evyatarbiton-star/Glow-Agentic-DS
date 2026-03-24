@@ -48,3 +48,19 @@ export type { ProviderCardProps, NetworkTier, CostLevel, ProviderType } from './
 
 export { StarRating } from './StarRating'
 export type { StarRatingProps } from './StarRating'
+
+export { ScrollArea } from './ScrollArea'
+export type { ScrollAreaProps, ScrollDirection } from './ScrollArea'
+
+export { SideNav } from './SideNav'
+export type {
+  SideNavProps,
+  SideNavProfileProps,
+  SideNavSectionProps,
+  SideNavNavItemProps,
+  SideNavSubItemProps,
+  SideNavToolItemProps,
+  SideNavAppDownloadProps,
+  SideNavFooterProps,
+  SideNavFooterItemProps,
+} from './SideNav'

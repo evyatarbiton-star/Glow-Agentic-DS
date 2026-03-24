@@ -306,6 +306,7 @@ export function ProviderCard({
   costChipHideIcon,
   showCostChip = true,
   showPrice = true,
+  costHint,
   languages,
   virtualAvailable,
   nextAppointmentLabel,
@@ -315,6 +316,7 @@ export function ProviderCard({
   onCallClick,
   onBookClick,
   onClick,
+  isActive,
 }: ProviderCardProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const containerWidth = useContainerWidth(containerRef)
@@ -359,13 +361,15 @@ export function ProviderCard({
   // ── Horizontal Layout ───────────────────────────────────────
   if (effectiveLayout === 'horizontal') {
     return (
-      <div ref={containerRef} style={layout === 'horizontal' ? { minWidth: HORIZONTAL_MIN_WIDTH } : undefined}>
+      <div ref={containerRef} style={{ width: '100%', height: '100%', ...(layout === 'horizontal' ? { minWidth: HORIZONTAL_MIN_WIDTH } : undefined) }}>
       <Card
         variant="outline"
         radius="md"
         padding="none"
         interactive={!!onClick}
+        isActive={isActive}
         onClick={onClick}
+        style={{ width: '100%', height: '100%' }}
         as="article"
       >
         <div style={{ display: 'flex', padding: SPACE_S }}>
@@ -457,7 +461,7 @@ export function ProviderCard({
                 <CostSection
                   cost={cost!} costLevel={costLevel}
                   costLabel={costLabel} costChipLabel={costChipLabel} costChipHideIcon={costChipHideIcon} showCostChip={showCostChip}
-                  chipInline
+                  costHint={costHint} chipInline
                 />
               </div>
             )}
@@ -486,14 +490,16 @@ export function ProviderCard({
 
   // ── Vertical Layout (default) ───────────────────────────────
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} style={{ width: '100%', height: '100%' }}>
     <Card
       variant="outline"
       radius="md"
       padding="none"
       interactive={!!onClick}
+        isActive={isActive}
       onClick={onClick}
       as="article"
+      style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
     >
       {/* ── Provider Header ──────────────────────────────────── */}
       <div style={{ padding: `${SPACE_S}px ${SPACE_S}px ${SPACE_XS}px` }}>
@@ -599,6 +605,7 @@ export function ProviderCard({
               costChipLabel={costChipLabel}
               costChipHideIcon={costChipHideIcon}
               showCostChip={showCostChip}
+              costHint={costHint}
             />
           </div>
         </>
@@ -606,7 +613,7 @@ export function ProviderCard({
 
       {/* ── Action Buttons ───────────────────────────────────── */}
       {hasActions && (
-        <div style={{ padding: `${SPACE_XS}px ${SPACE_S}px ${SPACE_S}px` }}>
+        <div style={{ padding: `${SPACE_XS}px ${SPACE_S}px ${SPACE_S}px`, marginTop: 'auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: onBookClick ? '1fr 1fr' : '1fr', gap: SPACE_XS }}>
             {onCallClick && (
               <Button variant="outline" size="sm" fullWidth onClick={(e) => { e.stopPropagation(); onCallClick() }}>

@@ -20,21 +20,28 @@ import { StarRatingDoc }     from './docs/components/StarRatingDoc'
 import { SideNavDoc }        from './docs/components/SideNavDoc'
 import { ScrollAreaDoc }     from './docs/components/ScrollAreaDoc'
 import { NetworkBadgeDoc }   from './docs/components/NetworkBadgeDoc'
+import ToastDoc              from './docs/components/ToastDoc'
+
+// Zoe component docs
+import ZoeInputDoc            from './docs/components/ZoeInputDoc'
+import ZoeThinkingLoaderDoc   from './docs/components/ZoeThinkingLoaderDoc'
+import ZoeUserBubbleDoc       from './docs/components/ZoeUserBubbleDoc'
+import ZoeResponseBubbleDoc   from './docs/components/ZoeResponseBubbleDoc'
+import ZoeBenefitCardDoc      from './docs/components/ZoeBenefitCardDoc'
+import ZoePromptChipDoc       from './docs/components/ZoePromptChipDoc'
+import ZoeChatHeaderDoc       from './docs/components/ZoeChatHeaderDoc'
+import ZoeDrawerDoc           from './docs/components/ZoeDrawerDoc'
+import ZoeProviderCardDoc     from './docs/components/ZoeProviderCardDoc'
+import ZoeStreamingTextDoc    from './docs/components/ZoeStreamingTextDoc'
+
+// Examples / Patterns
 import { LoginExample, LoginScreen }   from './docs/examples/LoginExample'
 import { ProviderSearchResultsExample, ProviderSearchResultsScreen } from './docs/examples/ProviderSearchResultsExample'
 import { HealtheeHomeExample, HealtheeHomeScreen } from './docs/examples/HealtheeHomeExample'
+import ZoeChatExample from './docs/examples/ZoeChatExample'
+
 import { IconPage } from './docs/pages/IconPage'
 import { OverviewPage } from './docs/pages/OverviewPage'
-import ZoeInputLab from './docs/lab/ZoeInputLab'
-import ZoeThinkingLoaderLab from './docs/lab/ZoeThinkingLoaderLab'
-import ZoeUserBubbleLab from './docs/lab/ZoeUserBubbleLab'
-import ZoeChatDemoLab from './docs/lab/ZoeChatDemoLab'
-import ZoeResponseBubbleLab from './docs/lab/ZoeResponseBubbleLab'
-import ZoeBenefitCardLab from './docs/lab/ZoeBenefitCardLab'
-import ZoePromptChipLab from './docs/lab/ZoePromptChipLab'
-import ZoeChatHeaderLab from './docs/lab/ZoeChatHeaderLab'
-import ZoeDrawerLab from './docs/lab/ZoeDrawerLab'
-import ZoeProviderCardLab from './docs/lab/ZoeProviderCardLab'
 import CarouselTestPage from './docs/pages/CarouselTestPage'
 
 function App() {
@@ -47,7 +54,7 @@ function App() {
         <Route path="/preview/carousel" element={<CarouselTestPage />} />
 
         {/* ── Zoe Chat (full-screen, no sidebar) ── */}
-        <Route path="/preview/zoe-chat" element={<ZoeChatDemoLab />} />
+        <Route path="/preview/zoe-chat" element={<ZoeChatExample />} />
 
         {/* ── Full-screen previews (no sidebar) ── */}
         <Route path="/preview/healthee-home" element={
@@ -107,30 +114,32 @@ function App() {
                 <Route path="/components/sidenav" element={<SideNavDoc />} />
                 <Route path="/components/scroll-area" element={<ScrollAreaDoc />} />
                 <Route path="/components/network-badge" element={<NetworkBadgeDoc />} />
+                <Route path="/components/toast" element={<ToastDoc />} />
 
-                {/* Examples */}
+                {/* Zoe AI Components */}
+                <Route path="/components/zoe-input" element={<ZoeInputDoc />} />
+                <Route path="/components/zoe-thinking-loader" element={<ZoeThinkingLoaderDoc />} />
+                <Route path="/components/zoe-user-bubble" element={<ZoeUserBubbleDoc />} />
+                <Route path="/components/zoe-response-bubble" element={<ZoeResponseBubbleDoc />} />
+                <Route path="/components/zoe-benefit-card" element={<ZoeBenefitCardDoc />} />
+                <Route path="/components/zoe-prompt-chip" element={<ZoePromptChipDoc />} />
+                <Route path="/components/zoe-chat-header" element={<ZoeChatHeaderDoc />} />
+                <Route path="/components/zoe-drawer" element={<ZoeDrawerDoc />} />
+                <Route path="/components/zoe-provider-card" element={<ZoeProviderCardDoc />} />
+                <Route path="/components/zoe-streaming-text" element={<ZoeStreamingTextDoc />} />
+
+                {/* Patterns / Examples */}
                 <Route path="/examples/login" element={<LoginExample />} />
                 <Route path="/examples/provider-search-results" element={<ProviderSearchResultsExample />} />
                 <Route path="/examples/healthee-home" element={<HealtheeHomeExample />} />
+                <Route path="/examples/zoe-chat" element={<ZoeChatExample />} />
                 <Route path="/examples/*" element={
                   <div className="flex items-center justify-center h-full p-xxl">
                     <p className="font-default text-neutral-text-light text-[15px]">Example coming soon...</p>
                   </div>
                 } />
 
-                {/* Lab */}
-                <Route path="/lab/zoe-input" element={<ZoeInputLab />} />
-                <Route path="/lab/zoe-thinking-loader" element={<ZoeThinkingLoaderLab />} />
-                <Route path="/lab/zoe-user-bubble" element={<ZoeUserBubbleLab />} />
-                <Route path="/lab/zoe-response-bubble" element={<ZoeResponseBubbleLab />} />
-                <Route path="/lab/zoe-benefit-card" element={<ZoeBenefitCardLab />} />
-                <Route path="/lab/zoe-prompt-chip" element={<ZoePromptChipLab />} />
-                <Route path="/lab/zoe-chat-demo" element={<ZoeChatDemoLab />} />
-                <Route path="/lab/zoe-chat-header" element={<ZoeChatHeaderLab />} />
-                <Route path="/lab/zoe-drawer" element={<ZoeDrawerLab />} />
-                <Route path="/lab/zoe-provider-card" element={<ZoeProviderCardLab />} />
-
-                {/* Catch-all for lab */}
+                {/* Lab — empty now */}
                 <Route path="/lab/*" element={
                   <div className="flex items-center justify-center h-full p-xxl">
                     <div className="text-center">
@@ -140,7 +149,7 @@ function App() {
                   </div>
                 } />
 
-                {/* Catch-all for future components */}
+                {/* Catch-all */}
                 <Route path="/components/*" element={
                   <div className="flex items-center justify-center h-full p-xxl">
                     <p className="font-default text-neutral-text-light text-[15px]">Component documentation coming soon...</p>

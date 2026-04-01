@@ -8,41 +8,21 @@ import ZoeSelectedLine from '../../../components/Icon/icons/line/ZoeSelected'
 import { semanticColors as sc } from '../../../../tokens/semantic/colors'
 import { fontFamilies, fontWeights, fontSizes } from '../../../../tokens/primitive/typography'
 import { semanticSpacing } from '../../../../tokens/semantic/spacing'
-import { semanticRadii } from '../../../../tokens/semantic/radii'
 
 // ── Token Constants ───────────────────────────────────────────
-const PRIMARY_BG   = sc.primary.surface.DEFAULT        // #fd5201
 const TEXT_DEFAULT = sc.neutral.text.DEFAULT             // #000000
 const TEXT_DARK    = sc.neutral.text.dark                // #404040
 
 const FONT       = fontFamilies.default
-const W_MEDIUM   = fontWeights.medium
 const W_REGULAR  = fontWeights.regular
 
 const SPACE_XXXS = parseInt(semanticSpacing.xxxs)       // 4
-const SPACE_XXS  = parseInt(semanticSpacing.xxs)        // 8
 const SPACE_S    = parseInt(semanticSpacing.s)           // 16
 
-const RADIUS_XXS = parseInt(semanticRadii.xxs)          // 4
-
-// ── Healthee Logo ─────────────────────────────────────────────
+// ── Healthee Logo (full SVG — icon + wordmark) ───────────────
 function HealtheeLogo() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: SPACE_XXS }}>
-      <div style={{
-        width: 28, height: 28, borderRadius: RADIUS_XXS,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: PRIMARY_BG,
-      }}>
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <path d="M8 2C4.69 2 2 4.69 2 8s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6Zm0 10.5c-2.49 0-4.5-2.01-4.5-4.5S5.51 3.5 8 3.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5Z" fill="white" />
-          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z" fill="white" />
-        </svg>
-      </div>
-      <span style={{ fontFamily: FONT, fontWeight: W_MEDIUM, fontSize: fontSizes[18], color: TEXT_DEFAULT }}>
-        healthee
-      </span>
-    </div>
+    <img src="/healthee-logo.svg" alt="Healthee" style={{ height: 24, width: 155, flexShrink: 0 }} />
   )
 }
 
@@ -97,11 +77,6 @@ export function AppNavBar({ activeTab, onTabChange, sticky }: AppNavBarProps) {
             alt="Jane Doe"
           />
         </div>
-      }
-      mobileRight={
-        <Button variant="outline" size="sm" pill iconLeft={<ZoeSelectedLine size="sm" />}>
-          Chat with Zoe
-        </Button>
       }
       maxWidth={1536}
       sticky={sticky}

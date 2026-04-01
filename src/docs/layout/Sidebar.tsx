@@ -89,6 +89,7 @@ const sections: SidebarSection[] = [
       {
         title: 'Feedback & Overlay',
         items: [
+          { label: 'Toast',   path: '/components/toast',   platforms: ['web'] },
           { label: 'Tooltip', path: '/components/tooltip', platforms: ['web'] },
           { label: 'Modal',   path: '/components/modal',   platforms: ['web'] },
         ],
@@ -100,6 +101,21 @@ const sections: SidebarSection[] = [
           { label: 'SideNav', path: '/components/sidenav', platforms: ['web'] },
         ],
       },
+      {
+        title: 'Zoe AI',
+        items: [
+          { label: 'ZoeInput',            path: '/components/zoe-input',              platforms: ['web'] },
+          { label: 'ZoeThinkingLoader',   path: '/components/zoe-thinking-loader',    platforms: ['web'] },
+          { label: 'ZoeUserBubble',       path: '/components/zoe-user-bubble',        platforms: ['web'] },
+          { label: 'ZoeResponseBubble',   path: '/components/zoe-response-bubble',    platforms: ['web'] },
+          { label: 'ZoeStreamingText',    path: '/components/zoe-streaming-text',     platforms: ['web'] },
+          { label: 'ZoeBenefitCard',      path: '/components/zoe-benefit-card',       platforms: ['web'] },
+          { label: 'ZoePromptChip',       path: '/components/zoe-prompt-chip',        platforms: ['web'] },
+          { label: 'ZoeChatHeader',       path: '/components/zoe-chat-header',        platforms: ['web'] },
+          { label: 'ZoeDrawer',           path: '/components/zoe-drawer',             platforms: ['web'] },
+          { label: 'ZoeProviderCard',     path: '/components/zoe-provider-card',      platforms: ['web'] },
+        ],
+      },
     ],
   },
   {
@@ -109,22 +125,7 @@ const sections: SidebarSection[] = [
       { label: 'Healthee Home',           path: '/examples/healthee-home',             platforms: ['web'] },
       { label: 'Provider Search Results', path: '/examples/provider-search-results',   platforms: ['web'] },
       { label: 'Login',                   path: '/examples/login',                     platforms: ['web'] },
-    ],
-  },
-  {
-    title: 'Lab',
-    defaultOpen: true,
-    items: [
-      { label: 'ZoeInput', path: '/lab/zoe-input', status: 'ready', platforms: ['web'] },
-      { label: 'ZoeThinkingLoader', path: '/lab/zoe-thinking-loader', status: 'ready', platforms: ['web'] },
-      { label: 'ZoeUserBubble', path: '/lab/zoe-user-bubble', status: 'ready', platforms: ['web'] },
-      { label: 'ZoeResponseBubble', path: '/lab/zoe-response-bubble', status: 'ready', platforms: ['web'] },
-      { label: 'ZoeBenefitCard', path: '/lab/zoe-benefit-card', status: 'ready', platforms: ['web'] },
-      { label: 'ZoePromptChip', path: '/lab/zoe-prompt-chip', status: 'ready', platforms: ['web'] },
-      { label: 'ZoeChatHeader', path: '/lab/zoe-chat-header', status: 'ready', platforms: ['web'] },
-      { label: 'ZoeDrawer', path: '/lab/zoe-drawer', status: 'ready', platforms: ['web'] },
-      { label: 'ZoeProviderCard', path: '/lab/zoe-provider-card', status: 'ready', platforms: ['web'] },
-      { label: 'Zoe Chat Demo', path: '/lab/zoe-chat-demo', status: 'ready', platforms: ['web'] },
+      { label: 'Zoe Chat',               path: '/examples/zoe-chat',                  platforms: ['web'] },
     ],
   },
 ]

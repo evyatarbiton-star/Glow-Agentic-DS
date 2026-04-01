@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# MCP server build output
+packages/mcp-server/build/
+packages/mcp-server/node_modules/
+
+# Claude internal
+.claude/plan.md

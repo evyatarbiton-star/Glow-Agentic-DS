@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useId } from 'react'
 import type {
   NavBarProps,
   NavBarBrandProps,
@@ -32,10 +32,16 @@ const RESPONSIVE_BP    = 1200                             // px — xl breakpoin
 const MOBILE_PAD_X     = 16                               // spacing.s
 
 // ── Responsive CSS (injected when responsive=true) ───────
-// Two variants: with and without mobileRight content
-const NAVBAR_RESPONSIVE_BASE = `
+// Scoped per instance using a unique data attribute to prevent cross-NavBar interference.
+// Two variants: with and without mobileRight content.
+
+function getResponsiveCSS(scope: string, hasMobileRight: boolean): string {
+  const s = `[data-navbar-id="${scope}"]` // scoping selector
+
+  if (hasMobileRight) {
+    return `
   /* Desktop: hide mobile-right off-screen (keeps SVG gradients alive) */
-  .glow-navbar-right-mobile {
+  ${s} .glow-navbar-right-mobile {
     position: absolute;
     width: 1px; height: 1px;
     overflow: hidden;
@@ -44,43 +50,45 @@ const NAVBAR_RESPONSIVE_BASE = `
   }
 
   @container (max-width: ${RESPONSIVE_BP - 1}px) {
-    .glow-navbar-center { display: none !important; }
-    .glow-navbar-right-desktop {
+    ${s} .glow-navbar-center { display: none !important; }
+    ${s} .glow-navbar-right-desktop {
       position: absolute !important;
       width: 1px !important; height: 1px !important;
       overflow: hidden !important;
       clip: rect(0, 0, 0, 0) !important;
     }
-    .glow-navbar-right-mobile {
+    ${s} .glow-navbar-right-mobile {
       position: static !important;
       width: auto !important; height: auto !important;
       overflow: visible !important;
       clip: auto !important;
       white-space: normal !important;
     }
-    .glow-navbar-root {
+    ${s} .glow-navbar-root {
       padding-left: ${MOBILE_PAD_X}px !important;
       padding-right: ${MOBILE_PAD_X}px !important;
     }
-    .glow-navbar-grid {
+    ${s} .glow-navbar-grid {
       grid-template-columns: 1fr 1fr !important;
     }
   }
 `
+  }
 
-const NAVBAR_RESPONSIVE_NO_MOBILE_RIGHT = `
+  return `
   @container (max-width: ${RESPONSIVE_BP - 1}px) {
-    .glow-navbar-center { display: none !important; }
-    .glow-navbar-right-desktop { display: none !important; }
-    .glow-navbar-root {
+    ${s} .glow-navbar-center { display: none !important; }
+    ${s} .glow-navbar-right-desktop { display: none !important; }
+    ${s} .glow-navbar-root {
       padding-left: ${MOBILE_PAD_X}px !important;
       padding-right: ${MOBILE_PAD_X}px !important;
     }
-    .glow-navbar-grid {
+    ${s} .glow-navbar-grid {
       grid-template-columns: 1fr !important;
     }
   }
 `
+}
 
 // ── Tabs Context ────────────────────────────────────────────
 type TabsCtx = { value: string; onChange: (v: string) => void }
@@ -123,7 +131,7 @@ function NavBarTab({ value, children }: NavBarTabProps) {
 
   return (
     <Button
-      variant={isActive ? 'secondary' : 'outline'}
+      variant={isActive ? 'secondary' : 'subtle'}
       size="sm"
       pill
       onClick={() => ctx.onChange(value)}
@@ -146,6 +154,17 @@ function NavBarComponent({
   style: styleProp,
   ...props
 }: NavBarProps) {
+  // Unique ID per instance — scopes responsive CSS so multiple NavBars
+  // on the same page don't interfere with each other.
+  const instanceId = useId()
+
+  // Container query wrapper — an element cannot query its own size,
+  // so the outer div holds containerType and the <nav> is the styled child.
+  const wrapperStyle: React.CSSProperties = {
+    containerType: 'inline-size' as React.CSSProperties['containerType'],
+    ...(sticky && { position: 'sticky' as const, top: 0, zIndex: Z_INDEX }),
+  }
+
   const navStyle: React.CSSProperties = {
     backgroundColor:   NAV_BG,
     borderBottom:      `${NAV_BORDER_WIDTH}px solid ${NAV_BORDER}`,
@@ -153,8 +172,6 @@ function NavBarComponent({
     paddingBottom:     PAD_Y,
     paddingLeft:       PAD_X,
     paddingRight:      PAD_X,
-    containerType:     'inline-size' as React.CSSProperties['containerType'],
-    ...(sticky && { position: 'sticky' as const, top: 0, zIndex: Z_INDEX }),
     ...styleProp,
   }
 
@@ -163,33 +180,35 @@ function NavBarComponent({
   }
 
   return (
-    <nav
-      role="navigation"
-      className={['glow-navbar-root', className].filter(Boolean).join(' ')}
-      style={navStyle}
-      {...props}
-    >
-      {responsive && (
-        <style>{mobileRight ? NAVBAR_RESPONSIVE_BASE : NAVBAR_RESPONSIVE_NO_MOBILE_RIGHT}</style>
-      )}
-      <div
-        className="glow-navbar-grid mx-auto grid grid-cols-[1fr_auto_1fr] items-center"
-        style={innerStyle}
+    <div style={wrapperStyle} data-navbar-id={instanceId}>
+      <nav
+        role="navigation"
+        className={['glow-navbar-root', className].filter(Boolean).join(' ')}
+        style={navStyle}
+        {...props}
       >
-        {/* Left zone — always visible */}
-        {left ? <div className="justify-self-start">{left}</div> : <div />}
+        {responsive && (
+          <style>{getResponsiveCSS(instanceId, !!mobileRight)}</style>
+        )}
+        <div
+          className="glow-navbar-grid mx-auto grid grid-cols-[1fr_auto_1fr] items-center"
+          style={innerStyle}
+        >
+          {/* Left zone — always visible */}
+          {left ? <div className="justify-self-start">{left}</div> : <div />}
 
-        {/* Center zone — hidden below 1200px container width when responsive */}
-        {center ? <div className="glow-navbar-center justify-self-center">{center}</div> : <div />}
+          {/* Center zone — hidden below 1200px container width when responsive */}
+          {center ? <div className="glow-navbar-center justify-self-center">{center}</div> : <div />}
 
-        {/* Right zone — desktop content hidden on mobile, mobile content shown */}
-        <div className="justify-self-end">
-          {right && <div className="glow-navbar-right-desktop">{right}</div>}
-          {mobileRight && <div className="glow-navbar-right-mobile">{mobileRight}</div>}
-          {!right && !mobileRight && null}
+          {/* Right zone — desktop content hidden on mobile, mobile content shown */}
+          <div className="justify-self-end">
+            {right && <div className="glow-navbar-right-desktop">{right}</div>}
+            {mobileRight && <div className="glow-navbar-right-mobile">{mobileRight}</div>}
+            {!right && !mobileRight && null}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   )
 }
 

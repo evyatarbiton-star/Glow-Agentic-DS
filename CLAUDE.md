@@ -85,6 +85,12 @@ import {
   NetworkBadge,
   StarRating,
   ScrollArea,
+  Toast,
+  SideNav,
+  ProviderCard,
+  ZoeInput, ZoeThinkingLoader, ZoeUserBubble, ZoeResponseBubble,
+  ZoeStreamingText, ZoeBenefitCard, ZoePromptChip,
+  ZoeChatHeader, ZoeDrawer, ZoeProviderCard,
 } from '../components'
 ```
 
@@ -122,19 +128,38 @@ import {
 | **StarRating** | — | `rating`, `maxStars`, `size` (xs/sm/md/lg), `showValue`, `reviewCount`, `filledColor`, `emptyColor` |
 | **ScrollArea** | — | `direction` (horizontal/vertical/both), `gap`, `snap`, `snapAlign`, `maxHeight`, `maxWidth`, `hideScrollbar` |
 
+### Feedback & Overlay
+| Component | Variants | Key Props |
+|-----------|----------|-----------|
+| **Toast** | default, success, error, warning, info | `message`, `variant`, `action` ({ label, onClick }), `showClose`, `duration` (5000ms), `open` |
+
 ### Navigation
 | Component | Key Props |
 |-----------|-----------|
 | **NavBar** | `left` (NavBar.Brand), `center` (NavBar.Tabs), `right` (free-form), `sticky`, `maxWidth`, `responsive`, `mobileRight` |
 | **SideNav** | `open`, `onClose`, `closeOnBackdropClick`, `closeOnEscape`. Compound: `.Profile` (name, companyName, companyLogo), `.Section`, `.NavItem` (label, expandable, expanded), `.SubItem` (label), `.ToolItem` (thumbnail, title, description, trailingIcon), `.AppDownload` (qrImageUrl, onAppleClick, onAndroidClick), `.Footer`, `.FooterItem` (label, right) |
 
-### Icon System (1,879 icons)
+### Zoe AI Components
+| Component | Key Props |
+|-----------|-----------|
+| **ZoeInput** | `value`, `onChange`, `onSubmit`, `placeholder`, `showZoeIcon` |
+| **ZoeThinkingLoader** | `isThinking`, `messageSets`, `delay`, `showIcon`, `onExitComplete` |
+| **ZoeUserBubble** | `text` |
+| **ZoeResponseBubble** | `children` (accepts text, cards, carousels) |
+| **ZoeStreamingText** | `text`, `isStreaming` (shows blinking cursor) |
+| **ZoeBenefitCard** | `title`, `subtitle`, `imageSrc`, `iconElement`, `metaIcon`, `metaText`, `isActive`, `onClick` |
+| **ZoePromptChip** | `text`, `emoji`, `onClick` |
+| **ZoeChatHeader** | `onClose` |
+| **ZoeDrawer** | `open`, `onClose`, `title`, `subtitle`, `footer`, `children` |
+| **ZoeProviderCard** | Extends ProviderCard + `isActive` |
+
+### Icon System (1,882 icons)
 | Style | Count | Import Pattern |
 |-------|-------|----------------|
-| Line | 924 | `import SearchLine from '@/components/Icon/icons/line/Search'` |
+| Line | 925 | `import SearchLine from '@/components/Icon/icons/line/Search'` |
 | Solid | 917 | `import SearchSolid from '@/components/Icon/icons/solid/Search'` |
-| Specialty | 19 | `import HeartSpecialty from '@/components/Icon/icons/specialty/Heart'` |
-| Profile | 19 | `import DoctorProfile from '@/components/Icon/icons/profile/Doctor'` |
+| Specialty | 20 | `import HeartSpecialty from '@/components/Icon/icons/specialty/Heart'` |
+| Profile | 20 | `import DoctorProfile from '@/components/Icon/icons/profile/Doctor'` |
 
 Icon sizes: `xs` (14px), `sm` (16px), `md` (20px), `lg` (24px), `xl` (32px)
 

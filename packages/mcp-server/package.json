@@ -1,0 +1,21 @@
+{
+  "name": "glow-ds-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for the Glow Design System — exposes components, tokens, and usage rules to any AI agent",
+  "type": "module",
+  "bin": {
+    "glow-ds-mcp": "./build/index.js"
+  },
+  "scripts": {
+    "build": "tsc && chmod 755 build/index.js",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}

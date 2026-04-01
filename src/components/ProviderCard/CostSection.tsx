@@ -17,11 +17,10 @@ type ChipConfig = {
   Icon: typeof ArrowDownLeftCrFrIcon
 }
 
-const COST_CHIP_CONFIG: Record<CostLevel, ChipConfig> = {
+const COST_CHIP_CONFIG: Record<Exclude<CostLevel, 'unknown'>, ChipConfig> = {
   lower:   { label: 'Lower cost',       chipColor: 'success', Icon: ArrowDownLeftCrFrIcon },
   typical: { label: 'Typical cost',      chipColor: 'info',    Icon: DistributeHorizontalSolid },
   higher:  { label: 'Higher cost',       chipColor: 'error',   Icon: ArrowUpRightCrFrIcon },
-  unknown: { label: 'Unknown cost est',  chipColor: 'neutral', Icon: FileInfoIcon },
 }
 
 const FONT         = fontFamilies.default        // Founders Grotesk
@@ -57,10 +56,11 @@ export function CostSection({
   chipInline = false,
   costHint,
 }: CostSectionProps) {
-  // Default cost label: "Call to verify out-of-pocket cost" for unknown, "est. out-of-pocket" otherwise
-  const costLabel = costLabelProp ?? (costLevel === 'unknown' ? 'Call to verify out-of-pocket cost' : 'est. out-of-pocket')
+  // Unknown cost: no badge, show range + "Call to verify cost"
+  const isUnknown = costLevel === 'unknown'
+  const costLabel = costLabelProp ?? (isUnknown ? 'Call to verify cost' : 'est. out-of-pocket')
 
-  const rawChip = costLevel ? COST_CHIP_CONFIG[costLevel] : null
+  const rawChip = (costLevel && costLevel !== 'unknown') ? COST_CHIP_CONFIG[costLevel] : null
   const chip = rawChip && costChipLabel ? { ...rawChip, label: costChipLabel } : rawChip
   const showChip = showCostChip && chip
 
@@ -137,20 +137,18 @@ export function CostSection({
         </div>
       ) : (
         <div>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: GAP_XXS }}>
-            <span style={{
-              fontFamily: FONT_DISPLAY, fontWeight: W_MEDIUM,
-              fontSize: fontSizes[24], lineHeight: lineHeights[29], color: TEXT_DEFAULT,
-            }}>
-              {cost}
-            </span>
-            <span style={{
-              fontFamily: FONT, fontWeight: W_REGULAR,
-              fontSize: fontSizes[14], lineHeight: lineHeights[17], color: TEXT_DARK,
-            }}>
-              {costLabel}
-            </span>
-          </div>
+          <span style={{
+            fontFamily: FONT_DISPLAY, fontWeight: W_MEDIUM,
+            fontSize: fontSizes[24], lineHeight: lineHeights[29], color: TEXT_DEFAULT,
+          }}>
+            {cost}
+          </span>
+          <p style={{
+            fontFamily: FONT, fontWeight: W_REGULAR,
+            fontSize: fontSizes[14], lineHeight: lineHeights[17], color: TEXT_DARK, marginTop: 2,
+          }}>
+            {costLabel}
+          </p>
           {hintEl}
         </div>
       )}

@@ -2,6 +2,24 @@ import { useState } from 'react'
 import { DocLayout, Section } from '../layout/DocLayout'
 import { NavBar } from '../../components/NavBar'
 import { Avatar } from '../../components/Avatar'
+import { Button } from '../../components/Button'
+import ZoeSelectedLine from '../../components/Icon/icons/line/ZoeSelected'
+import ChevronDownLine from '../../components/Icon/icons/line/ChevronDown'
+import { semanticColors as sc } from '../../../tokens/semantic/colors'
+import { fontFamilies, fontWeights, fontSizes } from '../../../tokens/primitive/typography'
+import { semanticSpacing } from '../../../tokens/semantic/spacing'
+
+// ── Token Constants (match AppNavBar pattern) ────────────────
+const TEXT_DEFAULT = sc.neutral.text.DEFAULT           // #000000
+const TEXT_DARK    = sc.neutral.text.dark              // #404040
+const FONT         = fontFamilies.default
+const W_REGULAR    = fontWeights.regular
+const SPACE_XXXS   = parseInt(semanticSpacing.xxxs)    // 4
+const SPACE_S      = parseInt(semanticSpacing.s)       // 16
+
+function ZoeIcon() {
+  return <ZoeSelectedLine size="sm" />
+}
 
 // ── Mini helpers (match ButtonDoc pattern) ────────────────────
 
@@ -37,16 +55,11 @@ function CodeBlock({ code }: { code: string }) {
   )
 }
 
-// ── Demo Logo ────────────────────────────────────────────────
+// ── Demo Logo (real SVG — icon + wordmark) ──────────────────
 
 function DemoLogo() {
   return (
-    <div className="flex items-center gap-xxs">
-      <div className="w-[28px] h-[28px] rounded-full bg-primary flex items-center justify-center">
-        <span className="text-white font-default font-medium text-[13px]">H</span>
-      </div>
-      <span className="font-default font-medium text-[16px] text-neutral">healthee</span>
-    </div>
+    <img src="/healthee-logo.svg" alt="Healthee" style={{ height: 24, width: 155, flexShrink: 0 }} />
   )
 }
 
@@ -126,10 +139,11 @@ export function NavBarDoc() {
     >
       {/* ── Full NavBar Demo ── */}
       <Section title="Default">
-        <Label>Complete NavBar with Brand, Tabs, and right-zone content</Label>
-        <div className="border border-neutral-border-light rounded-xs overflow-hidden">
+        <Label>Complete NavBar with Brand, Tabs, Chat with Zoe, and profile</Label>
+        <div className="border border-neutral-border-light rounded-xs overflow-hidden" style={{ marginLeft: -32, marginRight: -32, width: 'calc(100% + 64px)' }}>
           <NavBar
             sticky={false}
+            responsive={false}
             left={<NavBar.Brand logo={<DemoLogo />} onMenuClick={() => {}} />}
             center={
               <NavBar.Tabs value={activeTab} onChange={setActiveTab}>
@@ -139,9 +153,20 @@ export function NavBarDoc() {
               </NavBar.Tabs>
             }
             right={
-              <div className="flex items-center gap-m">
-                <span className="font-default text-[14px] text-neutral-text-dark">New York 10014</span>
-                <Avatar size="md" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Jane Doe" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: SPACE_S }}>
+                <Button variant="outline" size="sm" pill iconLeft={<ZoeIcon />}>Chat with Zoe</Button>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0 }}>
+                  <span style={{ fontFamily: FONT, fontWeight: W_REGULAR, fontSize: fontSizes[14], color: TEXT_DEFAULT }}>
+                    New York 10014
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: SPACE_XXXS }}>
+                    <span style={{ fontFamily: FONT, fontWeight: W_REGULAR, fontSize: fontSizes[14], color: TEXT_DARK }}>
+                      Home
+                    </span>
+                    <ChevronDownLine size="xs" color={TEXT_DARK} />
+                  </div>
+                </div>
+                <Avatar size="sm" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Jane Doe" />
               </div>
             }
           />
@@ -222,18 +247,49 @@ export function NavBarDoc() {
 
       {/* ── Responsive Behavior ── */}
       <Section title="Responsive Behavior">
-        <Label>Below 1024px: only logo + hamburger visible</Label>
         <p className="font-default text-[14px] text-neutral-text-dark mb-m leading-relaxed">
-          By default, the NavBar hides the <strong>center</strong> and <strong>right</strong> zones
-          on viewports narrower than 1024px (tablet / mobile). Only the left zone — typically
-          the hamburger menu and logo — remains visible. This matches the Healthee product behavior
-          where navigation moves into a slide-out menu on smaller screens.
+          Below <strong>1200px</strong>, the NavBar hides the <strong>center</strong> and <strong>right</strong> zones
+          and reduces horizontal padding from <strong>48px → 16px</strong>. Only the left zone (hamburger + logo) remains visible,
+          plus an optional <code className="bg-neutral-subtle px-xxxs py-[2px] rounded-xxxs text-[12px]">mobileRight</code> slot.
         </p>
-        <p className="font-default text-[13px] text-neutral-text-light mb-m leading-relaxed">
-          Set <code className="bg-neutral-subtle px-xxxs py-[2px] rounded-xxxs text-[12px]">responsive=&#123;false&#125;</code> to
-          keep all three zones visible at every viewport width.
+
+        <Label>Mobile (393px) — padding 16px, brand only</Label>
+        <div className="border border-neutral-border-light rounded-xs overflow-hidden mb-m" style={{ maxWidth: 393 }}>
+          <NavBar
+            sticky={false}
+            left={<NavBar.Brand logo={<DemoLogo />} onMenuClick={() => {}} />}
+            center={
+              <NavBar.Tabs value="home" onChange={() => {}}>
+                <NavBar.Tab value="home">Home</NavBar.Tab>
+                <NavBar.Tab value="benefits">My Benefits</NavBar.Tab>
+                <NavBar.Tab value="find-care">Find Care</NavBar.Tab>
+              </NavBar.Tabs>
+            }
+            right={
+              <div style={{ display: 'flex', alignItems: 'center', gap: SPACE_S }}>
+                <Button variant="outline" size="sm" pill iconLeft={<ZoeIcon />}>Chat with Zoe</Button>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0 }}>
+                  <span style={{ fontFamily: FONT, fontWeight: W_REGULAR, fontSize: fontSizes[14], color: TEXT_DEFAULT }}>
+                    New York 10014
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: SPACE_XXXS }}>
+                    <span style={{ fontFamily: FONT, fontWeight: W_REGULAR, fontSize: fontSizes[14], color: TEXT_DARK }}>
+                      Home
+                    </span>
+                    <ChevronDownLine size="xs" color={TEXT_DARK} />
+                  </div>
+                </div>
+                <Avatar size="sm" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Jane Doe" />
+              </div>
+            }
+          />
+        </div>
+        <p className="font-default text-[11px] text-neutral-text-light mt-xs mb-m">
+          ↑ Container is 393px — tabs, right zone, and Zoe button all collapse. Only hamburger + logo remain.
         </p>
-        <div className="border border-neutral-border-light rounded-xs overflow-hidden">
+
+        <Label>Desktop (full width) — non-responsive override</Label>
+        <div className="border border-neutral-border-light rounded-xs overflow-hidden" style={{ marginLeft: -32, marginRight: -32, width: 'calc(100% + 64px)' }}>
           <NavBar
             sticky={false}
             responsive={false}
@@ -241,14 +297,31 @@ export function NavBarDoc() {
             center={
               <NavBar.Tabs value="home" onChange={() => {}}>
                 <NavBar.Tab value="home">Home</NavBar.Tab>
-                <NavBar.Tab value="about">About</NavBar.Tab>
+                <NavBar.Tab value="benefits">My Benefits</NavBar.Tab>
+                <NavBar.Tab value="find-care">Find Care</NavBar.Tab>
               </NavBar.Tabs>
             }
-            right={<Avatar size="md" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Jane Doe" />}
+            right={
+              <div style={{ display: 'flex', alignItems: 'center', gap: SPACE_S }}>
+                <Button variant="outline" size="sm" pill iconLeft={<ZoeIcon />}>Chat with Zoe</Button>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 0 }}>
+                  <span style={{ fontFamily: FONT, fontWeight: W_REGULAR, fontSize: fontSizes[14], color: TEXT_DEFAULT }}>
+                    New York 10014
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: SPACE_XXXS }}>
+                    <span style={{ fontFamily: FONT, fontWeight: W_REGULAR, fontSize: fontSizes[14], color: TEXT_DARK }}>
+                      Home
+                    </span>
+                    <ChevronDownLine size="xs" color={TEXT_DARK} />
+                  </div>
+                </div>
+                <Avatar size="sm" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" alt="Jane Doe" />
+              </div>
+            }
           />
         </div>
         <p className="font-default text-[11px] text-neutral-text-light mt-xs">
-          ↑ This demo uses <code>responsive=&#123;false&#125;</code> so all zones stay visible at any width.
+          ↑ Uses <code>responsive=&#123;false&#125;</code> — all zones stay visible at any width.
         </p>
       </Section>
 

@@ -52,6 +52,40 @@ export type { StarRatingProps } from './StarRating'
 export { ScrollArea } from './ScrollArea'
 export type { ScrollAreaProps, ScrollDirection } from './ScrollArea'
 
+export { Toast } from './Toast'
+export type { ToastProps, ToastVariant, ToastAction } from './Toast'
+
+// ── Zoe AI Components ──────────────────────────────────────
+export { ZoeInput } from './ZoeInput'
+export type { ZoeInputProps } from './ZoeInput'
+
+export { ZoeThinkingLoader } from './ZoeThinkingLoader'
+export type { ZoeThinkingLoaderProps } from './ZoeThinkingLoader'
+
+export { ZoeUserBubble } from './ZoeUserBubble'
+export type { ZoeUserBubbleProps } from './ZoeUserBubble'
+
+export { ZoeResponseBubble } from './ZoeResponseBubble'
+export type { ZoeResponseBubbleProps } from './ZoeResponseBubble'
+
+export { ZoeBenefitCard } from './ZoeBenefitCard'
+export type { ZoeBenefitCardProps } from './ZoeBenefitCard'
+
+export { ZoePromptChip } from './ZoePromptChip'
+export type { ZoePromptChipProps } from './ZoePromptChip'
+
+export { ZoeChatHeader } from './ZoeChatHeader'
+export type { ZoeChatHeaderProps } from './ZoeChatHeader'
+
+export { ZoeDrawer } from './ZoeDrawer'
+export type { ZoeDrawerProps } from './ZoeDrawer'
+
+export { ZoeProviderCard } from './ZoeProviderCard'
+export type { ZoeProviderCardProps } from './ZoeProviderCard'
+
+export { ZoeStreamingText } from './ZoeStreamingText'
+export type { ZoeStreamingTextProps } from './ZoeStreamingText'
+
 export { SideNav } from './SideNav'
 export type {
   SideNavProps,

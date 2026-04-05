@@ -9,26 +9,41 @@ An **agentic design system** built for AI agent consumption. Every token, compon
 npm install
 
 # Run docs site
-npx vite --port 5175
+npm run dev
 
-# Build library for distribution
-npm run build:lib
+# Open in browser
+open http://localhost:5175
 ```
 
-Docs site: [http://localhost:5175](http://localhost:5175)
+## For AI Agents (MCP Server)
 
-## For AI Agents
+Glow includes an MCP server that exposes 8 tools for querying the DS:
 
-**Start here:** Read [`CLAUDE.md`](./CLAUDE.md) before generating any code. It contains:
+```bash
+# Build the MCP server
+cd packages/mcp-server && npm install && npm run build && cd ../..
 
-- Complete component inventory with props
-- 10 mandatory "Don'ts" and 10 mandatory "Do's"
-- Step-by-step screen-building guide
-- Composition patterns (Provider Card, Filter Bar, Settings Row, Form in Modal)
+# Register with Claude Code
+claude mcp add glow-ds -- node $(pwd)/packages/mcp-server/build/index.js
+```
 
-## Architecture
+Available tools: `ds_overview`, `get_component`, `find_components`, `get_tokens`, `get_usage_rules`, `search_icons`, `get_component_source`, `get_pattern`
 
-### Token Layers (3-tier)
+Also read [`CLAUDE.md`](./CLAUDE.md) — contains complete component inventory, mandatory rules, composition patterns, and step-by-step screen-building guide.
+
+## Components (31)
+
+| Category | Components |
+|----------|------------|
+| **Actions** | Button, IconButton |
+| **Selection** | Checkbox, RadioButton, Toggle |
+| **Form Inputs** | TextInput, Select, DatePicker |
+| **Data Display** | Card, Chip, ChipGroup, Avatar, StarRating, ProviderCard, NetworkBadge, ScrollArea |
+| **Feedback & Overlay** | Modal, Tooltip, TooltipPanel, Toast |
+| **Navigation** | NavBar (Brand, Tabs, Tab), SideNav (Profile, Section, NavItem, SubItem, ToolItem, AppDownload, Footer, FooterItem) |
+| **Zoe AI** | ZoeInput, ZoeThinkingLoader, ZoeUserBubble, ZoeResponseBubble, ZoeStreamingText, ZoeBenefitCard, ZoePromptChip, ZoeChatHeader, ZoeDrawer, ZoeProviderCard |
+
+## Token Architecture (3 Layers)
 
 ```
 Primitive (raw values) → Semantic (meaning) → Usage Rules (constraints)
@@ -37,10 +52,10 @@ Primitive (raw values) → Semantic (meaning) → Usage Rules (constraints)
 | Layer | Path | Purpose |
 |-------|------|---------|
 | Primitive | `tokens/primitive/` | Raw palette, spacing grid, font scale, radii, shadows |
-| Semantic | `tokens/semantic/` | Meaningful names mapped to primitives (90 color tokens, t-shirt spacing, typography presets) |
+| Semantic | `tokens/semantic/` | Meaningful names mapped to primitives (103 color tokens, t-shirt spacing, typography presets) |
 | Usage Rules | `tokens/usage/` | Mandatory constraints for choosing components and variants |
 
-### Usage Rules
+### Usage Rules (13 files)
 
 | File | Covers |
 |------|--------|
@@ -54,51 +69,72 @@ Primitive (raw values) → Semantic (meaning) → Usage Rules (constraints)
 | `chip-rules.ts` | Chip vs Button.pill, variant/color/size selection |
 | `modal-rules.ts` | Sizes, footer patterns, mobile behavior |
 | `avatar-navbar-rules.ts` | Avatar sizes, NavBar zones, composition |
+| `providercard-rules.ts` | ProviderCard avatar fallback, providerType, composition |
+| `sidenav-rules.ts` | SideNav anatomy, compound components, hover states |
+| `zoe-rules.ts` | Zoe AI chat answer types, component anatomy, layout rules |
 
-## Components
+## Icon System (1,882 icons)
 
-14 components available via `src/components`:
+| Style | Count | Import Pattern |
+|-------|-------|----------------|
+| Line | 925 | `import SearchLine from '@/components/Icon/icons/line/Search'` |
+| Solid | 917 | `import SearchSolid from '@/components/Icon/icons/solid/Search'` |
+| Specialty | 20 | `import HeartSpecialty from '@/components/Icon/icons/specialty/Heart'` |
+| Profile | 20 | `import DoctorProfile from '@/components/Icon/icons/profile/Doctor'` |
 
-| Category | Components |
-|----------|------------|
-| Actions | Button |
-| Selection | Checkbox, RadioButton, Toggle |
-| Form Inputs | TextInput, Select, DatePicker |
-| Containers | Card, Chip, ChipGroup, Modal |
-| Overlays | Tooltip, TooltipPanel |
-| Navigation | NavBar (with NavBar.Brand, NavBar.Tabs, NavBar.Tab) |
-| Identity | Avatar |
+## Component Manifest
 
-### Icon System (1,874 icons)
+`src/manifest.ts` — a centralized TypeScript file with full metadata for all 31 components:
+- Props with types, defaults, and descriptions
+- Variants and sizes
+- Accessibility info
+- Usage rules (whenToUse, avoidWhen)
+- Related components
+- Code examples
 
-| Style | Count | Path |
-|-------|-------|------|
-| Line | 924 | `src/components/Icon/icons/line/` |
-| Solid | 917 | `src/components/Icon/icons/solid/` |
-| Specialty | 19 | `src/components/Icon/icons/specialty/` |
-| Profile | 14 | `src/components/Icon/icons/profile/` |
-| Network Tier | 4 variants | `NetworkTierCoin` with color props |
+The MCP server reads the manifest at runtime to answer agent queries.
 
-```tsx
-// Import pattern
-import SearchLine from '@/components/Icon/icons/line/Search'
-import SearchSolid from '@/components/Icon/icons/solid/Search'
+## Project Structure
+
 ```
-
-## Library Usage
-
-Install as a package and import:
-
-```tsx
-// Components
-import { Button, Card, Chip, Modal } from 'glow-ds/components'
-
-// Tokens
-import { semanticColors, semanticSpacing } from 'glow-ds/tokens'
-
-// Tailwind preset
-// In tailwind.config.js:
-presets: [require('glow-ds/tailwind-preset')]
+glow-design-system/
+├── CLAUDE.md                    # AI agent instructions (read first)
+├── README.md                    # This file
+├── src/
+│   ├── components/              # All 31 DS components
+│   │   ├── Button/
+│   │   ├── Card/
+│   │   ├── NavBar/
+│   │   ├── ProviderCard/
+│   │   ├── SideNav/
+│   │   ├── Toast/
+│   │   ├── Zoe*/               # 10 Zoe AI components
+│   │   ├── Icon/icons/          # 1,882 SVG icons (line/solid/specialty/profile)
+│   │   └── ...
+│   ├── manifest.ts              # Component manifest (metadata for all components)
+│   ├── hooks/                   # Shared hooks (useStreamingText, useResponseSequence)
+│   └── docs/                    # Documentation site
+│       ├── components/          # Component doc pages
+│       ├── lab/                 # Work-in-progress component demos
+│       └── examples/            # Full-page example compositions
+├── tokens/
+│   ├── primitive/               # Raw values (colors, spacing, typography, radii, shadows)
+│   ├── semantic/                # Meaningful mappings (103 color tokens, t-shirt spacing)
+│   └── usage/                   # 13 rule files (button, card, chip, modal, etc.)
+├── packages/
+│   └── mcp-server/              # MCP server for AI agent integration
+│       ├── src/index.ts         # Server implementation (8 tools)
+│       ├── package.json
+│       └── tsconfig.json
+├── .claude/
+│   └── commands/                # Claude Code slash commands
+│       ├── glow.md              # /glow — Build UI with Glow DS
+│       ├── glow-sync.md         # /glow-sync — Sync all registry files
+│       ├── glow-review.md       # /glow-review — Review code against DS rules
+│       ├── glow-tokens.md       # /glow-tokens — Token lookup
+│       └── glow-figma.md        # /glow-figma — Build in Figma with Glow DS
+└── scripts/
+    └── validate-tokens.cjs      # Token compliance validator
 ```
 
 ## Fonts
@@ -113,50 +149,19 @@ presets: [require('glow-ds/tailwind-preset')]
 - Tailwind CSS 3
 - React Router (docs site)
 
-## Project Structure
+## Docs Site Examples
 
-```
-glow-design-system/
-├── CLAUDE.md                    # AI agent instructions (read first)
-├── src/
-│   ├── components/              # All DS components
-│   │   ├── Button/
-│   │   ├── Card/
-│   │   ├── Chip/
-│   │   ├── Modal/
-│   │   ├── Tooltip/
-│   │   ├── Icon/icons/          # 1,874 SVG icons (line/solid/specialty/profile)
-│   │   └── ...
-│   └── docs/                    # Documentation site
-│       ├── pages/               # Component doc pages
-│       └── examples/            # Full-screen example compositions
-├── tokens/
-│   ├── primitive/               # Raw values (colors, spacing, typography, radii, shadows)
-│   ├── semantic/                # Meaningful mappings (90 color tokens, t-shirt spacing)
-│   └── usage/                   # 10 rule files (button, card, chip, modal, etc.)
-├── lib/                         # Library entry points
-│   ├── components.ts            # All 14 components + types
-│   ├── tokens.ts                # All token exports
-│   └── tailwind-preset.js       # Tailwind preset with DS values
-└── figma-icons/                 # Raw SVGs exported from Figma
-```
-
-## Examples
-
-Working compositions in `src/docs/examples/`:
-
-- **CarCardExample** — Telehealth card with image, badges, pricing
+Working full-page compositions in `src/docs/examples/`:
 - **LoginExample** — Form with inputs, button, typography pairing
-- **FindCareExample** — Search with filters, specialty cards, provider results
+- **ProviderSearchResultsExample** — Desktop search with filters, ProviderCard layout, NavBar
 - **HealtheeHomeExample** — Full dashboard with navigation, cards, benefits grid
-- **ProviderSearchExample** — Mobile provider search interface
+- **ZoeChatExample** — AI chat interface with streaming, thinking loader, benefit cards
 
 ## Scripts
 
 ```bash
-npm run dev              # Start dev server
+npm run dev              # Start docs dev server (port 5175)
 npm run build            # Build docs site
-npm run build:lib        # Build library for distribution
 npm run lint             # Run ESLint
 npm run icons:build      # Full icon pipeline (rename → generate → index)
 ```

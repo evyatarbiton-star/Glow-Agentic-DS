@@ -15,6 +15,7 @@ Compare the current state of `src/components/` against these registries to find 
 6. `.claude/commands/glow.md` — skill reference tables
 7. `tokens/usage/` — usage rule files
 8. `src/docs/components/` — doc page files
+9. `README.md` — component count, categories table, icon counts, usage rules table
 
 ### Detection logic:
 ```
@@ -82,7 +83,14 @@ Read the component's `.types.ts` file and source `.tsx` file, then create a full
 - If a new usage rule file was created, add it to the usage rules mapping table
 - If it's a Zoe component, add to the Zoe import list
 
-### 2h. Create usage rules (if needed)
+### 2h. Update `README.md`
+- Update the Components table (category + component names)
+- Update the component count in the heading ("## Components (N)")
+- Update the icon counts table if icons changed
+- Update the Usage Rules table if a new rule file was added
+- Update the Project Structure tree if new top-level folders were added
+
+### 2i. Create usage rules (if needed)
 For major components, create `tokens/usage/newcomponent-rules.ts` with:
 - whenToUse guidelines
 - avoidWhen guidelines

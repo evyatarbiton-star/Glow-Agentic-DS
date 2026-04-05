@@ -236,6 +236,7 @@ This is the most common mistake. Follow this decision tree:
 8. **Always wrap multiple Chips** in `<ChipGroup>` for consistent spacing
 9. **Always match Chip color** to semantic meaning (success = positive, error = negative, info = informational, warning = caution, recommended = product recommendation)
 10. **Always default backgrounds to white** (`bg-neutral-negative`) unless Figma says otherwise
+11. **Always include rating, distance + address, and appointment row** on every ProviderCard — languages and virtualAvailable are optional extras, not defaults
 
 ---
 
@@ -383,8 +384,6 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
   reviewCount={124}
   cost="$1,400"
   costLevel="lower"
-  languages={["English", "Spanish"]}
-  virtualAvailable
   nextAppointmentLabel="Next appointment"
   nextAppointmentDate="Today, May 7"
   onCallClick={() => call(provider)}

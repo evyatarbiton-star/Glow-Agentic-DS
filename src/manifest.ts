@@ -659,16 +659,18 @@ export const manifest: GlowManifest = {
       whenToUse: [
         'Provider search results, saved/bookmarked lists, comparisons, appointment booking',
         'Complete self-contained component — never manually compose Card + Avatar',
+        'Default detail rows: ALWAYS include rating, distance + address, and appointment row. Languages and virtualAvailable are optional extras.',
       ],
       avoidWhen: [
         'Generic user profiles — use Card + Avatar manually',
         'Non-healthcare person cards',
         'Never pass onBookClick without onCallClick — Call is MANDATORY when actions exist',
         'Never set width on ProviderCard — set width on parent wrapper (it is 100% width built-in)',
+        'Never omit rating, distance, or address — these are mandatory default detail rows',
       ],
       relatedComponents: ['NetworkBadge', 'StarRating', 'Card', 'ZoeProviderCard'],
       examples: [
-        { label: 'Full card', code: `<ProviderCard\n  name="Dr. Sarah Chen"\n  specialty="Dermatology"\n  rating={4.8}\n  reviewCount={124}\n  networkTier="in-network"\n  cost="$150 - $300"\n  costLevel="lower"\n  onCallClick={() => {}}\n  onBookClick={() => {}}\n/>` },
+        { label: 'Full card', code: `<ProviderCard\n  name="Dr. Sarah Chen"\n  specialty="Dermatology"\n  providerType="female"\n  rating={4.8}\n  reviewCount={124}\n  distance="0.3 mi"\n  address="123 Medical Center Dr"\n  networkTier="in-network"\n  cost="$1,400"\n  costLevel="lower"\n  nextAppointmentLabel="Next appointment"\n  nextAppointmentDate="Today, May 7"\n  onCallClick={() => {}}\n  onBookClick={() => {}}\n/>` },
       ],
     },
 

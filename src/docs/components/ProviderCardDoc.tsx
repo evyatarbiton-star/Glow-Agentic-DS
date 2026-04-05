@@ -431,8 +431,6 @@ export function ProviderCardDoc() {
             networkLabel="In-Network"
             cost="$1,400"
             costLevel="lower"
-            languages={['English', 'Spanish']}
-            virtualAvailable
             nextAppointmentLabel="Next appointment"
             nextAppointmentDate="Today, May 7"
             onCallClick={() => {}}
@@ -455,7 +453,6 @@ export function ProviderCardDoc() {
             networkLabel="Tier 2"
             cost="$155"
             costLevel="typical"
-            languages={['English', 'Spanish', 'Mandarin']}
             nextAppointmentLabel="Next appointment"
             nextAppointmentDate="Thu, Mar 19"
             onCallClick={() => {}}
@@ -471,6 +468,8 @@ export function ProviderCardDoc() {
             providerType="facility"
             distance="0.9 mi"
             address="100 E 77th St, Lower Level, New York, NY 10075"
+            rating={4.3}
+            reviewCount={67}
             networkTier="out-of-network"
             networkLabel="Out-of-Network"
             cost="$890"
@@ -495,14 +494,56 @@ export function ProviderCardDoc() {
             networkLabel="In-Network"
             cost="$1,400"
             costLevel="lower"
-            languages={['English', 'Spanish']}
-            virtualAvailable
             nextAppointmentLabel="Next appointment"
             nextAppointmentDate="Today, May 7"
             onCallClick={() => {}}
             onBookClick={() => {}}
           />
         </CardDemo>
+      </Section>
+
+      {/* ── Default Permutations ──────────────────────────────── */}
+      <Section title="Default Permutations" description="The two standard card configurations. Both always show: rating, distance + address, and appointment availability. No languages or virtual visit by default.">
+        <Row>
+          <CardDemo>
+            <Label>Book + Call</Label>
+            <ProviderCard
+              name="Dr. Sarah Johnson"
+              specialty="Primary Care"
+              providerType="female"
+              rating={4.8}
+              reviewCount={124}
+              distance="0.3 mi"
+              address="123 Medical Center Dr, New York, NY 10029"
+              networkTier="in-network"
+              networkLabel="In-Network"
+              cost="$1,400"
+              costLevel="lower"
+              nextAppointmentLabel="Next appointment"
+              nextAppointmentDate="Today, May 7"
+              onCallClick={() => {}}
+              onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>Call only</Label>
+            <ProviderCard
+              name="Dr. Michael Chen"
+              specialty="Orthopedics"
+              providerType="male"
+              rating={4.5}
+              reviewCount={89}
+              distance="1.2 mi"
+              address="456 Health Plaza, New York, NY 10038"
+              networkTier="in-network"
+              networkLabel="In-Network"
+              cost="$2,100"
+              costLevel="typical"
+              onCallClick={() => {}}
+            />
+          </CardDemo>
+        </Row>
       </Section>
 
       {/* ── Cost Chip Levels ─────────────────────────────────── */}
@@ -652,10 +693,18 @@ export function ProviderCardDoc() {
               name="Dr. Lisa Wang"
               specialty="Dermatologist"
               initials="LW"
+              rating={4.6}
+              reviewCount={112}
+              distance="0.5 mi"
+              address="350 5th Ave, Suite 200, New York, NY 10118"
               networkTier="in-network"
               networkLabel="In-Network"
               cost="$185"
               costLevel="typical"
+              nextAppointmentLabel="Next appointment"
+              nextAppointmentDate="Today, May 7"
+              onCallClick={() => {}}
+              onBookClick={() => {}}
             />
           </CardDemo>
 
@@ -665,11 +714,19 @@ export function ProviderCardDoc() {
               name="Dr. James Rivera"
               specialty="Cardiologist"
               initials="JR"
+              rating={4.4}
+              reviewCount={98}
+              distance="1.0 mi"
+              address="200 Broadway, Suite 1105, New York, NY 10038"
               networkTier="tier-2"
               networkName="Aetna"
               networkLabel="Tier 2"
               cost="$305"
               costLevel="typical"
+              nextAppointmentLabel="Next appointment"
+              nextAppointmentDate="Tomorrow, May 8"
+              onCallClick={() => {}}
+              onBookClick={() => {}}
             />
           </CardDemo>
 
@@ -679,11 +736,16 @@ export function ProviderCardDoc() {
               name="Dr. Kevin Patel"
               specialty="Neurologist"
               initials="KP"
+              rating={4.7}
+              reviewCount={145}
+              distance="1.8 mi"
+              address="88 Lexington Ave, New York, NY 10016"
               networkTier="tier-3"
               networkName="BlueCross"
               networkLabel="Tier 3"
               cost="$450"
               costLevel="higher"
+              onCallClick={() => {}}
             />
           </CardDemo>
 
@@ -693,10 +755,15 @@ export function ProviderCardDoc() {
               name="Dr. Rachel Nguyen"
               specialty="Orthopedist"
               initials="RN"
+              rating={4.9}
+              reviewCount={201}
+              distance="2.5 mi"
+              address="500 Park Ave, Suite 200, New York, NY 10065"
               networkTier="out-of-network"
               networkLabel="Out-of-Network"
               cost="$890"
               costLevel="higher"
+              onCallClick={() => {}}
             />
           </CardDemo>
         </Row>

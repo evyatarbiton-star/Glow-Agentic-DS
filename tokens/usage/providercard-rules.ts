@@ -103,6 +103,11 @@ export const providerCardUsageRules = {
   // ── Composition Rules ───────────────────────────────────────
   compositionRules: [
     {
+      id: 'default-detail-rows',
+      rule: '⚠️ Every ProviderCard MUST show rating, distance + address, and appointment row by default',
+      detail: 'The three mandatory detail rows are: (1) rating + reviewCount, (2) distance + address, (3) next appointment date or "Call to check availability". Languages and virtualAvailable are OPTIONAL and omitted by default — only add them when explicitly needed. Agents MUST always include rating, distance, address, and either nextAppointmentDate or onCallClick (for "Call to check availability").',
+    },
+    {
       id: 'call-is-mandatory',
       rule: '⚠️ Every actionable ProviderCard MUST have a Call button — there is no valid card with Book but no Call',
       detail: 'Call is the minimum action. Valid combinations: (1) Call + Book — both buttons side by side, (2) Call only — single full-width button, (3) No actions — read-only card. A Book button without Call is NEVER valid. Agents MUST NOT pass onBookClick without also passing onCallClick.',

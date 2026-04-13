@@ -29,6 +29,7 @@ Based on what the developer is building, read the matching usage rules:
 | Checkboxes, radios, toggles | `tokens/usage/selection-controls-rules.ts` |
 | Typography, fonts | `tokens/usage/typography-rules.ts` |
 | Modals, dialogs | `tokens/usage/modal-rules.ts` |
+| Modal + form composition (inputs, selects inside a Modal/Drawer/Popover) | `tokens/usage/composition-rules.ts` |
 | Tooltips | `tokens/usage/tooltip-rules.ts` |
 | Layouts, backgrounds | `tokens/usage/layout-rules.ts` |
 | Avatars, NavBar | `tokens/usage/avatar-navbar-rules.ts` |
@@ -89,6 +90,7 @@ Before returning the code, check:
 - [ ] Modal footer actions are right-aligned via `footerActions` prop
 - [ ] `font-display` (Tiempos) used ONLY for page-level H1
 - [ ] All backgrounds default to white (`sc.neutral.surface.negative`) unless explicitly specified otherwise
+- [ ] **Modal/Drawer with form fields:** form sub-components are defined at MODULE SCOPE (not inside the parent's render body), form state lives in the parent, and map `key`s use stable ids — before generating, read `tokens/usage/composition-rules.ts` or call `get_pattern('modal-form')`
 
 ## Decision helpers
 
@@ -117,6 +119,7 @@ When asked to create a page or screen based on an existing pattern, **clone the 
 | **Provider Search** | `src/docs/examples/ProviderSearchResultsExample.tsx` | Search results with filters, ProviderCard grid/list |
 | **Healthee Home** | `src/docs/examples/HealtheeHomeExample.tsx` | Dashboard with navigation, cards, benefits grid |
 | **Login** | `src/docs/examples/LoginExample.tsx` | Auth forms, sign-in/sign-up screens |
+| **Modal + Form** | `src/docs/examples/ModalFormExample.tsx` | Any Modal/Drawer/Popover containing form inputs — demonstrates the module-scope form, parent-owned state, and stable keys pattern that prevents focus-loss bugs |
 
 ### How to use patterns:
 

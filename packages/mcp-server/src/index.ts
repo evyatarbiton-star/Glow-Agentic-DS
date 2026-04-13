@@ -328,7 +328,7 @@ server.registerTool(
         .enum([
           "button", "card", "chip", "modal", "tooltip", "layout",
           "selection-controls", "typography", "avatar-navbar", "sidenav",
-          "network-tier", "providercard", "zoe",
+          "network-tier", "providercard", "zoe", "composition",
         ])
         .describe("Component family name"),
     }),
@@ -470,7 +470,7 @@ server.registerTool(
       "Returns source code of a full-page pattern example showing how multiple Glow DS components work together. Use these as templates when building new pages.",
     inputSchema: z.object({
       pattern: z
-        .enum(["healthee-home", "provider-search", "login", "zoe-chat"])
+        .enum(["healthee-home", "provider-search", "login", "zoe-chat", "modal-form"])
         .describe("Pattern name"),
     }),
   },
@@ -480,6 +480,7 @@ server.registerTool(
       "provider-search": "ProviderSearchResultsExample.tsx",
       "login": "LoginExample.tsx",
       "zoe-chat": "ZoeChatExample.tsx",
+      "modal-form": "ModalFormExample.tsx",
     };
 
     const filename = patternMap[pattern];
@@ -530,7 +531,7 @@ server.registerTool(
       `- **1,882 icons** in 4 styles (line, solid, specialty, profile)`,
       `- **103 semantic color tokens** grouped by intent`,
       `- **3-layer token architecture:** Primitive → Semantic → Usage Rules`,
-      `- **4 pattern examples:** Home, Provider Search, Login, Zoe Chat`,
+      `- **5 pattern examples:** Home, Provider Search, Login, Zoe Chat, Modal+Form`,
       ``,
       `## Categories`,
       ...[...categories.entries()].map(
@@ -545,6 +546,7 @@ server.registerTool(
       `- Call button is MANDATORY on ProviderCard when actions exist`,
       `- Default background is always white (neutral-negative)`,
       `- Read usage rules before choosing component variants`,
+      `- Always place form components at MODULE SCOPE — never define them inside a parent's render body (causes input focus loss). See get_pattern("modal-form") and get_usage_rules("composition").`,
       ``,
       `## Available Tools`,
       `- \`get_component\` — details about a specific component`,

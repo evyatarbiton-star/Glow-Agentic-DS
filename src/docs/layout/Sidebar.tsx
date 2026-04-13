@@ -125,6 +125,7 @@ const sections: SidebarSection[] = [
       { label: 'Healthee Home',           path: '/examples/healthee-home',             platforms: ['web'] },
       { label: 'Provider Search Results', path: '/examples/provider-search-results',   platforms: ['web'] },
       { label: 'Login',                   path: '/examples/login',                     platforms: ['web'] },
+      { label: 'Modal + Form',            path: '/examples/modal-form',                platforms: ['web'] },
       { label: 'Zoe Chat',               path: '/examples/zoe-chat',                  platforms: ['web'] },
     ],
   },

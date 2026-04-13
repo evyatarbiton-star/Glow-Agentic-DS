@@ -1,75 +1,43 @@
 # Glow Design System (Agentic DS)
 
-This is **Glow DS** — an agentic design system built for AI agent consumption.
-Every token, component, and usage rule is structured in TypeScript so agents can read
-and apply them programmatically when generating UI.
+Library of tokens, components, and usage rules in TypeScript for AI agent consumption.
 
----
+## This is a library — NOT a product project
 
-## ⚠️ THIS IS A LIBRARY — NOT A PRODUCT PROJECT
+DO NOT build screens/prototypes here. Create a separate project (e.g., `~/Desktop/my-prototype/`) with React+Vite+Tailwind. `src/docs/examples/` is ONLY for DS documentation examples.
 
-This repo is the Glow Design System **library**. It contains reusable tokens,
-components, and documentation only.
+## Token Files
 
-**DO NOT** build product screens, prototypes, or app flows inside this project.
-The `src/docs/examples/` folder is ONLY for DS documentation examples that
-demonstrate component usage — it is NOT for product prototypes.
-
-**When asked to build a prototype, screen, or flow:**
-1. Create a **new project** in a separate directory (e.g., `~/Desktop/my-prototype/`)
-2. Set it up with React + Vite + Tailwind
-3. Copy the relevant tokens and components from Glow DS into the new project, or reference them
-4. Build the prototype there — never inside `glow-design-system/`
-
----
-
-## Before You Build Anything
-
-**Read the tokens and usage rules first.** Never hardcode colors, spacing, or font values.
-Every visual value must trace back to a DS token.
-
-### Token architecture (3 layers):
-
-```
-Primitive (raw values) → Semantic (meaning) → Usage Rules (constraints)
-```
-
-1. **Primitive tokens** — raw palette, never used directly in components
-2. **Semantic tokens** — meaningful names mapped to primitives, used everywhere
-3. **Usage rules** — mandatory constraints for choosing components and variants
-
-### Token files to read (in order):
+### Primitives → Semantics → Usage Rules:
 
 1. `tokens/primitive/colors.ts` — raw color palette (Grey, Orange, Blue, Green, Yellow, Red, Purple)
-2. `tokens/semantic/colors.ts` — 103 semantic tokens grouped by intent (primary, neutral, accent-yellow, accent-blue, accent-purple, success, error, overlay), each with surface/border/text sub-categories
+2. `tokens/semantic/colors.ts` — 103 semantic tokens by intent (primary, neutral, accent-yellow, accent-blue, accent-purple, success, error, overlay), each with surface/border/text
 3. `tokens/primitive/spacing.ts` — 4px base grid (0–120px)
 4. `tokens/semantic/spacing.ts` — t-shirt sizing (xxxs → 5xl)
 5. `tokens/primitive/typography.ts` — font families, sizes, weights, line-heights
 6. `tokens/semantic/typography.ts` — 40 web tokens (display/heading/label/paragraph/text-link)
-6b. `tokens/semantic/typography-native.ts` — 23 native tokens from Figma Native DS (node 1:394). Same key convention as web but fewer sizes; all headings weight 500; includes `text-link-xm` (no underline variant)
+6b. `tokens/semantic/typography-native.ts` — 23 native tokens from Figma Native DS (node 1:394). Same convention as web but fewer sizes; all headings weight 500; includes `text-link-xm`
 7. `tokens/primitive/radii.ts` — border-radius scale
-8. `tokens/semantic/radii.ts` — t-shirt naming (none → full, note: `sn` = small, `ln` = large)
+8. `tokens/semantic/radii.ts` — t-shirt naming (none → full, `sn` = small, `ln` = large)
 9. `tokens/primitive/shadows.ts` — shadow tokens (sm, md, lg, xl, 2xl, none)
 
-### Usage rules (MUST read before choosing components):
+### Usage rules:
 
-- `tokens/usage/button-rules.ts` — when to use each Button variant/size, pairing matrix
+- `tokens/usage/button-rules.ts` — Button variant/size, pairing matrix
 - `tokens/usage/selection-controls-rules.ts` — Checkbox vs RadioButton vs Toggle
-- `tokens/usage/typography-rules.ts` — font pairing rules (Tiempos Headline + Founders Grotesk)
-- `tokens/usage/layout-rules.ts` — background/surface color defaults (white-first principle)
-- `tokens/usage/tooltip-rules.ts` — Tooltip variants, modes, directions, content rules
+- `tokens/usage/typography-rules.ts` — font pairing (Tiempos Headline + Founders Grotesk)
+- `tokens/usage/layout-rules.ts` — background/surface color defaults (white-first)
+- `tokens/usage/tooltip-rules.ts` — Tooltip variants, modes, directions, content
 - `tokens/usage/network-tier-rules.ts` — insurance network tier badge colors, icons, ordering
 - `tokens/usage/card-rules.ts` — Card variants, radius, padding, interactive patterns
-- `tokens/usage/chip-rules.ts` — Chip vs Button.pill, variant/color/size selection
+- `tokens/usage/chip-rules.ts` — Chip vs Button.pill, variant/color/size
 - `tokens/usage/modal-rules.ts` — Modal sizes, footer patterns, mobile behavior
 - `tokens/usage/avatar-navbar-rules.ts` — Avatar sizes, NavBar zones, composition
 - `tokens/usage/providercard-rules.ts` — ProviderCard avatar fallback, providerType, composition
-- `tokens/usage/sidenav-rules.ts` — SideNav anatomy, compound components, hover states, responsive behavior
-- `tokens/usage/zoe-rules.ts` — Zoe AI chat answer types, component anatomy, layout rules, context defaults
+- `tokens/usage/sidenav-rules.ts` — SideNav anatomy, compound components, hover, responsive
+- `tokens/usage/zoe-rules.ts` — Zoe AI chat answer types, component anatomy, layout, context defaults
 
----
-
-## Complete Component Inventory
+## Component Inventory
 
 Import from `src/components`:
 
@@ -123,7 +91,7 @@ import {
 | **Modal** | — | `size` (sm/md/lg), `title`, `showBackButton`, `footer`, `footerActions`, `footerLeft` |
 | **Tooltip** | default (dark blur), rich (solid) | `direction`, `title`, `leftIcon`, `media`, `primaryAction`, `secondaryAction`, `link` |
 | **Avatar** | — | `size` (sm/md/lg), `src`, `alt`, `fallback`, `bgColor`, `color` |
-| **NetworkBadge** | — | Thin wrapper around Chip — provides tier→color mapping + NetworkTierCoin icon. See Chip doc for examples. |
+| **NetworkBadge** | — | Thin wrapper around Chip — tier→color mapping + NetworkTierCoin icon |
 | **ProviderCard** | — | `name`, `specialty`, `loading`, `photoUrl`, `providerType` (male/female/facility), `networkTier`, `cost`, `costLevel`, `languages` (string[]), `virtualAvailable`, `onBookClick`, `onCallClick` |
 | **StarRating** | — | `rating`, `maxStars`, `size` (xs/sm/md/lg), `showValue`, `reviewCount`, `filledColor`, `emptyColor` |
 | **ScrollArea** | — | `direction` (horizontal/vertical/both), `gap`, `snap`, `snapAlign`, `maxHeight`, `maxWidth`, `hideScrollbar` |
@@ -137,7 +105,7 @@ import {
 | Component | Key Props |
 |-----------|-----------|
 | **NavBar** | `left` (NavBar.Brand), `center` (NavBar.Tabs), `right` (free-form), `sticky`, `maxWidth`, `responsive`, `mobileRight` |
-| **SideNav** | `open`, `onClose`, `closeOnBackdropClick`, `closeOnEscape`. Compound: `.Profile` (name, companyName, companyLogo), `.Section`, `.NavItem` (label, expandable, expanded), `.SubItem` (label), `.ToolItem` (thumbnail, title, description, trailingIcon), `.AppDownload` (qrImageUrl, onAppleClick, onAndroidClick), `.Footer`, `.FooterItem` (label, right) |
+| **SideNav** | `open`, `onClose`, `closeOnBackdropClick`, `closeOnEscape`. Compound: `.Profile`, `.Section`, `.NavItem` (expandable), `.SubItem`, `.ToolItem` (thumbnail, title, description), `.AppDownload` (qrImageUrl), `.Footer`, `.FooterItem` |
 
 ### Zoe AI Components
 | Component | Key Props |
@@ -163,35 +131,27 @@ import {
 
 Icon sizes: `xs` (14px), `sm` (16px), `md` (20px), `lg` (24px), `xl` (32px)
 
-**CRITICAL:** Never use inline SVG icons. Always import from the DS icon library. If a needed icon doesn't exist, ask the user before falling back to inline SVG.
-
----
+Never use inline SVG icons — always import from the DS icon library. If missing, ask the user.
 
 ## IconButton vs Button iconOnly
 
-| Scenario | Use | Why |
-|----------|-----|-----|
-| Close, dismiss, bookmark, hamburger, nav arrows | `<IconButton>` ghost | Lightweight transparent utility |
-| Close on overlay/modal | `<IconButton>` outline | Visible boundary on busy backgrounds |
-| Bookmark / favorite toggle | `<IconButton>` ghost + `pressed` | Toggle with color change |
-| Formal destructive icon action | `<Button iconOnly>` destructive | Needs visual weight |
-| Toolbar formatting (bold, italic) | `<Button iconOnly>` subtle | Formal action context |
-
----
+| Scenario | Use |
+|----------|-----|
+| Close, dismiss, bookmark, hamburger, nav arrows | `<IconButton>` ghost |
+| Close on overlay/modal | `<IconButton>` outline |
+| Bookmark / favorite toggle | `<IconButton>` ghost + `pressed` |
+| Formal destructive icon action | `<Button iconOnly>` destructive |
+| Toolbar formatting (bold, italic) | `<Button iconOnly>` subtle |
 
 ## Chip vs Button.pill
 
-This is the most common mistake. Follow this decision tree:
-
-| Scenario | Use | Why |
-|----------|-----|-----|
-| Categorize/tag content | `<Chip>` | Labeling, not action |
-| Filter search results | `<Chip variant="outline" onClick>` | Selectable filter |
-| Show status (In-Network, Active) | `<Chip color="success">` | Status indicator |
-| Book appointment, Submit form | `<Button pill>` | Primary action |
-| Navigate to another page | `<Button pill>` | Navigation action |
-
----
+| Scenario | Use |
+|----------|-----|
+| Categorize/tag content | `<Chip>` |
+| Filter search results | `<Chip variant="outline" onClick>` |
+| Show status (In-Network, Active) | `<Chip color="success">` |
+| Book appointment, Submit form | `<Button pill>` |
+| Navigate to another page | `<Button pill>` |
 
 ## Tech Stack
 
@@ -203,49 +163,32 @@ This is the most common mistake. Follow this decision tree:
 ## Fonts
 
 - **Tiempos Headline** (`font-display`) — serif, for page-level H1 titles and hero text only
-- **Founders Grotesk** (`font-default`) — sans-serif, for everything else (body, labels, buttons, headings H2+)
-
----
+- **Founders Grotesk** (`font-default`) — sans-serif, for everything else
 
 ## Mandatory Rules
 
-### Absolute Don'ts (NEVER do these):
-
-1. **Never hardcode hex colors** — use semantic tokens (`sc.primary.surface.DEFAULT`, not `#fd5201`)
-2. **Never hardcode pixel values** — use spacing tokens (`semanticSpacing.m`, not `20`)
-3. **Never use inline SVG icons** — import from `src/components/Icon/icons/`
-4. **Never build containers with raw divs** — use `<Card>` for any bordered/elevated/filled container
-5. **Never center footer buttons in Modal** — footer actions are ALWAYS right-aligned
-6. **Never use native HTML form elements** — use DS components (`<Checkbox>`, not `<input type="checkbox">`)
-7. **Never use `bg-white` or `bg-[#ffffff]`** — use `bg-neutral-negative`
-8. **Never put two filled buttons side by side** — primary + outline, or secondary + outline
-9. **Never use `font-display` for anything except page-level H1** — everything else is `font-default`
-10. **Never nest elevated Cards inside elevated Cards** — use outline or filled for inner cards
-11. **Never generate a ProviderCard with Book but no Call** — Call is ALWAYS required. Valid: Call+Book, Call only, or no actions.
-12. **Never use lg (56px) buttons in product screens** — lg is for marketing/hero only. Use md (48px) or sm (40px).
-
-### Absolute Do's (ALWAYS do these):
-
-1. **Always use semantic tokens** — every color, spacing, radius, shadow, and typography value
-2. **Always add token comments** — `const BOX_SIZE = 20 // spacing.m`
-3. **Always check usage rules** before choosing a component variant
-4. **Always use `<Card>`** for containers — pick the right variant/radius/padding
-5. **Always use `<Chip>`** for labels, tags, filters, and status indicators
-6. **Always provide `alt` text** for Avatar when `src` is provided
-7. **Always use `footerActions`** for Modal buttons (right-aligned) — not custom `footer`
-8. **Always wrap multiple Chips** in `<ChipGroup>` for consistent spacing
-9. **Always match Chip color** to semantic meaning (success = positive, error = negative, info = informational, warning = caution, recommended = product recommendation)
-10. **Always default backgrounds to white** (`bg-neutral-negative`) unless Figma says otherwise
-11. **Always include rating, distance + address, and appointment row** on every ProviderCard — languages and virtualAvailable are optional extras, not defaults
-
----
+1. Always use semantic tokens for every color, spacing, radius, shadow, typography — never hardcode hex/px
+2. Add token comments: `const BOX_SIZE = 20 // spacing.m`
+3. Check usage rules before choosing a component variant
+4. Use `<Card>` for any bordered/elevated/filled container — never raw divs
+5. Use `<Chip>` for labels, tags, filters, status indicators. Wrap in `<ChipGroup>`
+6. Match Chip color to meaning: success=positive, error=negative, info=informational, warning=caution, recommended=product recommendation
+7. Never use inline SVG icons — import from `src/components/Icon/icons/`
+8. Never use native HTML form elements — use DS components
+9. Never use `bg-white`/`bg-[#ffffff]` — use `bg-neutral-negative`
+10. Never put two filled buttons side by side — primary + outline, or secondary + outline
+11. Max ONE primary button per screen. lg (56px) buttons only for marketing/hero
+12. Never use `font-display` except for page-level H1 — everything else is `font-default`
+13. Never nest elevated Cards inside elevated Cards — use outline or filled for inner
+14. Modal footer buttons: always use `footerActions` (right-aligned), never custom `footer`
+15. ProviderCard: never generate Book without Call. Valid: Call+Book, Call only, or no actions
+16. Always include rating, distance+address, and appointment row on every ProviderCard
+17. Default backgrounds to white (`bg-neutral-negative`) unless Figma says otherwise
+18. Always provide `alt` text for Avatar when `src` is provided
 
 ## Figma-to-Token Mapping
 
-When building from Figma designs, NEVER copy raw values. Map every value to a DS token:
-
-### Colors
-Figma shows hex → find the matching semantic token:
+### Colors (hex → semantic token)
 - `#fd5201` → `sc.primary.surface.DEFAULT`
 - `#f2f2f2` → `sc.neutral.surface.subtle`
 - `#e0e0e0` → `sc.neutral.surface.light` / `sc.neutral.border.strong`
@@ -253,35 +196,29 @@ Figma shows hex → find the matching semantic token:
 - `#8a8a8a` → `sc.neutral.text.light`
 - `#ffffff` → `sc.neutral.surface.negative`
 - `#000000` → `sc.neutral.text.DEFAULT`
-- If no exact match exists → STOP and flag it. Do not invent a new token or use a raw hex.
+- No match → STOP and flag it. Never invent a new token.
 
-### Spacing
-Figma shows pixels → find the matching spacing token:
-- `4px` → `semanticSpacing.xxxs` | `8px` → `xxs` | `12px` → `xs` | `16px` → `s` | `20px` → `m`
+### Spacing (px → token)
+- `4px` → `xxxs` | `8px` → `xxs` | `12px` → `xs` | `16px` → `s` | `20px` → `m`
 - `24px` → `l` | `32px` → `xl` | `40px` → `xxl` | `48px` → `xxxl` | `56px` → `xxxxl` | `72px` → `5xl`
-- If the value doesn't match any token → use the nearest token and note the deviation.
+- No match → use nearest token, note the deviation.
 
-### Typography
-Figma shows font/size/weight → find the matching typography token:
+### Typography (font/size/weight → token)
 - Tiempos 40px/48px → `typographyStyles['display-xs']`
 - Founders 18px/21px → `typographyStyles['paragraph-l']`
 - Founders 16px/19px → `typographyStyles['paragraph-m']`
 - Never set fontSize/lineHeight/fontFamily individually — always spread from `typographyStyles['token-name']`
 
 ### Components
-Before building ANY card, input, badge, or container:
-1. Check the Component Inventory table above
-2. Check `src/components/_lab/` for WIP components
-3. If a matching component exists → USE IT, even if the Figma looks slightly different
-4. If no match → build it using DS tokens only, flag it as a potential new DS component
+Before building any component, check Component Inventory above and `src/components/_lab/`. If a match exists, use it even if Figma looks slightly different. No match → build with DS tokens, flag as potential new DS component.
 
 ### Validation
-Run `node scripts/validate-tokens.cjs src/path/to/file.tsx` to check for hardcoded values.
-The script detects hardcoded hex colors, inline SVGs, and suggests the correct DS token.
+```bash
+node scripts/validate-tokens.cjs src/path/to/file.tsx
+```
+Detects hardcoded hex colors, inline SVGs, suggests correct DS token.
 
----
-
-### Component Pattern:
+## Component Pattern
 
 ```
 ComponentName/
@@ -290,23 +227,15 @@ ComponentName/
   index.ts                — Single named export
 ```
 
-- Inline styles with token constants (not CSS classes for component-internal styles)
-- Named constants at the top of the file: `const PANEL_BG = sc.neutral.surface.negative // #ffffff`
+- Inline styles with token constants, not CSS classes for component-internal styles
+- Named constants at top: `const PANEL_BG = sc.neutral.surface.negative // #ffffff`
 - Tailwind for layout only (flex, grid, padding, margin on page-level containers)
-- Figma node-id documented in a comment at the top of each component file
+- Figma node-id documented in a comment at top of each component file
 
----
+## How to Build a Screen
 
-## How to Build a Screen (Step by Step)
-
-When building a new page or screen, follow this order:
-
-### 1. Understand the structure
-Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
-
-### 2. Set up the page shell
+### Page shell
 ```tsx
-// Page background is always white unless Figma says otherwise
 <div className="min-h-screen bg-neutral-negative">
   <NavBar left={...} center={...} right={...} />
   <main className="max-w-[1200px] mx-auto px-xl py-xl">
@@ -315,7 +244,7 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </div>
 ```
 
-### 3. Build sections with Cards
+### Sections with Cards
 ```tsx
 <Card variant="outline" radius="md" padding="md">
   <h2 className="font-default font-medium text-[18px] text-neutral mb-xs">Section Title</h2>
@@ -323,7 +252,7 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </Card>
 ```
 
-### 4. Add forms
+### Forms
 ```tsx
 <div className="space-y-m">
   <TextInput label="Full Name" placeholder="Enter your name" size="md" />
@@ -335,7 +264,7 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </div>
 ```
 
-### 5. Add status/filter UI with Chips
+### Filter UI with Chips
 ```tsx
 <ChipGroup wrap>
   <Chip variant="outline" selected={filter === 'all'} onClick={() => setFilter('all')}>All</Chip>
@@ -344,7 +273,7 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </ChipGroup>
 ```
 
-### 6. Add modals for focused tasks
+### Modal
 ```tsx
 <Modal
   open={showModal}
@@ -366,13 +295,10 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </Modal>
 ```
 
----
-
 ## Common Composition Patterns
 
 ### Provider Card (use `<ProviderCard>` — NOT Card + Avatar)
 ```tsx
-// CORRECT — use the dedicated ProviderCard component
 <ProviderCard
   name="Dr. Emily Chen"
   specialty="Ophthalmologist"
@@ -390,14 +316,12 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
   onBookClick={() => book(provider)}
   onClick={() => navigate(`/provider/${provider.id}`)}
 />
-
-// WRONG — never manually compose Card + Avatar for providers
-// <Card><Avatar /><div>name...</div></Card>  ← DON'T DO THIS
+<!-- Never manually compose Card + Avatar for providers -->
 ```
 
-### ProviderCard Carousel (ScrollArea + fixed-width wrappers)
+### ProviderCard Carousel
 ```tsx
-// ProviderCard fills its parent width — control card size via the wrapper div
+<!-- Each wrapper 360px fixed. 16px gap. Cards without Book show "Call to check availability" -->
 <ScrollArea direction="horizontal" gap={16} snap>
   {providers.map(p => (
     <div key={p.id} style={{ width: 360, minWidth: 360, flexShrink: 0, scrollSnapAlign: 'start', display: 'flex' }}>
@@ -410,14 +334,9 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
     </div>
   ))}
 </ScrollArea>
-// Key rules:
-// - Each wrapper is 360px fixed width — ProviderCard stretches to fill it
-// - 16px gap between cards (ScrollArea gap prop)
-// - Cards without Book button auto-show "Call to check availability"
-// - All cards same height even with different content (flex stretch)
 ```
 
-### Filter Bar (ChipGroup + TextInput)
+### Filter Bar
 ```tsx
 <div className="flex items-center gap-m">
   <div className="flex-1">
@@ -433,7 +352,7 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </div>
 ```
 
-### Settings Row (Card + Toggle)
+### Settings Row
 ```tsx
 <Card variant="outline" radius="sm" padding="sm">
   <div className="flex items-center justify-between">
@@ -446,7 +365,37 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </Card>
 ```
 
-### Form in Modal (Modal + TextInput + Select + Button)
+### AI anti-patterns to avoid (CRITICAL)
+
+**Rule:** NEVER define a React component inside another component's render body. This is the #1 source of AI-generated bugs in Modal+Form flows — every keystroke re-creates the inner component, React remounts the `<input>`, and focus is lost after each character.
+
+**Always:**
+- Define form components at MODULE SCOPE (outside the parent function), OR inline the JSX directly inside the Modal.
+- Keep form state in the PARENT that renders the Modal — pass `value` + `onChange` down as props.
+- Use a STABLE id (e.g., `option.value`) for `key` when mapping fields, never the array index.
+- Never put a changing value (like `open` or form state) in the Modal's `key` prop.
+
+```tsx
+// ❌ WRONG — Form defined inside parent's body. Every keystroke remounts <input>.
+function ModalFormScreen() {
+  const [name, setName] = useState('')
+  const Form = () => <TextInput value={name} onChange={(e) => setName(e.target.value)} />
+  return <Modal open={open}><Form /></Modal>
+}
+
+// ✅ RIGHT — Form at module scope, state in parent
+const BookingForm = ({ name, setName }: { name: string; setName: (v: string) => void }) => (
+  <TextInput value={name} onChange={(e) => setName(e.target.value)} />
+)
+function ModalFormScreen() {
+  const [name, setName] = useState('')
+  return <Modal open={open}><BookingForm name={name} setName={setName} /></Modal>
+}
+```
+
+Applies to: Modal, ZoeDrawer, SideNav with forms, any Portal/Overlay that wraps form fields. See `tokens/usage/composition-rules.ts` and `src/docs/examples/ModalFormExample.tsx`.
+
+### Form in Modal
 ```tsx
 <Modal open={open} onClose={close} title="Add Details" size="md"
   footerActions={
@@ -464,8 +413,6 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 </Modal>
 ```
 
----
-
 ## Z-Index Hierarchy
 
 | Layer | Z-Index | Component |
@@ -476,92 +423,61 @@ Read the Figma design and identify: NavBar, page sections, cards, forms, modals.
 | Tooltip | 1000 | Contextual popups |
 | Modal | 1500 | Dialog overlay |
 
----
-
 ## Examples
 
-See working examples in `src/docs/examples/`:
-- `LoginExample.tsx` — form with inputs, button, typography pairing
-- `ProviderSearchResultsExample.tsx` — desktop provider search results with filters, ProviderCard horizontal layout, NavBar
-- `HealtheeHomeExample.tsx` — full dashboard with navigation, cards, benefits grid
+See `src/docs/examples/`:
+- `LoginExample.tsx` — form with inputs, button, typography
+- `ProviderSearchResultsExample.tsx` — desktop provider search, filters, ProviderCard, NavBar
+- `HealtheeHomeExample.tsx` — dashboard with navigation, cards, benefits grid
 
----
-
-## Lab (Work-In-Progress Components)
-
-The Lab is a staging area for components that are still being built, reviewed, or iterated on.
-Lab components are **not exported** from the DS — they can be previewed in the docs site but cannot be imported by consumers.
-
-### Directory structure
+## Lab — WIP components (not exported, preview only in docs site)
 
 ```
-src/components/_lab/         ← WIP component source (same pattern as production)
-  ComponentName/
-    ComponentName.tsx
-    ComponentName.types.ts
-    index.ts
-
-src/docs/lab/                ← Lab doc pages
-  ComponentNameLab.tsx
+src/components/_lab/ComponentName/   — WIP source
+src/docs/lab/ComponentNameLab.tsx    — Lab doc page
 ```
 
-### Status badges
-
-Each lab item in the sidebar can have a status:
-- **Draft** (grey) — still being built
-- **Review** (orange) — ready for feedback
-- **Ready** (green) — approved, pending promotion
+Statuses: **Draft** (grey), **Review** (orange), **Ready** (green)
 
 ### Adding a lab component
-
 1. Create component folder in `src/components/_lab/ComponentName/`
 2. Create doc page in `src/docs/lab/ComponentNameLab.tsx`
 3. Add route in `App.tsx`: `<Route path="/lab/component-name" element={<ComponentNameLab />} />`
-4. Add sidebar entry in `Sidebar.tsx` under the Lab section with a `status` field
+4. Add sidebar entry in `Sidebar.tsx` under Lab section with `status` field
 
 ### Promoting to production
-
 1. Move `src/components/_lab/ComponentName/` → `src/components/ComponentName/`
 2. Add export to `src/components/index.ts`
 3. Move doc from `src/docs/lab/` → `src/docs/components/`
 4. Update Sidebar (move from Lab to Components) + Routes
 5. Update this file's Component Inventory table
 
----
-
 ## DS Change Checklist
 
-When adding, removing, or modifying tokens or components, **always complete every applicable step**:
-
 ### Token changes (colors, spacing, typography, radii, shadows)
-- [ ] Update the **primitive** token file (`tokens/primitive/…`)
-- [ ] Update the **semantic** token file (`tokens/semantic/…`)
-- [ ] Update **`tailwind.config.js`** to mirror the new/changed semantic tokens
-- [ ] Update the matching **Foundation doc page** (`src/docs/foundation/…`) — labels, descriptions, counts
-- [ ] Update **this file** (`CLAUDE.md`) — token counts, file descriptions, any affected rules
-- [ ] Update the **usage rules** file if the change affects component usage (`tokens/usage/…`)
+- [ ] Update primitive token file (`tokens/primitive/…`)
+- [ ] Update semantic token file (`tokens/semantic/…`)
+- [ ] Update `tailwind.config.js` to mirror new/changed semantic tokens
+- [ ] Update matching Foundation doc page (`src/docs/foundation/…`)
+- [ ] Update this file (`CLAUDE.md`) — token counts, file descriptions, affected rules
+- [ ] Update usage rules file if change affects component usage (`tokens/usage/…`)
 
 ### Component changes (new component, new variant, prop change)
-- [ ] Update the **component doc page** (`src/docs/components/…`)
-- [ ] Update the **Component Inventory** table in this file (`CLAUDE.md`)
-- [ ] Add or update **usage rules** if the component has variant/pairing constraints
-- [ ] Add a **working example** in the doc page showing the new variant/feature
-- [ ] Update **`src/components/index.ts`** exports if adding a new component
+- [ ] Update component doc page (`src/docs/components/…`)
+- [ ] Update Component Inventory table in this file
+- [ ] Add/update usage rules if component has variant/pairing constraints
+- [ ] Add working example in doc page
+- [ ] Update `src/components/index.ts` exports if new component
 
 ### Icon changes (new icon, renamed icon)
-- [ ] Place the icon in the correct style folder (`line/`, `solid/`, `specialty/`, `profile/`)
-- [ ] Update icon **counts** in this file and in the Icon doc page
-- [ ] Ensure the icon uses **`currentColor`** and supports standard sizes
+- [ ] Place in correct style folder (`line/`, `solid/`, `specialty/`, `profile/`)
+- [ ] Update icon counts in this file and Icon doc page
+- [ ] Ensure icon uses `currentColor` and supports standard sizes
 
-### New component / screen — token compliance
-- [ ] Run `node scripts/validate-tokens.cjs src/path/to/file.tsx` — must pass with 0 violations
-- [ ] Zero hardcoded hex colors (all from `semanticColors`)
-- [ ] Zero hardcoded font values (all from `typographyStyles`)
-- [ ] Zero inline SVGs (all from Icon library)
-- [ ] All containers use `<Card>` component (not raw divs with borders/shadows)
-- [ ] Existing DS components reused where available (check Component Inventory above)
-
----
+### New component/screen — token compliance
+- [ ] Run `node scripts/validate-tokens.cjs src/path/to/file.tsx` — 0 violations
+- [ ] Zero hardcoded hex colors, font values, inline SVGs
+- [ ] All containers use `<Card>`, existing DS components reused
 
 ## Running
 

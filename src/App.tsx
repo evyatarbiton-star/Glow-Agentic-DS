@@ -38,6 +38,7 @@ import ZoeStreamingTextDoc    from './docs/components/ZoeStreamingTextDoc'
 import { LoginExample, LoginScreen }   from './docs/examples/LoginExample'
 import { ProviderSearchResultsExample, ProviderSearchResultsScreen } from './docs/examples/ProviderSearchResultsExample'
 import { HealtheeHomeExample, HealtheeHomeScreen } from './docs/examples/HealtheeHomeExample'
+import { ModalFormExample } from './docs/examples/ModalFormExample'
 import ZoeChatExample from './docs/examples/ZoeChatExample'
 
 import { IconPage } from './docs/pages/IconPage'
@@ -132,6 +133,7 @@ function App() {
                 <Route path="/examples/login" element={<LoginExample />} />
                 <Route path="/examples/provider-search-results" element={<ProviderSearchResultsExample />} />
                 <Route path="/examples/healthee-home" element={<HealtheeHomeExample />} />
+                <Route path="/examples/modal-form" element={<ModalFormExample />} />
                 <Route path="/examples/zoe-chat" element={<ZoeChatExample />} />
                 <Route path="/examples/*" element={
                   <div className="flex items-center justify-center h-full p-xxl">

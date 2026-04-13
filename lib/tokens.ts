@@ -23,6 +23,7 @@ export {
   avatarUsageRules,
   navBarUsageRules,
   providerCardUsageRules,
+  compositionRules,
 } from '../tokens/index'
 
 export type {

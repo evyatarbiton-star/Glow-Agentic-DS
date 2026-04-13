@@ -140,6 +140,22 @@ After all updates:
 3. Verify sidebar shows the component in the correct group
 4. Verify the manifest entry count matches total component folders
 
+## Step 6: Propagate Skills to Global
+
+After the DS internal state is verified, propagate the 4 consumer-facing skills to the global `~/.claude/commands/` folder so they're available when working in any prototype project on Desktop.
+
+```bash
+cp .claude/commands/glow.md ~/.claude/commands/glow.md
+cp .claude/commands/glow-figma.md ~/.claude/commands/glow-figma.md
+cp .claude/commands/glow-review.md ~/.claude/commands/glow-review.md
+cp .claude/commands/glow-tokens.md ~/.claude/commands/glow-tokens.md
+```
+
+**DO NOT copy `glow-sync.md`** — it's DS-internal and must stay only inside the DS folder. Invoking it from a prototype directory would try to mutate files that don't belong to the DS.
+
+### Why this step exists
+Step 2g of this workflow can rewrite `.claude/commands/glow.md` inside the DS (skill reference tables, Zoe import list, etc.). Without this propagation, the global copy at `~/.claude/commands/glow.md` would silently drift behind the DS version, and consumer projects would reference outdated guidance. Running this step after every sync keeps global and DS aligned automatically.
+
 ## Quick Reference: File Locations
 
 | What | Where |

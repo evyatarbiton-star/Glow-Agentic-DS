@@ -17,17 +17,19 @@ open http://localhost:5175
 
 ## For AI Agents (MCP Server)
 
-Glow includes an MCP server that exposes 8 tools for querying the DS:
+Glow includes an MCP server that exposes 8 tools for querying the DS. The repo ships with `.mcp.json`, so Claude Code picks it up automatically once built.
 
 ```bash
 # Build the MCP server
 cd packages/mcp-server && npm install && npm run build && cd ../..
-
-# Register with Claude Code
-claude mcp add glow-ds -- node $(pwd)/packages/mcp-server/build/index.js
 ```
 
+Then open this repo in Claude Code — it will prompt once to approve the project-level MCP server, and `glow-ds` becomes available.
+
 Available tools: `ds_overview`, `get_component`, `find_components`, `get_tokens`, `get_usage_rules`, `search_icons`, `get_component_source`, `get_pattern`
+
+> Manual alternative (non-Claude-Code clients):
+> `node $(pwd)/packages/mcp-server/build/index.js`
 
 Also read [`CLAUDE.md`](./CLAUDE.md) — contains complete component inventory, mandatory rules, composition patterns, and step-by-step screen-building guide.
 

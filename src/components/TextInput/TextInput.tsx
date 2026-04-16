@@ -6,7 +6,7 @@
 // Variants: 3 Types (Enabled/Disabled/Error) × 6 States × 2 Shapes × 3 Sizes
 // ============================================================
 
-import { useRef } from 'react'
+import { useRef, useId } from 'react'
 import type { TextInputProps, TextInputSize, TextInputShape } from './TextInput.types'
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../tokens/semantic/typography'
@@ -131,6 +131,7 @@ export function TextInput({
 }: TextInputProps) {
 
   const inputBoxRef = useRef<HTMLDivElement>(null)
+  const helperId = useId()
   const { height } = SIZE_CONFIG[size]
   const borderRadius = shape === 'rounded'
     ? INPUT_BORDER_RADIUS_ROUNDED
@@ -279,6 +280,9 @@ export function TextInput({
           placeholder={placeholder}
           disabled={disabled}
           name={name}
+          aria-invalid={error || undefined}
+          aria-describedby={helperText ? helperId : undefined}
+          aria-required={required || undefined}
           onFocus={onFocus}
           onBlur={onBlur}
           {...props}
@@ -322,6 +326,7 @@ export function TextInput({
       {/* ── Helper Text ── */}
       {helperText && (
         <p
+          id={helperId}
           style={{
             fontSize: HELPER_FONT_SIZE,
             lineHeight: HELPER_LINE_HEIGHT,

@@ -4,12 +4,14 @@ import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../tokens/semantic/typography'
 import { semanticSpacing } from '../../../tokens/semantic/spacing'
 import { semanticRadii } from '../../../tokens/semantic/radii'
+import { primitiveShadows } from '../../../tokens/primitive/shadows'
+import { semanticShadows } from '../../../tokens/semantic/shadows'
 import type { ZoePromptChipProps } from './ZoePromptChip.types'
 
-const BG_DEFAULT = 'rgba(255, 255, 255, 0.5)'                  // frosted glass
-const BG_HOVER = 'rgba(255, 255, 255, 0.85)'
-const SHADOW_DEFAULT = '0px 2px 8px rgba(0, 0, 0, 0.08)'
-const SHADOW_HOVER = '0px 4px 12px rgba(0, 0, 0, 0.12)'
+const BG_DEFAULT = 'rgba(255, 255, 255, 0.5)'                  // TOKEN-EXCEPTION: frosted glass effect — unique glassmorphism
+const BG_HOVER = 'rgba(255, 255, 255, 0.85)'                   // TOKEN-EXCEPTION: frosted glass hover — unique glassmorphism
+const SHADOW_DEFAULT = primitiveShadows.md                      // 0px 2px 8px rgba(0,0,0,0.08)
+const SHADOW_HOVER = semanticShadows.cardHover                  // 0px 4px 16px rgba(0,0,0,0.10)
 const PADDING_H = semanticSpacing.l                              // 24px
 const PADDING_V = semanticSpacing.xs                             // 12px
 const BORDER_RADIUS = semanticRadii.sn                           // 16px

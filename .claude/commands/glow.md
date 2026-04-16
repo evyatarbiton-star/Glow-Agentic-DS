@@ -16,6 +16,8 @@ Before writing any code, read these files (in this order):
 3. **tokens/semantic/spacing.ts** — Spacing scale (xxxs → 5xl)
 4. **tokens/semantic/typography.ts** — 40 typography tokens (display, heading, label, paragraph, text-link)
 5. **tokens/semantic/radii.ts** — Border radius scale (none → full)
+6. **tokens/semantic/shadows.ts** — Semantic shadows (card, cardHover, toast, tooltip, dropdown)
+7. **tokens/semantic/z-index.ts** — Stacking order (sticky, stickyNav, dropdown, modal)
 
 ## Step 2: Load relevant usage rules
 

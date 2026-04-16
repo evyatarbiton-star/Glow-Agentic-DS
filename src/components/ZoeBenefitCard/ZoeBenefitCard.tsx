@@ -4,6 +4,7 @@ import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../tokens/semantic/typography'
 import { semanticSpacing } from '../../../tokens/semantic/spacing'
 import { semanticRadii } from '../../../tokens/semantic/radii'
+import { semanticShadows } from '../../../tokens/semantic/shadows'
 import ChevronRightLine from '../Icon/icons/line/ChevronRight'
 import type { ZoeBenefitCardProps } from './ZoeBenefitCard.types'
 
@@ -27,7 +28,7 @@ const META_TEXT_COLOR = sc.neutral.text.DEFAULT                  // #000000
 const CHEVRON_BG = sc.neutral.surface.negative                  // #ffffff
 const CHEVRON_BORDER = sc.neutral.border.strong                 // #e0e0e0
 
-const HOVER_SHADOW = '0px 2px 8px rgba(0, 0, 0, 0.16)'         // Figma "Card/Hover"
+const HOVER_SHADOW = semanticShadows.toast                      // 0px 2px 8px 0px rgba(0,0,0,0.16) — Figma "Card/Hover"
 const HOVER_BG = sc.neutral.surface.negative                    // #ffffff
 
 export function ZoeBenefitCard({

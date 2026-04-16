@@ -266,10 +266,10 @@ server.registerTool(
   {
     title: "Get Design Tokens",
     description:
-      "Returns Glow DS token values. Search by category (colors, spacing, typography, radii, shadows) and optionally by keyword. Always use these tokens — never hardcode values.",
+      "Returns Glow DS token values. Search by category (colors, spacing, typography, radii, shadows, z-index) and optionally by keyword. Always use these tokens — never hardcode values.",
     inputSchema: z.object({
       category: z
-        .enum(["colors", "spacing", "typography", "radii", "shadows"])
+        .enum(["colors", "spacing", "typography", "radii", "shadows", "z-index"])
         .describe("Token category"),
       layer: z
         .enum(["primitive", "semantic"])

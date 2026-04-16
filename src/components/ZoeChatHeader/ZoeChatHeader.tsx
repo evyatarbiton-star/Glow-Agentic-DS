@@ -1,5 +1,6 @@
 // ZoeChatHeader — Figma: node-id=497:28402
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
+import { semanticZIndex } from '../../../tokens/semantic/z-index'
 import { semanticSpacing } from '../../../tokens/semantic/spacing'
 import { IconButton } from '../IconButton/IconButton'
 import CloseLine from '../Icon/icons/line/Close'
@@ -8,7 +9,7 @@ import type { ZoeChatHeaderProps } from './ZoeChatHeader.types'
 const BG_COLOR = sc.neutral.surface.negative                   // #ffffff
 const PADDING_Y = semanticSpacing.s                            // 16px
 const PADDING_X = semanticSpacing.l                            // 24px
-const Z_INDEX = 10
+const Z_INDEX = semanticZIndex.sticky
 
 const GRADIENT = `linear-gradient(to bottom, ${BG_COLOR} 40%, transparent 100%)`
 

@@ -6,6 +6,7 @@ import type {
   NavBarTabProps,
 } from './NavBar.types'
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
+import { semanticZIndex } from '../../../tokens/semantic/z-index'
 import { Button } from '../Button'
 import { IconButton } from '../IconButton'
 import MenuLine from '../Icon/icons/line/Menu'
@@ -26,7 +27,7 @@ const NAV_BORDER       = sc.neutral.border.light       // #ededed
 const NAV_BORDER_WIDTH = 1                             // default border
 const PAD_Y            = 12                            // spacing.xs
 const PAD_X            = 48                            // spacing.xxxl
-const Z_INDEX          = 50
+const Z_INDEX          = semanticZIndex.stickyNav
 const DEFAULT_MAX_W    = 1200
 const RESPONSIVE_BP    = 1200                             // px — xl breakpoint
 const MOBILE_PAD_X     = 16                               // spacing.s

@@ -5,6 +5,7 @@ import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { semanticRadii } from '../../../tokens/semantic/radii'
 import { semanticSpacing } from '../../../tokens/semantic/spacing'
 import { primitiveShadows } from '../../../tokens/primitive/shadows'
+import { semanticZIndex } from '../../../tokens/semantic/z-index'
 import { fontFamilies } from '../../../tokens/primitive/typography'
 import { typographyStyles } from '../../../tokens/semantic/typography'
 import CloseLine from '../Icon/icons/line/Close'
@@ -40,7 +41,7 @@ const TITLE_LH        = '28px'
 const TITLE_WEIGHT    = parseInt(typographyStyles['heading-s']?.fontWeight ?? '400')
 const FONT            = fontFamilies.default
 
-const Z_INDEX         = 1500                                 // above Select/DatePicker/Tooltip (1000)
+const Z_INDEX         = semanticZIndex.modal                  // 1500 — above Select/DatePicker/Tooltip (1000)
 const ANIM_DURATION   = '150ms'
 const MOBILE_BP       = 640                                  // px — mobile breakpoint
 

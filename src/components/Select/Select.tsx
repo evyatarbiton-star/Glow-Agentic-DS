@@ -19,6 +19,7 @@ import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../tokens/semantic/typography'
 import { fontWeights, fontFamilies } from '../../../tokens/primitive/typography'
 import { primitiveShadows } from '../../../tokens/primitive/shadows'
+import { semanticZIndex } from '../../../tokens/semantic/z-index'
 import ChevronDownLine from '../Icon/icons/line/ChevronDown'
 import SearchLine from '../Icon/icons/line/Search'
 import InfoCrFrLine from '../Icon/icons/line/InfoCrFr'
@@ -100,7 +101,7 @@ const DROPDOWN_SHADOW          = primitiveShadows['2xl'] // closest match
 const DROPDOWN_PADDING         = 8      // spacing.xxs
 const DROPDOWN_ITEMS_RADIUS    = 4      // borderRadius.xxxs
 const DROPDOWN_GAP_FROM_TRIGGER = 4
-const DROPDOWN_Z_INDEX         = 1000
+const DROPDOWN_Z_INDEX         = semanticZIndex.dropdown
 
 // ── Option Tokens ───────────────────────────────────────────
 const OPTION_PADDING_X         = 16

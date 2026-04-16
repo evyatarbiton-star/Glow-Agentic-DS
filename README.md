@@ -54,10 +54,10 @@ Primitive (raw values) → Semantic (meaning) → Usage Rules (constraints)
 | Layer | Path | Purpose |
 |-------|------|---------|
 | Primitive | `tokens/primitive/` | Raw palette, spacing grid, font scale, radii, shadows |
-| Semantic | `tokens/semantic/` | Meaningful names mapped to primitives (103 color tokens, t-shirt spacing, typography presets) |
+| Semantic | `tokens/semantic/` | Meaningful names mapped to primitives (103 color tokens, t-shirt spacing, typography presets, shadows, z-index) |
 | Usage Rules | `tokens/usage/` | Mandatory constraints for choosing components and variants |
 
-### Usage Rules (13 files)
+### Usage Rules (14 files)
 
 | File | Covers |
 |------|--------|
@@ -74,6 +74,7 @@ Primitive (raw values) → Semantic (meaning) → Usage Rules (constraints)
 | `providercard-rules.ts` | ProviderCard avatar fallback, providerType, composition |
 | `sidenav-rules.ts` | SideNav anatomy, compound components, hover states |
 | `zoe-rules.ts` | Zoe AI chat answer types, component anatomy, layout rules |
+| `composition-rules.ts` | Modal + form focus-loss prevention, module-scope components |
 
 ## Icon System (1,882 icons)
 
@@ -121,8 +122,8 @@ glow-design-system/
 │       └── examples/            # Full-page example compositions
 ├── tokens/
 │   ├── primitive/               # Raw values (colors, spacing, typography, radii, shadows)
-│   ├── semantic/                # Meaningful mappings (103 color tokens, t-shirt spacing)
-│   └── usage/                   # 13 rule files (button, card, chip, modal, etc.)
+│   ├── semantic/                # Meaningful mappings (103 color tokens, t-shirt spacing, shadows, z-index)
+│   └── usage/                   # 14 rule files (button, card, chip, modal, composition, etc.)
 ├── packages/
 │   └── mcp-server/              # MCP server for AI agent integration
 │       ├── src/index.ts         # Server implementation (8 tools)

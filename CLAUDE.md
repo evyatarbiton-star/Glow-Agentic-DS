@@ -20,6 +20,8 @@ DO NOT build screens/prototypes here. Create a separate project (e.g., `~/Deskto
 7. `tokens/primitive/radii.ts` — border-radius scale
 8. `tokens/semantic/radii.ts` — t-shirt naming (none → full, `sn` = small, `ln` = large)
 9. `tokens/primitive/shadows.ts` — shadow tokens (sm, md, lg, xl, 2xl, none)
+10. `tokens/semantic/shadows.ts` — semantic shadow layer (card, cardHover, toast, tooltip, dropdown)
+11. `tokens/semantic/z-index.ts` — stacking order (sticky:10, stickyNav:50, dropdown:1000, modal:1500)
 
 ### Usage rules:
 

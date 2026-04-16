@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback, useState, useId } from 'react'
 import type { ToastProps, ToastVariant } from './Toast.types'
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { semanticRadii } from '../../../tokens/semantic/radii'
+import { semanticShadows } from '../../../tokens/semantic/shadows'
 import { fontWeights } from '../../../tokens/primitive/typography'
 import type { ReactNode } from 'react'
 
@@ -22,7 +23,7 @@ import CloseLine from '../Icon/icons/line/Close'
 const TOAST_BG = sc.neutral.surface.focused            // #404040
 const TOAST_TEXT = sc.neutral.text.negative              // #ffffff
 const TOAST_RADIUS = semanticRadii.xxs                   // 8px
-const TOAST_SHADOW = '0px 2px 8px 0px rgba(0,0,0,0.16)' // card/hover shadow
+const TOAST_SHADOW = semanticShadows.toast                // 0px 2px 8px 0px rgba(0,0,0,0.16)
 const TOAST_MAX_WIDTH = 709                              // Figma max-width
 const TOAST_PADDING_X = 16                               // spacing.s
 const TOAST_PADDING_Y = 12                               // spacing.xs

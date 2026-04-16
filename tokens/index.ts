@@ -44,3 +44,9 @@ export { avatarUsageRules, navBarUsageRules } from './usage/avatar-navbar-rules'
 export { providerCardUsageRules }      from './usage/providercard-rules'
 export { zoeUsageRules }               from './usage/zoe-rules'
 export { compositionRules }            from './usage/composition-rules'
+
+export { semanticShadows }             from './semantic/shadows'
+export type { SemanticShadow }         from './semantic/shadows'
+
+export { semanticZIndex }              from './semantic/z-index'
+export type { SemanticZIndex }         from './semantic/z-index'

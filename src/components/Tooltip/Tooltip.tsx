@@ -4,6 +4,8 @@ import type { TooltipProps, TooltipDirection } from './Tooltip.types'
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { fontWeights, fontFamilies } from '../../../tokens/primitive/typography'
 import { typographyStyles } from '../../../tokens/semantic/typography'
+import { semanticZIndex } from '../../../tokens/semantic/z-index'
+import { semanticShadows } from '../../../tokens/semantic/shadows'
 
 // ============================================================
 // GLOW DS — Tooltip Component
@@ -26,11 +28,11 @@ const BTN_OUTLINE_BDR = sc.neutral.border.strong         // #e0e0e0
 const BTN_OUTLINE_TXT = sc.neutral.text.DEFAULT          // #000000
 const BTN_OUTLINE_HOV = sc.neutral.surface.subtle        // #f2f2f2
 const BTN_GHOST_TXT   = sc.neutral.text.negative         // #ffffff
-const BTN_GHOST_HOV   = 'rgba(255,255,255,0.10)' // ghost hover bg (on dark — no token)
-const CLOSE_COLOR   = 'rgba(255,255,255,0.60)'   // close icon default (no token)
+const BTN_GHOST_HOV   = 'rgba(255,255,255,0.10)' // TOKEN-EXCEPTION: white alpha on inverted dark bg — tooltip-specific
+const CLOSE_COLOR   = 'rgba(255,255,255,0.60)'   // TOKEN-EXCEPTION: white alpha on inverted dark bg — tooltip-specific
 const CLOSE_HOV     = sc.neutral.text.negative           // #ffffff
 const LINK_COLOR    = sc.neutral.text.negative           // #ffffff
-const LINK_HOV      = 'rgba(255,255,255,0.80)' // link hover (no token)
+const LINK_HOV      = 'rgba(255,255,255,0.80)' // TOKEN-EXCEPTION: white alpha on inverted dark bg — tooltip-specific
 
 const RADIUS_BOX    = 12                  // radii.xs (12px)
 const RADIUS_FULL   = 999                 // radii.full
@@ -83,7 +85,7 @@ const ARROW_PAD     = 24                  // spacing.l
 const ARROW_OVERLAP = 12
 
 
-const SHADOW = '0px 0px 1px 0px rgba(23, 15, 73, 0.03), 0px 1px 1px 0px rgba(23, 15, 73, 0.04), 0px 5px 14px 0px rgba(8, 15, 52, 0.04)' // unique tooltip shadow — not in token scale
+const SHADOW = semanticShadows.tooltip
 
 // ── Arrow Components ─────────────────────────────────────────
 
@@ -575,7 +577,7 @@ export function Tooltip({
     >
       {children}
       {isVisible && portalStyle && createPortal(
-        <div style={{ zIndex: 1000, ...portalStyle }}>
+        <div style={{ zIndex: semanticZIndex.dropdown, ...portalStyle }}>
           <TooltipPanel
             direction={direction}
             variant={variant}

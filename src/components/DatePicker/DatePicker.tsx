@@ -13,6 +13,7 @@ import { semanticColors as sc } from '../../../tokens/semantic/colors'
 import { typographyStyles } from '../../../tokens/semantic/typography'
 import { fontWeights, fontFamilies } from '../../../tokens/primitive/typography'
 import { primitiveShadows } from '../../../tokens/primitive/shadows'
+import { semanticZIndex } from '../../../tokens/semantic/z-index'
 import Calendar12Line from '../Icon/icons/line/Calendar12'
 import ChevronLeftLine from '../Icon/icons/line/ChevronLeft'
 import ChevronRightLine from '../Icon/icons/line/ChevronRight'
@@ -65,7 +66,7 @@ const FONT               = fontFamilies.default
 const CALENDAR_WIDTH            = 280
 const CALENDAR_BORDER_RADIUS    = 12   // borderRadius.xs — same as Select dropdown
 const CALENDAR_SHADOW           = primitiveShadows['2xl']
-const CALENDAR_Z_INDEX          = 1000
+const CALENDAR_Z_INDEX          = semanticZIndex.dropdown
 const CALENDAR_GAP_FROM_TRIGGER = 4
 const CAL_PADDING               = 16   // spacing.s
 const CAL_DAY_SIZE              = 32

@@ -24,6 +24,8 @@ export {
   navBarUsageRules,
   providerCardUsageRules,
   compositionRules,
+  semanticShadows,
+  semanticZIndex,
 } from '../tokens/index'
 
 export type {

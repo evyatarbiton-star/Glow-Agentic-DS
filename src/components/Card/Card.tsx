@@ -49,6 +49,10 @@ const paddings: Record<CardPadding, number> = {
 
 const HOVER_SHADOW = primitiveShadows.lg            // 0px 4px 16px rgba(0,0,0,0.10)
 
+// Focus ring (a11y — matches Button pattern)
+const FOCUS_RING_COLOR = sc.neutral.border.light    // #ededed
+const FOCUS_RING_WIDTH = 2
+
 export function Card({
   variant     = 'outline',
   radius      = 'lg',
@@ -86,6 +90,7 @@ export function Card({
     <Tag
       className={className || undefined}
       style={baseStyle}
+      {...(interactive ? { tabIndex: 0, role: 'button' } : {})}
       onMouseEnter={interactive ? (e: React.MouseEvent<HTMLElement>) => {
         const el = e.currentTarget
         el.style.boxShadow = HOVER_SHADOW
@@ -95,6 +100,23 @@ export function Card({
         const el = e.currentTarget
         el.style.boxShadow = isActive ? HOVER_SHADOW : v.shadow
         el.style.transform = 'translateY(0)'
+      } : undefined}
+      onFocus={interactive ? (e: React.FocusEvent<HTMLElement>) => {
+        const el = e.currentTarget
+        if (!el.matches(':focus-visible')) return
+        el.style.outline = `${FOCUS_RING_WIDTH}px solid ${FOCUS_RING_COLOR}`
+        el.style.outlineOffset = '2px'
+      } : undefined}
+      onBlur={interactive ? (e: React.FocusEvent<HTMLElement>) => {
+        const el = e.currentTarget
+        el.style.outline = 'none'
+        el.style.outlineOffset = '0px'
+      } : undefined}
+      onKeyDown={interactive ? (e: React.KeyboardEvent<HTMLElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          e.currentTarget.click()
+        }
       } : undefined}
       {...props}
     >

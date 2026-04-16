@@ -12,6 +12,7 @@ import type {
   SideNavFooterItemProps,
 } from './SideNav.types'
 import { semanticColors as sc } from '../../../tokens/semantic/colors'
+import { semanticZIndex } from '../../../tokens/semantic/z-index'
 import { semanticSpacing } from '../../../tokens/semantic/spacing'
 import { semanticRadii } from '../../../tokens/semantic/radii'
 import { fontFamilies, fontWeights } from '../../../tokens/primitive/typography'
@@ -71,7 +72,7 @@ const NAV_ITEM_HEIGHT   = 40                                   // Figma: main na
 const THUMBNAIL_SIZE    = 56                                   // Figma: tool thumbnail (spacing.xxxxl)
 const QR_SIZE           = 100                                  // Figma: QR code container
 
-const Z_INDEX           = 1500                                 // same as Modal
+const Z_INDEX           = semanticZIndex.modal                  // 1500 — same as Modal
 const ANIM_DURATION     = '250ms'
 const ANIM_EASING       = 'cubic-bezier(0.32, 0.72, 0, 1)'    // smooth ease-out
 const MOBILE_BP         = 640                                  // px — mobile breakpoint

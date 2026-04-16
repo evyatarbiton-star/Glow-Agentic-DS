@@ -77,7 +77,7 @@ const sections: SidebarSection[] = [
       {
         title: 'Data Display',
         items: [
-          { label: 'Avatar',        path: '/components/navbar',         platforms: ['web'] },
+          { label: 'Avatar',        path: '/components/avatar',         platforms: ['web'] },
           { label: 'Card',          path: '/components/card',           platforms: ['web'] },
           { label: 'Chip',          path: '/components/chip',           platforms: ['web'] },
           { label: 'Star Rating',    path: '/components/star-rating',    platforms: ['web'] },

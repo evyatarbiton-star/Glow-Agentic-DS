@@ -11,6 +11,7 @@ import { SelectionControlsDoc } from './docs/components/SelectionControlsDoc'
 import { FormsDoc }            from './docs/components/FormsDoc'
 import { TooltipDoc }         from './docs/components/TooltipDoc'
 import { NavBarDoc }          from './docs/components/NavBarDoc'
+import { AvatarDoc }          from './docs/components/AvatarDoc'
 import { CardDoc }            from './docs/components/CardDoc'
 import { ChipDoc }            from './docs/components/ChipDoc'
 import { ModalDoc }           from './docs/components/ModalDoc'
@@ -40,6 +41,7 @@ import { ProviderSearchResultsExample, ProviderSearchResultsScreen } from './doc
 import { HealtheeHomeExample, HealtheeHomeScreen } from './docs/examples/HealtheeHomeExample'
 import { ModalFormExample } from './docs/examples/ModalFormExample'
 import ZoeChatExample from './docs/examples/ZoeChatExample'
+import CostBreakdownModalExample from './docs/examples/CostBreakdownModalExample'
 
 import { IconPage } from './docs/pages/IconPage'
 import { OverviewPage } from './docs/pages/OverviewPage'
@@ -50,6 +52,9 @@ function App() {
     <BrowserRouter>
       <PlatformProvider>
       <Routes>
+
+        {/* ── Cost Breakdown Modal (full-screen, no sidebar) ── */}
+        <Route path="/preview/cost-breakdown" element={<CostBreakdownModalExample />} />
 
         {/* ── Carousel test (full-screen, no sidebar) ── */}
         <Route path="/preview/carousel" element={<CarouselTestPage />} />
@@ -106,6 +111,7 @@ function App() {
                 <Route path="/components/selection-controls" element={<SelectionControlsDoc />} />
                 <Route path="/components/forms"    element={<FormsDoc />} />
                 <Route path="/components/tooltip" element={<TooltipDoc />} />
+                <Route path="/components/avatar" element={<AvatarDoc />} />
                 <Route path="/components/navbar" element={<NavBarDoc />} />
                 <Route path="/components/card" element={<CardDoc />} />
                 <Route path="/components/chip" element={<ChipDoc />} />

@@ -21,7 +21,7 @@ const DEFAULT_FILLED = sc['accent-yellow'].surface.selected  // #ffd129
 const DEFAULT_EMPTY  = sc.neutral.surface.disabled           // #d4d4d4
 const TEXT_COLOR     = sc.neutral.text.light                 // #8a8a8a
 const FONT           = fontFamilies.default
-const FONT_SIZE      = fontSizes[13]                         // 13px
+const FONT_SIZE      = fontSizes[14]                         // 14px — matches CostSection meta text in ProviderCard
 const FONT_WEIGHT    = fontWeights.regular                   // 400
 const TEXT_GAP       = parseInt(semanticSpacing.xxs)         // 8px — gap before text
 

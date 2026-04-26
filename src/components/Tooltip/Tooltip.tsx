@@ -214,10 +214,15 @@ function ActionBtn({ label, onClick, btnVariant }: { label: string; onClick?: ()
 
 interface TooltipPanelProps extends Omit<TooltipProps, 'children' | 'open'> {
   direction: TooltipDirection
+}
+
+// `bg` is computed inside TooltipPanel from the `variant` and passed to the
+// inner box — it is not part of the public API.
+interface TooltipBoxProps extends TooltipPanelProps {
   bg: string
 }
 
-function TooltipBox({ bg, variant, title, text, leftIcon, media, link, primaryAction, secondaryAction, onClose, panelStyle }: TooltipPanelProps) {
+function TooltipBox({ bg, variant, title, text, leftIcon, media, link, primaryAction, secondaryAction, onClose, panelStyle }: TooltipBoxProps) {
   const isRich = variant === 'rich'
 
   // ── Rich variant layout ──────────────────────────────────

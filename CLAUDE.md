@@ -94,7 +94,7 @@ import {
 | **Tooltip** | default (dark blur), rich (solid) | `direction`, `title`, `leftIcon`, `media`, `primaryAction`, `secondaryAction`, `link` |
 | **Avatar** | — | `size` (sm/md/lg), `src`, `alt`, `fallback`, `bgColor`, `color` |
 | **NetworkBadge** | — | Thin wrapper around Chip — tier→color mapping + NetworkTierCoin icon |
-| **ProviderCard** | — | `name`, `specialty`, `loading`, `photoUrl`, `providerType` (male/female/facility), `networkTier`, `cost`, `costLevel`, `languages` (string[]), `virtualAvailable`, `onBookClick`, `onCallClick` |
+| **ProviderCard** | — | `name`, `specialty`, `loading`, `photoUrl`, `providerType` (male/female/facility), `networkTier`, `cost`, `costVariant` (coinsurance/cost-unknown/cost-no-comparison/copay-visit/copay-procedure/not-covered/price-unknown/hidden — primary variant API), `costLevel` (chip color — coinsurance only), `languages` (string[]), `virtualAvailable`, `onBookClick`, `onCallClick` |
 | **StarRating** | — | `rating`, `maxStars`, `size` (xs/sm/md/lg), `showValue`, `reviewCount`, `filledColor`, `emptyColor` |
 | **ScrollArea** | — | `direction` (horizontal/vertical/both), `gap`, `snap`, `snapAlign`, `maxHeight`, `maxWidth`, `hideScrollbar` |
 
@@ -133,7 +133,7 @@ import {
 
 Icon sizes: `xs` (14px), `sm` (16px), `md` (20px), `lg` (24px), `xl` (32px)
 
-Never use inline SVG icons — always import from the DS icon library. If missing, ask the user.
+Never use inline SVG icons in product code — always import from the DS icon library. If missing, ask the user. Exception: inline SVG is permitted inside DS component internals for animation primitives (e.g., Button/Chip loading spinners) — keep these self-contained and do not expose raw SVG in component props.
 
 ## IconButton vs Button iconOnly
 
@@ -175,7 +175,7 @@ Never use inline SVG icons — always import from the DS icon library. If missin
 4. Use `<Card>` for any bordered/elevated/filled container — never raw divs
 5. Use `<Chip>` for labels, tags, filters, status indicators. Wrap in `<ChipGroup>`
 6. Match Chip color to meaning: success=positive, error=negative, info=informational, warning=caution, recommended=product recommendation
-7. Never use inline SVG icons — import from `src/components/Icon/icons/`
+7. Never use inline SVG icons in product code — import from `src/components/Icon/icons/`. DS components may use inline SVG for internal animation primitives (spinners, transitions) only.
 8. Never use native HTML form elements — use DS components
 9. Never use `bg-white`/`bg-[#ffffff]` — use `bg-neutral-negative`
 10. Never put two filled buttons side by side — primary + outline, or secondary + outline
@@ -187,6 +187,28 @@ Never use inline SVG icons — always import from the DS icon library. If missin
 16. Always include rating, distance+address, and appointment row on every ProviderCard
 17. Default backgrounds to white (`bg-neutral-negative`) unless Figma says otherwise
 18. Always provide `alt` text for Avatar when `src` is provided
+
+## Escape Hatch: `glow-ignore`
+
+The token validator supports a per-line escape hatch for legitimate exceptions that cannot be expressed as DS tokens (e.g., animation timing, third-party embed constraints, one-off magic numbers tied to external APIs).
+
+**Format — a reason is REQUIRED:**
+```tsx
+const BLUR_RADIUS = '4.3px' // glow-ignore: backdrop-filter blur needs exact value for iOS parity
+<svg viewBox="0 0 24 24" /* glow-ignore: internal animation primitive */ />
+```
+
+**When `glow-ignore` is acceptable:**
+- Animation primitives inside DS component internals (spinners, loaders, transitions)
+- Values mandated by a third-party SDK or embed (Stripe, Datadog, reCAPTCHA)
+- Platform workarounds with a linked issue/commit
+
+**When it is NOT acceptable:**
+- "I couldn't find the right token" → ask in #design-system before ignoring
+- Color, spacing, or radius values that fit existing tokens
+- Hiding new, unaudited colors from the palette
+
+Reviewers should reject any `glow-ignore` without a clear reason after the colon. The validator enforces the `glow-ignore:` prefix.
 
 ## Figma-to-Token Mapping
 

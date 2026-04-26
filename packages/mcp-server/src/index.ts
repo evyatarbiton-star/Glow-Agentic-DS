@@ -14,7 +14,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { readFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 // ── DS Root Path ────────────────────────────────────────────
@@ -44,87 +44,37 @@ let _manifestCache: ManifestComponent[] | null = null;
 let _manifestMtime: number = 0;
 
 function loadManifest(): ManifestComponent[] {
-  const manifestPath = join(DS_ROOT, "src", "manifest.ts");
+  // src/manifest.json is auto-generated from src/manifest.ts by
+  // scripts/generate-manifest-json.cjs (wired into `npm run prebuild`).
+  // Loading the JSON directly avoids regex-parsing TypeScript at runtime.
+  const manifestPath = join(DS_ROOT, "src", "manifest.json");
   if (!existsSync(manifestPath)) {
-    console.error(`Manifest not found at ${manifestPath}`);
+    console.error(
+      `Manifest not found at ${manifestPath}. ` +
+      `Run: node scripts/generate-manifest-json.cjs (or npm run prebuild).`
+    );
     return [];
   }
 
-  const stat = readFileSync(manifestPath);
-  const currentMtime = stat.length; // rough change detection
+  const currentMtime = statSync(manifestPath).mtimeMs;
 
   if (_manifestCache && _manifestMtime === currentMtime) {
     return _manifestCache;
   }
 
-  // Read the raw TS file and extract component data via eval-free parsing
-  const raw = readFileSync(manifestPath, "utf-8");
-
-  // Extract component blocks by finding name patterns
-  const components: ManifestComponent[] = [];
-  const nameMatches = raw.matchAll(/name:\s*'([^']+)'/g);
-
-  for (const match of nameMatches) {
-    const name = match[1];
-    if (!name) continue;
-
-    // Find the block for this component
-    const startIdx = match.index!;
-    // Find the import statement
-    const importMatch = raw.slice(startIdx).match(/import:\s*["']([^"']+)["']/);
-    const categoryMatch = raw.slice(startIdx).match(/category:\s*'([^']+)'/);
-    const descMatch = raw.slice(startIdx).match(/description:\s*'([^']+)'/);
-    const figmaMatch = raw.slice(startIdx).match(/figmaNodeId:\s*(?:'([^']*)'|null)/);
-
-    // Extract arrays
-    const variantsMatch = raw.slice(startIdx, startIdx + 500).match(/variants:\s*\[([^\]]*)\]/);
-    const sizesMatch = raw.slice(startIdx, startIdx + 500).match(/sizes:\s*\[([^\]]*)\]/);
-
-    // Extract whenToUse and avoidWhen arrays
-    const whenToUseBlock = extractStringArray(raw, startIdx, "whenToUse");
-    const avoidWhenBlock = extractStringArray(raw, startIdx, "avoidWhen");
-    const relatedBlock = extractStringArray(raw, startIdx, "relatedComponents");
-
-    components.push({
-      name,
-      import: importMatch?.[1] ?? `import { ${name} } from 'glow-ds'`,
-      category: categoryMatch?.[1] ?? "unknown",
-      description: descMatch?.[1] ?? "",
-      figmaNodeId: figmaMatch?.[1] ?? null,
-      variants: parseArrayValues(variantsMatch?.[1] ?? ""),
-      sizes: parseArrayValues(sizesMatch?.[1] ?? ""),
-      props: {}, // Props are complex — we'll serve them from types files on demand
-      whenToUse: whenToUseBlock,
-      avoidWhen: avoidWhenBlock,
-      relatedComponents: relatedBlock,
-      examples: [],
-    });
+  let parsed: { components?: ManifestComponent[] };
+  try {
+    parsed = JSON.parse(readFileSync(manifestPath, "utf-8"));
+  } catch (err) {
+    console.error(`Failed to parse ${manifestPath}:`, err);
+    return [];
   }
+
+  const components = Array.isArray(parsed.components) ? parsed.components : [];
 
   _manifestCache = components;
   _manifestMtime = currentMtime;
   return components;
-}
-
-function parseArrayValues(str: string): string[] {
-  return str
-    .split(",")
-    .map((s) => s.trim().replace(/^['"]|['"]$/g, ""))
-    .filter(Boolean);
-}
-
-function extractStringArray(raw: string, fromIdx: number, key: string): string[] {
-  const slice = raw.slice(fromIdx, fromIdx + 3000);
-  const regex = new RegExp(`${key}:\\s*\\[([\\s\\S]*?)\\]`);
-  const match = slice.match(regex);
-  if (!match) return [];
-  return match[1]
-    .split("\n")
-    .map((line) => {
-      const m = line.match(/['"](.+?)['"]/);
-      return m?.[1] ?? "";
-    })
-    .filter(Boolean);
 }
 
 // ── Create Server ───────────────────────────────────────────

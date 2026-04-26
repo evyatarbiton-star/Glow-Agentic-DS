@@ -97,3 +97,16 @@ const BRAND = sc.primary.surface.DEFAULT  // #fd5201
 
 If available, also run: `node scripts/validate-tokens.cjs [filepath]`
 This catches hardcoded values automatically. Combine its output with your semantic review.
+
+## Escape hatch: `glow-ignore`
+
+The validator honors a per-line escape hatch of the form:
+```tsx
+const X = '4.3px' // glow-ignore: third-party embed requires this exact value
+```
+The colon and a reason are REQUIRED — a bare `// glow-ignore` is treated as a normal comment and the line is still scanned.
+
+When you see `glow-ignore` in reviewed code:
+- **Accept** if the reason describes a real external constraint (animation timing, 3rd-party SDK, platform workaround)
+- **Reject** if the reason is vague ("custom", "design request") — push the author to use a DS token or escalate to add a new token
+- Full policy: see CLAUDE.md → "Escape Hatch: glow-ignore"

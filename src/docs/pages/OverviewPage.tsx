@@ -26,8 +26,8 @@ const SECTIONS = [
   {
     title: 'Lab',
     description: 'Work-in-progress components being iterated on before promotion.',
-    path: '/lab/provider-card-v2',
-    count: 1,
+    path: '/lab',
+    count: 0,
     color: '#8b5cf6',
   },
 ]

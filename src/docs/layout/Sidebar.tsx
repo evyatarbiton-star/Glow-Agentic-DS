@@ -129,6 +129,11 @@ const sections: SidebarSection[] = [
       { label: 'Zoe Chat',               path: '/examples/zoe-chat',                  platforms: ['web'] },
     ],
   },
+  {
+    title: 'Lab',
+    defaultOpen: true,
+    items: [],
+  },
 ]
 
 // ── localStorage Persistence ─────────────────────────────────

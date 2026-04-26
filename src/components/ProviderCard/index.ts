@@ -1,2 +1,2 @@
 export { ProviderCard } from './ProviderCard'
-export type { ProviderCardProps, NetworkTier, CostLevel, ProviderCardLayout } from './ProviderCard.types'
+export type { ProviderCardProps, NetworkTier, CostLevel, CostVariant, ProviderCardLayout } from './ProviderCard.types'

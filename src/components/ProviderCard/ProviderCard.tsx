@@ -258,6 +258,7 @@ export function ProviderCard({
   networkName,
   networkLabel,
   cost,
+  costVariant,
   costLevel,
   costLabel,
   costChipLabel,
@@ -303,6 +304,10 @@ export function ProviderCard({
     )
   }
 
+  // Back-compat shim: if no variant set but costLevel='unknown', treat as 'cost-unknown' preset
+  const resolvedCostVariant = costVariant ?? (costLevel === 'unknown' ? 'cost-unknown' : 'coinsurance')
+  const costHidden = resolvedCostVariant === 'hidden'
+
   const hasLanguages = languages && languages.length > 0
   const languageText = hasLanguages
     ? (languages!.length <= 2
@@ -312,7 +317,7 @@ export function ProviderCard({
   const callOnly = onCallClick && !onBookClick
   const showAppointmentRow = onBookClick ? !!nextAppointmentDate : callOnly
   const hasDetails = distance || address || rating != null || hasLanguages || virtualAvailable || showAppointmentRow
-  const hasCost = showPrice && cost
+  const hasCost = showPrice && cost && !costHidden
   const hasActions = onCallClick || onBookClick
 
   if (effectiveLayout === 'horizontal') {
@@ -409,7 +414,7 @@ export function ProviderCard({
             {hasCost && (
               <div style={{ textAlign: 'right' }}>
                 <CostSection
-                  cost={cost!} costLevel={costLevel}
+                  cost={cost!} costVariant={resolvedCostVariant} costLevel={costLevel}
                   costLabel={costLabel} costChipLabel={costChipLabel} costChipHideIcon={costChipHideIcon} showCostChip={showCostChip}
                   costHint={costHint} chipInline
                 />
@@ -542,6 +547,7 @@ export function ProviderCard({
           <div style={{ padding: `${SPACE_XS}px ${SPACE_S}px` }}>
             <CostSection
               cost={cost}
+              costVariant={resolvedCostVariant}
               costLevel={costLevel}
               costLabel={costLabel}
               costChipLabel={costChipLabel}

@@ -9,6 +9,33 @@ export type CostLevel = 'lower' | 'typical' | 'higher' | 'unknown'
 export type ProviderType = 'male' | 'female' | 'facility'
 export type ProviderCardLayout = 'vertical' | 'horizontal' | 'responsive'
 
+/**
+ * Cost display variant — drives label, hint, and chip visibility for the
+ * cost section. User props (costLabel / costHint / showCostChip) override
+ * the preset if provided.
+ *
+ * Terminology:
+ *   • cost  = what the user pays out of pocket
+ *   • price = what the provider charges before insurance
+ */
+export type CostVariant =
+  /** Chip (green/blue/red from costLevel) + "Est. out-of-pocket cost" */
+  | 'coinsurance'
+  /** Price range + "Call to verify out-of-pocket cost" (no chip) */
+  | 'cost-unknown'
+  /** Single cost + "Est. out-of-pocket cost" (no chip) — no comparison data available */
+  | 'cost-no-comparison'
+  /** Flat copay + "Per visit" (no chip) */
+  | 'copay-visit'
+  /** Flat copay + "Per procedure" (no chip) */
+  | 'copay-procedure'
+  /** Full price + "Without insurance" + hint "Call to verify out-of-pocket cost" */
+  | 'not-covered'
+  /** Price range + "Est. service price" + hint "Before insurance" */
+  | 'price-unknown'
+  /** Cost section is not rendered at all */
+  | 'hidden'
+
 export interface ProviderCardProps {
   /** Card layout — 'responsive' auto-switches at 480px (default: 'responsive') */
   layout?: ProviderCardLayout
@@ -48,7 +75,9 @@ export interface ProviderCardProps {
   // ── Cost ────────────────────────────────────────────────────
   /** Formatted cost string, e.g. "$1,400" */
   cost?: string
-  /** Cost comparison level — controls chip color + icon */
+  /** Cost display variant — drives label, hint, and chip visibility for the cost section. Default: 'coinsurance'. */
+  costVariant?: CostVariant
+  /** Cost comparison level — controls chip color + icon (only used within the `coinsurance` variant) */
   costLevel?: CostLevel
   /** Label under cost, e.g. "est. out-of-pocket". Accepts string or ReactNode. */
   costLabel?: React.ReactNode

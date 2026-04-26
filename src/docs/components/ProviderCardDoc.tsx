@@ -119,11 +119,13 @@ const propsData = [
   { prop: 'networkTier',          type: '"in-network" | "tier-2" | "tier-3" | "out-of-network"', default: 'undefined', description: 'Insurance network tier — controls badge color' },
   { prop: 'networkName',          type: 'string',                          default: 'undefined',            description: 'Network name, e.g. "Aetna"' },
   { prop: 'networkLabel',         type: 'string',                          default: 'undefined',            description: 'Network tier label, e.g. "In-Network"' },
-  { prop: 'cost',                 type: 'string',                          default: 'undefined',            description: 'Formatted cost, e.g. "$1,400"' },
-  { prop: 'costLevel',            type: '"lower" | "typical" | "higher"',  default: 'undefined',            description: 'Cost comparison level — controls chip color + icon' },
-  { prop: 'costLabel',            type: 'string',                          default: '"est. out-of-pocket"', description: 'Label under the cost amount' },
-  { prop: 'showCostChip',         type: 'boolean',                         default: 'true',                 description: 'Show the cost comparison chip' },
-  { prop: 'showPrice',            type: 'boolean',                         default: 'true',                 description: 'Show entire price section' },
+  { prop: 'cost',                 type: 'string',                          default: 'undefined',            description: 'Formatted cost, e.g. "$1,400" or "$900–$1,200" for ranges' },
+  { prop: 'costVariant',          type: '"coinsurance" | "cost-unknown" | "cost-no-comparison" | "copay-visit" | "copay-procedure" | "not-covered" | "price-unknown" | "hidden"', default: '"coinsurance"', description: 'Primary variant — drives label, hint, chip, and typography (cost-style vs price-style)' },
+  { prop: 'costLevel',            type: '"lower" | "typical" | "higher"',  default: 'undefined',            description: 'Chip color — ONLY used within coinsurance variant; ignored otherwise' },
+  { prop: 'costLabel',            type: 'ReactNode',                       default: 'preset',               description: 'Override the cost label (falls back to variant preset)' },
+  { prop: 'costHint',             type: 'ReactNode',                       default: 'preset',               description: 'Override the hint text below the cost (falls back to variant preset)' },
+  { prop: 'showCostChip',         type: 'boolean',                         default: 'preset',               description: 'Override chip visibility (only coinsurance variant shows a chip by default)' },
+  { prop: 'showPrice',            type: 'boolean',                         default: 'true',                 description: 'Show entire cost section' },
   { prop: 'languages',            type: 'string[]',                        default: 'undefined',            description: 'Languages spoken, e.g. ["English", "Spanish"]. Shows first 2 + count.' },
   { prop: 'virtualAvailable',     type: 'boolean',                         default: 'undefined',            description: 'Show "Accept virtual appointment" row' },
   { prop: 'nextAppointmentLabel', type: 'string',                          default: 'undefined',            description: 'Appointment label, e.g. "Next appointment"' },
@@ -209,6 +211,7 @@ const DEFAULTS = {
   rating: '4.8',
   reviewCount: '128',
   cost: '$1,400',
+  costVariant: 'coinsurance' as const,
   costLevel: 'lower' as const,
   nextAppointmentLabel: 'Next appointment',
   nextAppointmentDate: 'Today, May 7',
@@ -254,7 +257,17 @@ const COST_LEVEL_OPTIONS = [
   { value: 'lower', label: 'Lower' },
   { value: 'typical', label: 'Typical' },
   { value: 'higher', label: 'Higher' },
-  { value: 'unknown', label: 'Unknown' },
+]
+
+const COST_VARIANT_OPTIONS = [
+  { value: 'coinsurance',         label: 'Coinsurance (chip)' },
+  { value: 'cost-unknown',        label: 'Cost unknown (range)' },
+  { value: 'cost-no-comparison',  label: 'Cost — no comparison' },
+  { value: 'copay-visit',         label: 'Copay — per visit' },
+  { value: 'copay-procedure',     label: 'Copay — per procedure' },
+  { value: 'not-covered',         label: 'Not covered (price)' },
+  { value: 'price-unknown',       label: 'Price unknown (range)' },
+  { value: 'hidden',              label: 'Hidden (no cost section)' },
 ]
 
 function Playground() {
@@ -321,7 +334,8 @@ function Playground() {
               networkLabel={s.networkTier === 'none' ? undefined : s.networkLabel || undefined}
               networkName={s.networkName || undefined}
               cost={s.cost || undefined}
-              costLevel={s.costLevel === 'none' ? undefined : s.costLevel as any}
+              costVariant={s.costVariant}
+              costLevel={s.costVariant === 'coinsurance' && s.costLevel !== 'none' ? (s.costLevel as any) : undefined}
               showPrice={s.showPrice}
               showCostChip={s.showCostChip}
               bookmarkable={s.bookmarkable}
@@ -371,7 +385,10 @@ function Playground() {
                 else if (tier === 'out-of-network') set('networkLabel', 'Out-of-Network')
                 else set('networkLabel', '')
               }} />
-              <Select label="costLevel" size="sm" options={COST_LEVEL_OPTIONS} value={s.costLevel === 'none' ? 'none' : s.costLevel} onChange={(v) => set('costLevel', v as typeof s.costLevel)} />
+              <Select label="costVariant" size="sm" options={COST_VARIANT_OPTIONS} value={s.costVariant} onChange={(v) => set('costVariant', v as typeof s.costVariant)} />
+              {s.costVariant === 'coinsurance' && (
+                <Select label="costLevel" size="sm" options={COST_LEVEL_OPTIONS} value={s.costLevel === 'none' ? 'none' : s.costLevel} onChange={(v) => set('costLevel', v as typeof s.costLevel)} helperText="Only used within coinsurance variant" />
+              )}
               <Select label="actions" size="sm" options={ACTIONS_OPTIONS} value={s.actions} onChange={(v) => set('actions', v as typeof s.actions)} />
             </div>
 
@@ -546,139 +563,153 @@ export function ProviderCardDoc() {
         </Row>
       </Section>
 
-      {/* ── Cost Chip Levels ─────────────────────────────────── */}
-      <Section title="Cost Chip Levels" description="Four cost comparison levels with distinct colors and icons. Lower and higher include directional arrow icons.">
+      {/* ── Cost Variant Gallery ──────────────────────────────── */}
+      <Section title="Cost Variant Gallery" description="The 8 cost display variants from Figma. Each is a preset for label, hint, chip visibility, and typography (Tiempos for out-of-pocket cost, Founders for pre-insurance price).">
         <Row>
           <CardDemo>
-            <Label>Lower cost</Label>
+            <Label>coinsurance · lower</Label>
             <ProviderCard
-              name="Dr. Emily Park"
-              specialty="Ophthalmologist"
-              providerType="female"
-              distance="1.2 mi"
-              address="635 Madison Ave, 3rd Floor, New York, NY 10022"
-              rating={4.5}
-              reviewCount={89}
-              networkTier="in-network"
-              networkLabel="In-Network"
-              cost="$72"
-              costLevel="lower"
-              nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Wed, Mar 18"
-              onCallClick={() => {}}
-              onBookClick={() => {}}
+              name="Dr. Emily Park" specialty="Ophthalmologist" providerType="female"
+              distance="1.2 mi" address="635 Madison Ave" rating={4.5} reviewCount={89}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$72" costVariant="coinsurance" costLevel="lower"
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Wed, Mar 18"
+              onCallClick={() => {}} onBookClick={() => {}}
             />
           </CardDemo>
 
           <CardDemo>
-            <Label>Typical cost</Label>
+            <Label>coinsurance · typical</Label>
             <ProviderCard
-              name="Dr. Michael Torres"
-              specialty="Ophthalmologist"
-              initials="MT"
-              distance="0.8 mi"
-              address="200 Broadway, Suite 1105, New York, NY 10038"
-              rating={4.7}
-              reviewCount={156}
-              networkTier="in-network"
-              networkLabel="In-Network"
-              cost="$155"
-              costLevel="typical"
-              nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Thu, Mar 19"
-              onCallClick={() => {}}
-              onBookClick={() => {}}
+              name="Dr. Michael Torres" specialty="Ophthalmologist"
+              distance="0.8 mi" address="200 Broadway" rating={4.7} reviewCount={156}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$155" costVariant="coinsurance" costLevel="typical"
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Thu, Mar 19"
+              onCallClick={() => {}} onBookClick={() => {}}
             />
           </CardDemo>
 
           <CardDemo>
-            <Label>Higher cost</Label>
+            <Label>coinsurance · higher</Label>
             <ProviderCard
-              name="Dr. Robert Kim"
-              specialty="Ophthalmologist"
-              initials="RK"
-              distance="2.1 mi"
-              address="88 Lexington Ave, Apt 12C, New York, NY 10016"
-              rating={4.9}
-              reviewCount={201}
-              networkTier="in-network"
-              networkLabel="In-Network"
-              cost="$210"
-              costLevel="higher"
-              nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Mon, Mar 23"
-              onCallClick={() => {}}
-              onBookClick={() => {}}
+              name="Dr. Robert Kim" specialty="Ophthalmologist"
+              distance="2.1 mi" address="88 Lexington Ave" rating={4.9} reviewCount={201}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$210" costVariant="coinsurance" costLevel="higher"
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Mon, Mar 23"
+              onCallClick={() => {}} onBookClick={() => {}}
             />
           </CardDemo>
 
           <CardDemo>
-            <Label>Unknown cost</Label>
+            <Label>cost-unknown</Label>
             <ProviderCard
-              name="Dr. Lisa Nguyen"
-              specialty="Ophthalmologist"
-              initials="LN"
-              distance="3.0 mi"
-              address="500 Park Ave, Suite 200, New York, NY 10065"
-              rating={4.6}
-              reviewCount={74}
-              networkTier="in-network"
-              networkLabel="In-Network"
-              cost="$1,400 - $3,200"
-              costLevel="unknown"
-              nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Fri, Mar 21"
+              name="Dr. Lisa Nguyen" specialty="Ophthalmologist" providerType="female"
+              distance="3.0 mi" address="500 Park Ave" rating={4.6} reviewCount={74}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$900–$1,200" costVariant="cost-unknown"
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Fri, Mar 21"
+              onCallClick={() => {}} onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>cost-no-comparison</Label>
+            <ProviderCard
+              name="Dr. Priya Shah" specialty="Cardiologist" providerType="female"
+              distance="1.5 mi" address="160 E 34th St" rating={4.7} reviewCount={92}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$120" costVariant="cost-no-comparison"
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Tue, Mar 19"
+              onCallClick={() => {}} onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>copay-visit</Label>
+            <ProviderCard
+              name="Dr. David Hoffman" specialty="Orthopedist"
+              distance="0.4 mi" address="555 Madison Ave" rating={4.7} reviewCount={134}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$30" costVariant="copay-visit"
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Tomorrow, Mar 25"
+              onCallClick={() => {}} onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>copay-procedure</Label>
+            <ProviderCard
+              name="Manhattan Imaging" specialty="Imaging center" providerType="facility"
+              distance="0.9 mi" address="100 E 77th St" rating={4.3} reviewCount={67}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$150" costVariant="copay-procedure"
+              onCallClick={() => {}} onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>not-covered</Label>
+            <ProviderCard
+              name="Dr. James Wright" specialty="Dermatologist"
+              distance="1.8 mi" address="250 W 57th St" rating={4.4} reviewCount={63}
+              networkTier="out-of-network" networkLabel="Out-of-Network"
+              cost="$450" costVariant="not-covered"
               onCallClick={() => {}}
-              onBookClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>price-unknown</Label>
+            <ProviderCard
+              name="Dr. Rachel Lee" specialty="Orthopedist" providerType="female"
+              distance="2.5 mi" address="500 Park Ave" rating={4.9} reviewCount={201}
+              networkTier="tier-2" networkName="Aetna" networkLabel="Tier 2"
+              cost="$900–$1,200" costVariant="price-unknown"
+              onCallClick={() => {}}
+            />
+          </CardDemo>
+
+          <CardDemo>
+            <Label>hidden</Label>
+            <ProviderCard
+              name="Dr. Anthony Brooks" specialty="Orthopedist"
+              distance="0.5 mi" address="350 5th Ave" rating={4.6} reviewCount={92}
+              networkTier="in-network" networkLabel="In-Network"
+              costVariant="hidden"
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Today, Mar 24"
+              onCallClick={() => {}} onBookClick={() => {}}
             />
           </CardDemo>
         </Row>
       </Section>
 
-      {/* ── Cost Chip Customization ──────────────────────────── */}
-      <Section title="Cost Chip Customization" description="Override the default cost chip label or hide the icon.">
+      {/* ── Chip Customization (coinsurance only) ─────────────── */}
+      <Section title="Chip Customization" description="Within the coinsurance variant, override the chip label or hide the icon.">
         <Row>
           <CardDemo>
-            <Label>Custom label</Label>
+            <Label>Custom chip label</Label>
             <ProviderCard
-              name="Dr. Sarah Chen"
-              specialty="Dermatologist"
-              providerType="female"
-              distance="0.5 mi"
-              address="100 E 77th St, New York, NY 10075"
-              rating={4.8}
-              reviewCount={112}
-              networkTier="in-network"
-              networkLabel="In-Network"
-              cost="$95"
-              costLevel="typical"
+              name="Dr. Sarah Chen" specialty="Dermatologist" providerType="female"
+              distance="0.5 mi" address="100 E 77th St" rating={4.8} reviewCount={112}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$95" costVariant="coinsurance" costLevel="typical"
               costChipLabel="Check with insurer"
-              nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Tomorrow"
-              onCallClick={() => {}}
-              onBookClick={() => {}}
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Tomorrow"
+              onCallClick={() => {}} onBookClick={() => {}}
             />
           </CardDemo>
 
           <CardDemo>
-            <Label>Hidden icon</Label>
+            <Label>Chip icon hidden</Label>
             <ProviderCard
-              name="Dr. James Wright"
-              specialty="Dermatologist"
-              initials="JW"
-              distance="1.8 mi"
-              address="250 W 57th St, New York, NY 10019"
-              rating={4.4}
-              reviewCount={63}
-              networkTier="in-network"
-              networkLabel="In-Network"
-              cost="$180"
-              costLevel="higher"
-              costChipHideIcon
-              nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Mon, Mar 23"
-              onCallClick={() => {}}
-              onBookClick={() => {}}
+              name="Dr. James Wright" specialty="Dermatologist"
+              distance="1.8 mi" address="250 W 57th St" rating={4.4} reviewCount={63}
+              networkTier="in-network" networkLabel="In-Network"
+              cost="$180" costVariant="coinsurance" costLevel="higher" costChipHideIcon
+              nextAppointmentLabel="Next appointment" nextAppointmentDate="Mon, Mar 23"
+              onCallClick={() => {}} onBookClick={() => {}}
             />
           </CardDemo>
         </Row>
@@ -769,52 +800,6 @@ export function ProviderCardDoc() {
         </Row>
       </Section>
 
-      {/* ── Without Price ────────────────────────────────────── */}
-      <Section title="Without Price" description="When the plan is not connected or cost data is unavailable, hide the price section entirely.">
-        <CardDemo>
-          <ProviderCard
-            name="Dr. Anthony Brooks"
-            specialty="Orthopedist"
-            initials="AB"
-            distance="0.5 mi"
-            address="350 5th Ave, Suite 7700, New York, NY 10118"
-            rating={4.6}
-            reviewCount={92}
-            networkTier="in-network"
-            networkLabel="In-Network"
-            showPrice={false}
-            nextAppointmentLabel="Next appointment"
-            nextAppointmentDate="Today, Mar 24"
-            onCallClick={() => {}}
-            onBookClick={() => {}}
-          />
-        </CardDemo>
-      </Section>
-
-      {/* ── Without Cost Chip ────────────────────────────────── */}
-      <Section title="Without Cost Chip" description="Show cost inline with label but no comparison chip. Used when cost comparison data is not available.">
-        <CardDemo>
-          <ProviderCard
-            name="Manhattan Eye Center"
-            specialty="Retinal imaging center"
-            initials="ME"
-            distance="0.9 mi"
-            address="100 E 77th St, Lower Level, New York, NY 10075"
-            rating={4.3}
-            reviewCount={67}
-            networkTier="in-network"
-            networkLabel="In-Network"
-            cost="$95"
-            showCostChip={false}
-            costLabel="est. provider charge"
-            nextAppointmentLabel="Next appointment"
-            nextAppointmentDate="Today, Mar 24"
-            onCallClick={() => {}}
-            onBookClick={() => {}}
-          />
-        </CardDemo>
-      </Section>
-
       {/* ── Minimal Card ─────────────────────────────────────── */}
       <Section title="Minimal Card" description="Only name and specialty — no cost, details, network, or actions.">
         <CardDemo>
@@ -847,32 +832,6 @@ export function ProviderCardDoc() {
               specialty=""
             />
           </div>
-        </Row>
-      </Section>
-
-      {/* ── Copay Variant ────────────────────────────────────── */}
-      <Section title="Copay Variant" description="For copay plans, all providers show the same flat cost. Use costLabel to show 'copay per visit'.">
-        <Row>
-          <CardDemo>
-            <ProviderCard
-              name="Dr. David Hoffman"
-              specialty="Orthopedist"
-              initials="DH"
-              distance="0.4 mi"
-              address="555 Madison Ave, 17th Floor, New York, NY 10022"
-              rating={4.7}
-              reviewCount={134}
-              networkTier="in-network"
-              networkLabel="In-Network"
-              cost="$45"
-              costLabel="copay per visit"
-              showCostChip={false}
-              nextAppointmentLabel="Next appointment"
-              nextAppointmentDate="Tomorrow, Mar 25"
-              onCallClick={() => {}}
-              onBookClick={() => {}}
-            />
-          </CardDemo>
         </Row>
       </Section>
 
@@ -940,10 +899,10 @@ export function ProviderCardDoc() {
       </Section>
 
       {/* ── Code Examples ────────────────────────────────────── */}
-      <Section title="Usage" description="Import and use ProviderCard with your provider data.">
+      <Section title="Usage" description="Import and use ProviderCard with your provider data. Pick the costVariant that matches the plan/coverage state; costLevel only applies within coinsurance.">
         <CodeBlock code={`import { ProviderCard } from '../components/ProviderCard'
 
-// Full card with all features
+// Coinsurance — shows cost chip (green/blue/red by costLevel)
 <ProviderCard
   name="Dr. Sarah Chen"
   specialty="Primary Care Doctor"
@@ -955,8 +914,8 @@ export function ProviderCardDoc() {
   networkTier="in-network"
   networkLabel="In-Network"
   cost="$1,400"
+  costVariant="coinsurance"
   costLevel="lower"
-  costLabel="est. out-of-pocket"
   nextAppointmentLabel="Next appointment"
   nextAppointmentDate="Tomorrow, Mar 25"
   onCallClick={() => handleCall(provider)}
@@ -964,24 +923,34 @@ export function ProviderCardDoc() {
   onClick={() => navigate(\`/provider/\${provider.id}\`)}
 />
 
-// Copay plan — flat cost, no chip
+// Copay plan — flat cost, no chip, variant drives the label
 <ProviderCard
   name="Dr. David Hoffman"
   specialty="Orthopedist"
   cost="$45"
-  costLabel="copay per visit"
-  showCostChip={false}
+  costVariant="copay-visit"
   networkTier="in-network"
   networkLabel="In-Network"
   onCallClick={() => {}}
   onBookClick={() => {}}
 />
 
-// Not connected — no price
+// Service not covered — shows pre-insurance price (Founders, not Tiempos)
+<ProviderCard
+  name="Dr. James Wright"
+  specialty="Dermatologist"
+  cost="$450"
+  costVariant="not-covered"
+  networkTier="out-of-network"
+  networkLabel="Out-of-Network"
+  onCallClick={() => {}}
+/>
+
+// No cost section at all
 <ProviderCard
   name="Dr. Anthony Brooks"
   specialty="Orthopedist"
-  showPrice={false}
+  costVariant="hidden"
   networkTier="in-network"
   networkLabel="In-Network"
   onCallClick={() => {}}
@@ -999,8 +968,8 @@ export function ProviderCardDoc() {
           />
           <RuleCard
             number={2}
-            title="Use costLevel for comparison chips"
-            description="Set costLevel to 'lower', 'typical', or 'higher' to show the colored chip. Omit or set showCostChip={false} when comparison data isn't available."
+            title="costVariant is the primary cost selector"
+            description="Pick one of 8 variants: coinsurance, cost-unknown, cost-no-comparison, copay-visit, copay-procedure, not-covered, price-unknown, hidden. It drives the label, hint, chip visibility, AND typography. costLevel only applies within coinsurance (to pick the chip color)."
           />
           <RuleCard
             number={3}
@@ -1014,8 +983,8 @@ export function ProviderCardDoc() {
           />
           <RuleCard
             number={5}
-            title="Copay vs Coinsurance"
-            description="For copay plans, set showCostChip={false} and use costLabel='copay per visit'. For coinsurance, use costLevel to show the comparison chip."
+            title="Cost vs Price typography"
+            description="Out-of-pocket variants (coinsurance, cost-*, copay-*) use Tiempos Headline 20/24 as the hero value. Pre-insurance variants (not-covered, price-unknown) use Founders 16/19, intentionally subdued. Don't override the typography — pick the matching variant instead."
           />
           <RuleCard
             number={6}

@@ -75,11 +75,13 @@ export const providerCardUsageRules = {
       networkLabel: 'Custom label, e.g., "In-Network" (auto-generated from tier if omitted)',
     },
     cost: {
-      cost:         'Formatted cost string, e.g., "$1,400" or "$900–$1,200" for unknown tier',
-      costLevel:    '"lower" | "typical" | "higher" | "unknown" — controls chip color and icon',
-      costLabel:    'Label under cost — defaults to "est. out-of-pocket", or "Call to verify out-of-pocket cost" when costLevel is "unknown"',
-      showCostChip: 'Show/hide the cost comparison chip (default: true)',
-      showPrice:    'Show/hide the entire cost section (default: true)',
+      cost:         'Formatted cost string, e.g., "$1,400" or "$900–$1,200" for unknown/range tiers',
+      costVariant:  '"coinsurance" | "cost-unknown" | "cost-no-comparison" | "copay-visit" | "copay-procedure" | "not-covered" | "price-unknown" | "hidden" — primary variant selector. Drives label, hint, chip visibility, AND typography (Tiempos 20/24 for out-of-pocket "cost", Founders 16/19 for pre-insurance "price"). Default: "coinsurance".',
+      costLevel:    '"lower" | "typical" | "higher" — controls chip color + icon. ONLY used within the "coinsurance" variant; ignored for all other variants.',
+      costLabel:    'Override label under cost. If omitted, the variant preset supplies the label (see Presets below).',
+      costHint:     'Override hint text below the price. If omitted, the variant preset supplies the hint (only "not-covered" and "price-unknown" have default hints).',
+      showCostChip: 'Override chip visibility. If omitted, the variant preset decides (only "coinsurance" shows the chip).',
+      showPrice:    'Show/hide the entire cost section (default: true). Also hidden when costVariant="hidden".',
     },
     languages: {
       languages: 'string[] — Languages spoken. Shows first 2, then "+N" for extras. Optional, hidden by default.',
@@ -148,13 +150,19 @@ export const providerCardUsageRules = {
       detail: 'See tokens/usage/network-tier-rules.ts for the full color/icon mapping.',
     },
     {
-      id: 'cost-chip-follows-level',
-      rule: 'The cost comparison chip color is driven by costLevel prop — green for "lower", blue for "typical", red for "higher"',
+      id: 'use-costvariant-as-primary-selector',
+      rule: 'Use `costVariant` as the primary variant selector for the cost section. Use `costLevel` ONLY when `costVariant="coinsurance"` (to pick the chip color).',
+      detail: 'costVariant drives label, hint, chip visibility, AND typography. The 8 variants cover every cost-display permutation from Figma (coinsurance, cost-unknown, cost-no-comparison, copay-visit, copay-procedure, not-covered, price-unknown, hidden). costLevel is only meaningful inside the coinsurance variant — it is silently ignored for all other variants.',
     },
     {
-      id: 'always-provide-costlevel-with-cost',
-      rule: 'Always provide costLevel when cost is provided — this ensures consistent layout across all cards',
-      detail: 'Without costLevel, the cost label renders inline (same line as price) instead of below, breaking visual consistency with other cards that have cost chips.',
+      id: 'cost-chip-follows-level',
+      rule: 'Within the coinsurance variant, the chip color is driven by costLevel — green for "lower", blue for "typical", red for "higher"',
+      detail: 'The chip is ONLY rendered for costVariant="coinsurance". All other variants render no chip regardless of costLevel or showCostChip.',
+    },
+    {
+      id: 'cost-vs-price-typography',
+      rule: 'Variants split into "cost" style (Tiempos Headline Medium 20/24, serif, hero) vs "price" style (Founders Grotesk Medium 16/19, sans, subdued) — never mix',
+      detail: 'Cost-style variants (coinsurance, cost-unknown, cost-no-comparison, copay-visit, copay-procedure) show what the user pays out of pocket — rendered in Tiempos as a hero value. Price-style variants (not-covered, price-unknown) show what the provider charges before insurance — rendered in Founders as a subdued secondary value. This split is automatic and driven by costVariant.',
     },
     {
       id: 'detail-row-order',
@@ -230,28 +238,74 @@ export const providerCardUsageRules = {
     },
   ],
 
-  // ── Presets (card defaults by cost level) ────────────────────
+  // ── Cost Variant Presets ────────────────────────────────────
+  // The 8 costVariant presets — each drives label, hint, chip visibility,
+  // and typography treatment. Overrides via costLabel / costHint / showCostChip
+  // always win over the preset value.
   presets: {
-    description: 'Default prop combinations by cost level. All presets omit languages and virtualAvailable by default.',
-    lower: {
-      costLevel: 'lower',
-      cost: 'Single price, e.g., "$95"',
-      costLabel: '"est. out-of-pocket" (default)',
+    description: 'Preset shapes per costVariant. Listed fields are the preset defaults — user props override them.',
+    coinsurance: {
+      costVariant:   'coinsurance',
+      cost:          'Single cost, e.g., "$95"',
+      typography:    'Tiempos Headline Medium 20/24 (serif, hero)',
+      costLabel:     '"Est. out-of-pocket cost"',
+      chip:          'Shown — color + icon driven by costLevel ("lower" | "typical" | "higher")',
+      notes:         'The ONLY variant that renders the cost chip. Provide costLevel to pick chip color.',
     },
-    typical: {
-      costLevel: 'typical',
-      cost: 'Single price, e.g., "$120"',
-      costLabel: '"est. out-of-pocket" (default)',
+    'cost-unknown': {
+      costVariant:   'cost-unknown',
+      cost:          'Price RANGE, e.g., "$900–$1,200"',
+      typography:    'Tiempos Headline Medium 20/24 (serif, hero)',
+      costLabel:     '"Call to verify out-of-pocket cost"',
+      chip:          'Hidden',
+      notes:         'Out-of-pocket cost is not known — show a range + "call to verify" label.',
     },
-    higher: {
-      costLevel: 'higher',
-      cost: 'Single price, e.g., "$200"',
-      costLabel: '"est. out-of-pocket" (default)',
+    'cost-no-comparison': {
+      costVariant:   'cost-no-comparison',
+      cost:          'Single cost, e.g., "$120"',
+      typography:    'Tiempos Headline Medium 20/24 (serif, hero)',
+      costLabel:     '"Est. out-of-pocket cost"',
+      chip:          'Hidden',
+      notes:         'Use when cost is known but comparison data (lower/typical/higher) is unavailable.',
     },
-    unknown: {
-      costLevel: 'unknown',
-      cost: 'Price RANGE, e.g., "$900–$1,200"',
-      costLabel: '"Call to verify out-of-pocket cost" (auto-set when costLevel is unknown)',
+    'copay-visit': {
+      costVariant:   'copay-visit',
+      cost:          'Flat copay, e.g., "$30"',
+      typography:    'Tiempos Headline Medium 20/24 (serif, hero)',
+      costLabel:     '"Per visit"',
+      chip:          'Hidden',
+      notes:         'Flat copay per visit (e.g., primary care, urgent care).',
+    },
+    'copay-procedure': {
+      costVariant:   'copay-procedure',
+      cost:          'Flat copay, e.g., "$150"',
+      typography:    'Tiempos Headline Medium 20/24 (serif, hero)',
+      costLabel:     '"Per procedure"',
+      chip:          'Hidden',
+      notes:         'Flat copay per procedure (e.g., imaging, specialist procedures).',
+    },
+    'not-covered': {
+      costVariant:   'not-covered',
+      cost:          'Full price, e.g., "$450"',
+      typography:    'Founders Grotesk Medium 16/19 (sans, subdued)',
+      costLabel:     '"Without insurance"',
+      costHint:      '"Call to verify out-of-pocket cost"',
+      chip:          'Hidden',
+      notes:         'Service is not covered — we show what the provider charges without insurance. Price style (subdued, not hero).',
+    },
+    'price-unknown': {
+      costVariant:   'price-unknown',
+      cost:          'Price RANGE, e.g., "$900–$1,200"',
+      typography:    'Founders Grotesk Medium 16/19 (sans, subdued)',
+      costLabel:     '"Est. service price"',
+      costHint:      '"Before insurance"',
+      chip:          'Hidden',
+      notes:         'Pre-insurance price range — out-of-pocket cost is not yet known. Price style (subdued, not hero).',
+    },
+    hidden: {
+      costVariant:   'hidden',
+      cost:          '(not rendered)',
+      notes:         'Omit the entire cost section. Use when a card should render without any cost information.',
     },
     defaults: {
       languages: 'Omitted by default — only add when provider speaks non-English languages',

@@ -147,7 +147,7 @@ function App() {
                   </div>
                 } />
 
-                {/* Lab — empty now */}
+                {/* Lab — WIP components */}
                 <Route path="/lab/*" element={
                   <div className="flex items-center justify-center h-full p-xxl">
                     <div className="text-center">

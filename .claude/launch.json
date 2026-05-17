@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "glow-ds",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["vite", "--port", "5175"],
-      "port": 5175
+      "name": "glow-ds-fresh",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "cd /Users/healthee/Desktop/Projects/glow-ds/glow-design-system && exec npx vite --port 5180 --strictPort"],
+      "port": 5180
     }
   ]
 }

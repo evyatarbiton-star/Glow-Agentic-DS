@@ -14,6 +14,7 @@ import { NavBarDoc }          from './docs/components/NavBarDoc'
 import { AvatarDoc }          from './docs/components/AvatarDoc'
 import { CardDoc }            from './docs/components/CardDoc'
 import { ChipDoc }            from './docs/components/ChipDoc'
+import { AccordionDoc }       from './docs/components/AccordionDoc'
 import { ModalDoc }           from './docs/components/ModalDoc'
 import { ProviderCardDoc }    from './docs/components/ProviderCardDoc'
 import { IconButtonDoc }      from './docs/components/IconButtonDoc'
@@ -115,6 +116,7 @@ function App() {
                 <Route path="/components/navbar" element={<NavBarDoc />} />
                 <Route path="/components/card" element={<CardDoc />} />
                 <Route path="/components/chip" element={<ChipDoc />} />
+                <Route path="/components/accordion" element={<AccordionDoc />} />
                 <Route path="/components/modal" element={<ModalDoc />} />
                 <Route path="/components/provider-card" element={<ProviderCardDoc />} />
                 <Route path="/components/star-rating" element={<StarRatingDoc />} />

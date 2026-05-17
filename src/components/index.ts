@@ -34,6 +34,16 @@ export type { CardProps, CardVariant, CardRadius, CardPadding } from './Card'
 export { Chip, ChipGroup } from './Chip'
 export type { ChipProps, ChipGroupProps, ChipVariant, ChipColor, ChipSize } from './Chip'
 
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from './Accordion'
+export type {
+  AccordionProps,
+  AccordionItemProps,
+  AccordionTriggerProps,
+  AccordionContentProps,
+  AccordionIndicator,
+  AccordionHeadingLevel,
+} from './Accordion'
+
 export { Tooltip, TooltipPanel } from './Tooltip'
 export type { TooltipProps, TooltipDirection, TooltipVariant, TooltipAction, TooltipMedia, TooltipLink } from './Tooltip'
 

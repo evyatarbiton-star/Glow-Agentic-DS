@@ -151,7 +151,7 @@ cp .claude/commands/glow-review.md ~/.claude/commands/glow-review.md
 cp .claude/commands/glow-tokens.md ~/.claude/commands/glow-tokens.md
 ```
 
-**DO NOT copy `glow-sync.md`** — it's DS-internal and must stay only inside the DS folder. Invoking it from a prototype directory would try to mutate files that don't belong to the DS.
+**DO NOT copy `glow-sync.md` or `glow-new-component.md`** — both are DS-internal commands that mutate DS files. They must stay only inside the DS folder. Invoking them from a prototype directory would try to mutate files that don't belong to the DS.
 
 ### Why this step exists
 Step 2g of this workflow can rewrite `.claude/commands/glow.md` inside the DS (skill reference tables, Zoe import list, etc.). Without this propagation, the global copy at `~/.claude/commands/glow.md` would silently drift behind the DS version, and consumer projects would reference outdated guidance. Running this step after every sync keeps global and DS aligned automatically.

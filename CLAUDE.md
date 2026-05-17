@@ -49,6 +49,7 @@ import {
   Checkbox, RadioButton, Toggle,
   TextInput, Select, DatePicker,
   Card, Chip, ChipGroup,
+  Accordion, AccordionItem, AccordionTrigger, AccordionContent,
   Tooltip, TooltipPanel,
   Modal,
   Avatar, NavBar,
@@ -90,6 +91,7 @@ import {
 | **Card** | outline, elevated, filled | `radius` (sm/md/lg), `padding` (none/sm/md/lg), `interactive`, `as` |
 | **Chip** | subtle, outline, filled | `color` (neutral/success/error/info/warning/recommended/hsa/lfsa), `size` (sm/md/lg), `selected`, `removable`, `iconLeft` |
 | **ChipGroup** | — | `gap`, `wrap` |
+| **Accordion** | — | Compound: `Accordion` (`value`/`defaultValue`/`onValueChange`, `indicator: 'plus-minus' \| 'chevron'`, `collapsible`), `AccordionItem` (`value`, `headingLevel`, `disabled`), `AccordionTrigger` (`iconLeft`), `AccordionContent`. Single-open behavior. |
 | **Modal** | — | `size` (sm/md/lg), `title`, `showBackButton`, `footer`, `footerActions`, `footerLeft` |
 | **Tooltip** | default (dark blur), rich (solid) | `direction`, `title`, `leftIcon`, `media`, `primaryAction`, `secondaryAction`, `link` |
 | **Avatar** | — | `size` (sm/md/lg), `src`, `alt`, `fallback`, `bgColor`, `color` |

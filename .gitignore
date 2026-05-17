@@ -29,3 +29,4 @@ packages/mcp-server/node_modules/
 
 # Claude internal
 .claude/plan.md
+.claude/worktrees/
